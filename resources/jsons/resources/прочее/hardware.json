@@ -1,0 +1,125 @@
+{
+  "_config": {
+    "emoji": "📦"
+  },
+  "hw_1": {
+    "name": "Горсть гвоздей",
+    "price": 5,
+    "weight": 1,
+    "probability": 95,
+    "minAmount": 1,
+    "maxAmount": 5
+  },
+  "hw_2": {
+    "name": "Петля дверная",
+    "price": 8,
+    "weight": 1,
+    "probability": 85,
+    "minAmount": 2,
+    "maxAmount": 6
+  },
+  "hw_3": {
+    "name": "Засов железный",
+    "price": 20,
+    "weight": 2,
+    "probability": 65,
+    "minAmount": 1,
+    "maxAmount": 2
+  },
+  "hw_4": {
+    "name": "Замок навесной",
+    "price": 35,
+    "weight": 1,
+    "probability": 55,
+    "minAmount": 1,
+    "maxAmount": 2
+  },
+  "hw_5": {
+    "name": "Цепь (звено)",
+    "price": 3,
+    "weight": 1,
+    "probability": 90,
+    "minAmount": 3,
+    "maxAmount": 10
+  },
+  "hw_6": {
+    "name": "Подкова",
+    "price": 12,
+    "weight": 2,
+    "probability": 70,
+    "minAmount": 1,
+    "maxAmount": 4
+  },
+  "hw_7": {
+    "name": "Кольцо крепёжное",
+    "price": 7,
+    "weight": 1,
+    "probability": 85,
+    "minAmount": 2,
+    "maxAmount": 6
+  },
+  "hw_8": {
+    "name": "Скоба железная",
+    "price": 4,
+    "weight": 1,
+    "probability": 90,
+    "minAmount": 2,
+    "maxAmount": 8
+  },
+  "hw_9": {
+    "name": "Болт с гайкой",
+    "price": 6,
+    "weight": 1,
+    "probability": 88,
+    "minAmount": 2,
+    "maxAmount": 8
+  },
+  "hw_10": {
+    "name": "Медная скрепа",
+    "price": 9,
+    "weight": 1,
+    "probability": 80,
+    "minAmount": 2,
+    "maxAmount": 5
+  },
+  "hw_11": {
+    "name": "Пружина стальная",
+    "price": 18,
+    "weight": 1,
+    "probability": 60,
+    "minAmount": 1,
+    "maxAmount": 3
+  },
+  "hw_12": {
+    "name": "Клещи (небольшие)",
+    "price": 45,
+    "weight": 2,
+    "probability": 45,
+    "minAmount": 1,
+    "maxAmount": 1
+  },
+  "hw_13": {
+    "name": "Зубчатое колёсико",
+    "price": 25,
+    "weight": 1,
+    "probability": 55,
+    "minAmount": 1,
+    "maxAmount": 3
+  },
+  "hw_14": {
+    "name": "Шуруп деревянный",
+    "price": 2,
+    "weight": 1,
+    "probability": 92,
+    "minAmount": 4,
+    "maxAmount": 12
+  },
+  "hw_15": {
+    "name": "Стальная проволока (моток)",
+    "price": 15,
+    "weight": 1,
+    "probability": 70,
+    "minAmount": 1,
+    "maxAmount": 3
+  }
+}

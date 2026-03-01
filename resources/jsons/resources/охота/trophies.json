@@ -1,0 +1,115 @@
+{
+    "_config": {
+        "emoji": "🐾"
+    },
+    "trp_0": {
+        "name": "Ничего не нашли",
+        "price": 0,
+        "probability": 10
+    },
+    "trp_1": {
+        "name": "Волк",
+        "price": 8,
+        "probability": 10
+    },
+    "trp_2": {
+        "name": "Кабан",
+        "price": 10,
+        "probability": 8
+    },
+    "trp_3": {
+        "name": "Олень",
+        "price": 12,
+        "probability": 6
+    },
+    "trp_4": {
+        "name": "Заяц",
+        "price": 5,
+        "probability": 8
+    },
+    "trp_5": {
+        "name": "Крыса",
+        "price": 2,
+        "probability": 12
+    },
+    "trp_6": {
+        "name": "Жук",
+        "price": 3,
+        "probability": 10
+    },
+    "trp_7": {
+        "name": "Кровяная муха",
+        "price": 6,
+        "probability": 8
+    },
+    "trp_8": {
+        "name": "Снаппер",
+        "price": 25,
+        "probability": 4
+    },
+    "trp_9": {
+        "name": "Гоблин",
+        "price": 15,
+        "probability": 5
+    },
+    "trp_10": {
+        "name": "Орк",
+        "price": 40,
+        "probability": 2
+    },
+    "trp_11": {
+        "name": "Падальщик",
+        "price": 20,
+        "probability": 4
+    },
+    "trp_12": {
+        "name": "Кротокрыс",
+        "price": 18,
+        "probability": 4
+    },
+    "trp_13": {
+        "name": "Пещерный ползун",
+        "price": 30,
+        "probability": 2
+    },
+    "trp_14": {
+        "name": "Шахтный ползун",
+        "price": 45,
+        "probability": 1
+    },
+    "trp_15": {
+        "name": "Болотный дух",
+        "price": 35,
+        "probability": 2
+    },
+    "trp_16": {
+        "name": "Скелет",
+        "price": 20,
+        "probability": 3
+    },
+    "trp_17": {
+        "name": "Зомби",
+        "price": 22,
+        "probability": 3
+    },
+    "trp_18": {
+        "name": "Упырь",
+        "price": 50,
+        "probability": 1
+    },
+    "trp_19": {
+        "name": "Тролль",
+        "price": 60,
+        "probability": 1
+    },
+    "trp_20": {
+        "name": "Огненный ящер",
+        "price": 80,
+        "probability": 0
+    },
+    "trp_21": {
+        "name": "Дракон",
+        "price": 200,
+        "probability": 0
+    }
+}

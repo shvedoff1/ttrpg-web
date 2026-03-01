@@ -1,0 +1,28 @@
+{
+  "weapon": {
+    "sword": {
+      "name": "Меч",
+      "parts": [
+        {"slot": "base", "name": "Основа", "source": "generator/weapon/parts/bases.json"},
+        {"slot": "material", "name": "Материал", "source": "generator/weapon/parts/materials.json"}
+      ],
+      "property_groups": [
+        {"name": "Позитивные", "source": "generator/weapon/properties/positive.json", "count_min": 1, "count_max": 2},
+        {"name": "Негативные", "source": "generator/weapon/properties/negative.json", "count_min": 0, "count_max": 1}
+      ]
+    }
+  },
+  "armor": {
+    "heavy": {
+      "name": "Тяжёлая броня",
+      "parts": [
+        {"slot": "base", "name": "Основа", "source": "generator/armor/parts/bases.json"},
+        {"slot": "material", "name": "Материал", "source": "generator/armor/parts/materials.json"}
+      ],
+      "property_groups": [
+        {"name": "Позитивные", "source": "generator/armor/properties/positive.json", "count_min": 1, "count_max": 2},
+        {"name": "Негативные", "source": "generator/armor/properties/negative.json", "count_min": 0, "count_max": 1}
+      ]
+    }
+  }
+}

@@ -1,0 +1,101 @@
+{
+  "_config": {
+    "emoji": "🏹"
+  },
+  "arr_1": {
+    "name": "Обычная стрела",
+    "price": 3,
+    "weight": 1,
+    "probability": 95,
+    "minAmount": 5,
+    "maxAmount": 20
+  },
+  "arr_2": {
+    "name": "Бронебойная стрела",
+    "price": 8,
+    "weight": 1,
+    "probability": 60,
+    "minAmount": 3,
+    "maxAmount": 12
+  },
+  "arr_3": {
+    "name": "Огненная стрела",
+    "price": 15,
+    "weight": 1,
+    "probability": 40,
+    "minAmount": 2,
+    "maxAmount": 8
+  },
+  "arr_4": {
+    "name": "Отравленная стрела",
+    "price": 20,
+    "weight": 1,
+    "probability": 30,
+    "minAmount": 2,
+    "maxAmount": 6
+  },
+  "arr_5": {
+    "name": "Разрывная стрела",
+    "price": 25,
+    "weight": 1,
+    "probability": 25,
+    "minAmount": 2,
+    "maxAmount": 5
+  },
+  "arr_6": {
+    "name": "Серебряная стрела",
+    "price": 35,
+    "weight": 1,
+    "probability": 20,
+    "minAmount": 2,
+    "maxAmount": 6
+  },
+  "arr_7": {
+    "name": "Тяжёлый болт",
+    "price": 5,
+    "weight": 1,
+    "probability": 75,
+    "minAmount": 4,
+    "maxAmount": 15
+  },
+  "arr_8": {
+    "name": "Охотничья стрела",
+    "price": 6,
+    "weight": 1,
+    "probability": 80,
+    "minAmount": 4,
+    "maxAmount": 16
+  },
+  "arr_9": {
+    "name": "Стрела с гарпуном",
+    "price": 40,
+    "weight": 2,
+    "probability": 20,
+    "minAmount": 1,
+    "maxAmount": 3
+  },
+  "arr_10": {
+    "name": "Магическая стрела",
+    "price": 50,
+    "weight": 1,
+    "probability": 15,
+    "minAmount": 2,
+    "maxAmount": 5
+  },
+  "arr_11": {
+    "name": "Стрела-свисток (шумовая)",
+    "price": 12,
+    "weight": 1,
+    "probability": 45,
+    "minAmount": 3,
+    "maxAmount": 8
+  },
+  "arr_12": {
+    "name": "Сломанная стрела",
+    "price": 1,
+    "weight": 1,
+    "probability": 90,
+    "minAmount": 3,
+    "maxAmount": 10
+  }
+}

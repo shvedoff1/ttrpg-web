@@ -1,0 +1,39 @@
+{
+    "item_count": 1,
+    "categories": [
+        "resources/провизия/food.json",
+        "resources/провизия/alcohol.json",
+        "resources/провизия/spices.json",
+        "resources/прочее/tools.json",
+        "resources/прочее/hardware.json",
+        "resources/прочее/locks.json",
+        "resources/прочее/cloth.json",
+        "resources/прочее/bags.json",
+        "resources/прочее/candles.json",
+        "resources/ремесло/jewelry.json",
+        "resources/алхимия/potions.json",
+        "resources/прочее/scrolls.json",
+        "resources/алхимия/reagents.json",
+        "resources/прочее/books.json",
+        "resources/прочее/curiosities.json",
+        "resources/прочее/hlam.json"
+    ],
+    "district_filter": {
+        "poor": {
+            "filter": "exclude_rarest",
+            "percent": 75
+        },
+        "normal": {
+            "filter": "exclude_rarest",
+            "percent": 20
+        },
+        "rich": {
+            "filter": "exclude_common",
+            "percent": 20
+        },
+        "magic": {
+            "filter": "exclude_common",
+            "percent": 20
+        }
+    }
+}

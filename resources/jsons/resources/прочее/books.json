@@ -1,0 +1,125 @@
+{
+  "_config": {
+    "emoji": "📦"
+  },
+  "book_1": {
+    "name": "Потрёпанный молитвенник",
+    "price": 20,
+    "weight": 1,
+    "probability": 60,
+    "minAmount": 1,
+    "maxAmount": 1
+  },
+  "book_2": {
+    "name": "Карта окрестностей",
+    "price": 80,
+    "weight": 1,
+    "probability": 35,
+    "minAmount": 1,
+    "maxAmount": 1
+  },
+  "book_3": {
+    "name": "Алхимический трактат",
+    "price": 150,
+    "weight": 1,
+    "probability": 20,
+    "minAmount": 1,
+    "maxAmount": 1
+  },
+  "book_4": {
+    "name": "Дневник наёмника",
+    "price": 25,
+    "weight": 1,
+    "probability": 50,
+    "minAmount": 1,
+    "maxAmount": 1
+  },
+  "book_5": {
+    "name": "Рецепт зелья",
+    "price": 60,
+    "weight": 1,
+    "probability": 40,
+    "minAmount": 1,
+    "maxAmount": 2
+  },
+  "book_6": {
+    "name": "Книга заклинаний (потёртая)",
+    "price": 200,
+    "weight": 2,
+    "probability": 12,
+    "minAmount": 1,
+    "maxAmount": 1
+  },
+  "book_7": {
+    "name": "Указ коменданта",
+    "price": 10,
+    "weight": 1,
+    "probability": 55,
+    "minAmount": 1,
+    "maxAmount": 2
+  },
+  "book_8": {
+    "name": "Руководство по кузнечному делу",
+    "price": 90,
+    "weight": 2,
+    "probability": 25,
+    "minAmount": 1,
+    "maxAmount": 1
+  },
+  "book_9": {
+    "name": "Свод законов Миненталя",
+    "price": 30,
+    "weight": 2,
+    "probability": 40,
+    "minAmount": 1,
+    "maxAmount": 1
+  },
+  "book_10": {
+    "name": "Нечитаемый манускрипт",
+    "price": 5,
+    "weight": 1,
+    "probability": 75,
+    "minAmount": 1,
+    "maxAmount": 3
+  },
+  "book_11": {
+    "name": "Книга монстров",
+    "price": 120,
+    "weight": 2,
+    "probability": 18,
+    "minAmount": 1,
+    "maxAmount": 1
+  },
+  "book_12": {
+    "name": "Азбука орочьего языка",
+    "price": 45,
+    "weight": 1,
+    "probability": 35,
+    "minAmount": 1,
+    "maxAmount": 1
+  },
+  "book_13": {
+    "name": "Журнал торговца",
+    "price": 35,
+    "weight": 1,
+    "probability": 45,
+    "minAmount": 1,
+    "maxAmount": 1
+  },
+  "book_14": {
+    "name": "Мятая листовка",
+    "price": 2,
+    "weight": 1,
+    "probability": 90,
+    "minAmount": 1,
+    "maxAmount": 5
+  },
+  "book_15": {
+    "name": "Тайный шифрованный свиток",
+    "price": 180,
+    "weight": 1,
+    "probability": 10,
+    "minAmount": 1,
+    "maxAmount": 1
+  }
+}

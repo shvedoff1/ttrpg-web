@@ -1,0 +1,133 @@
+{
+    "_config": {
+        "emoji": "🍼"
+    },
+    "pot_1": {
+        "name": "Маленькое зелье лечения",
+        "price": 40,
+        "weight": 1,
+        "probability": 80,
+        "minAmount": 1,
+        "maxAmount": 3
+    },
+    "pot_2": {
+        "name": "Среднее зелье лечения",
+        "price": 90,
+        "weight": 1,
+        "probability": 60,
+        "minAmount": 1,
+        "maxAmount": 2
+    },
+    "pot_3": {
+        "name": "Большое зелье лечения",
+        "price": 180,
+        "weight": 1,
+        "probability": 30,
+        "minAmount": 1,
+        "maxAmount": 2
+    },
+    "pot_4": {
+        "name": "Зелье выносливости",
+        "price": 55,
+        "weight": 1,
+        "probability": 65,
+        "minAmount": 1,
+        "maxAmount": 2
+    },
+    "pot_5": {
+        "name": "Зелье маны",
+        "price": 70,
+        "weight": 1,
+        "probability": 55,
+        "minAmount": 1,
+        "maxAmount": 2
+    },
+    "pot_6": {
+        "name": "Зелье скорости",
+        "price": 120,
+        "weight": 1,
+        "probability": 35,
+        "minAmount": 1,
+        "maxAmount": 2
+    },
+    "pot_7": {
+        "name": "Противоядие",
+        "price": 65,
+        "weight": 1,
+        "probability": 50,
+        "minAmount": 1,
+        "maxAmount": 3
+    },
+    "pot_8": {
+        "name": "Зелье ночного зрения",
+        "price": 85,
+        "weight": 1,
+        "probability": 40,
+        "minAmount": 1,
+        "maxAmount": 2
+    },
+    "pot_9": {
+        "name": "Зелье силы",
+        "price": 150,
+        "weight": 1,
+        "probability": 25,
+        "minAmount": 1,
+        "maxAmount": 2
+    },
+    "pot_10": {
+        "name": "Зелье невидимости",
+        "price": 280,
+        "weight": 1,
+        "probability": 10,
+        "minAmount": 1,
+        "maxAmount": 1
+    },
+    "pot_11": {
+        "name": "Эликсир бодрости",
+        "price": 45,
+        "weight": 1,
+        "probability": 70,
+        "minAmount": 1,
+        "maxAmount": 3
+    },
+    "pot_12": {
+        "name": "Зелье огнестойкости",
+        "price": 130,
+        "weight": 1,
+        "probability": 30,
+        "minAmount": 1,
+        "maxAmount": 2
+    },
+    "pot_13": {
+        "name": "Мутное снадобье",
+        "price": 15,
+        "weight": 1,
+        "probability": 85,
+        "minAmount": 1,
+        "maxAmount": 4
+    },
+    "pot_14": {
+        "name": "Зелье берсерка",
+        "price": 200,
+        "weight": 1,
+        "probability": 15,
+        "minAmount": 1,
+        "maxAmount": 1
+    },
+    "pot_15": {
+        "name": "Отвар из трав",
+        "price": 25,
+        "weight": 1,
+        "probability": 80,
+        "minAmount": 1,
+        "maxAmount": 3
+    },
+    "pot_16": {
+        "name": "Зелье регенерации",
+        "price": 160,
+        "weight": 1,
+        "probability": 20,
+        "minAmount": 1,
+        "maxAmount": 1
+    }
+}

@@ -1,0 +1,89 @@
+{
+    "type1": {
+        "name": "Луговые",
+        "overrides": {
+            "herb_0": 5,
+            "herb_1": 20,
+            "herb_2": 10,
+            "herb_3": 10,
+            "herb_4": 10,
+            "herb_5": 5,
+            "herb_6": 1,
+            "herb_7": 1,
+            "herb_23": 99
+        }
+    },
+    "type2": {
+        "name": "Лесные",
+        "overrides": {
+            "herb_0": 5,
+            "herb_1": 5,
+            "herb_4": 2,
+            "herb_5": 2,
+            "herb_6": 2,
+            "herb_8": 3,
+            "herb_9": 3,
+            "herb_10": 2,
+            "herb_11": 2,
+            "herb_12": 6,
+            "herb_13": 6,
+            "herb_14": 6,
+            "herb_19": 10,
+            "herb_24": 1
+        }
+    },
+    "type3": {
+        "name": "Пустынные",
+        "overrides": {
+            "herb_0": 50,
+            "herb_3": 10,
+            "herb_5": 10,
+            "herb_6": 5,
+            "herb_11": 2,
+            "herb_15": 10,
+            "herb_16": 20,
+            "herb_17": 2,
+            "herb_24": 1
+        }
+    },
+    "type4": {
+        "name": "Горные",
+        "overrides": {
+            "herb_0": 50,
+            "herb_2": 30,
+            "herb_6": 2,
+            "herb_8": 20,
+            "herb_13": 10,
+            "herb_17": 10,
+            "herb_18": 10,
+            "herb_19": 10
+        }
+    },
+    "type5": {
+        "name": "У воды",
+        "overrides": {
+            "herb_0": 10,
+            "herb_1": 5,
+            "herb_4": 10,
+            "herb_6": 1,
+            "herb_18": 10,
+            "herb_20": 5,
+            "herb_21": 1,
+            "herb_24": 1
+        }
+    },
+    "type6": {
+        "name": "Пещерные",
+        "overrides": {
+            "herb_6": 4,
+            "herb_8": 10,
+            "herb_11": 4,
+            "herb_12": 10,
+            "herb_13": 10,
+            "herb_17": 10,
+            "herb_19": 20,
+            "herb_22": 10,
+            "herb_23": 1
+        }
+    }
+}

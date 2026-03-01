@@ -1,0 +1,125 @@
+{
+  "_config": {
+    "emoji": "🔨"
+  },
+  "knife_1": {
+    "name": "Нож1",
+    "price": 120,
+    "weight": 1,
+    "probability": 100,
+    "minAmount": 2,
+    "maxAmount": 4
+  },
+  "knife_2": {
+    "name": "Нож2",
+    "price": 120,
+    "weight": 1,
+    "probability": 100,
+    "minAmount": 2,
+    "maxAmount": 4
+  },
+  "knife_3": {
+    "name": "Нож3",
+    "price": 120,
+    "weight": 1,
+    "probability": 100,
+    "minAmount": 2,
+    "maxAmount": 4
+  },
+  "knife_4": {
+    "name": "Нож4",
+    "price": 120,
+    "weight": 1,
+    "probability": 100,
+    "minAmount": 2,
+    "maxAmount": 4
+  },
+  "knife_5": {
+    "name": "Нож5",
+    "price": 120,
+    "weight": 1,
+    "probability": 100,
+    "minAmount": 2,
+    "maxAmount": 4
+  },
+  "knife_67": {
+    "name": "Нож6",
+    "price": 120,
+    "weight": 1,
+    "probability": 100,
+    "minAmount": 2,
+    "maxAmount": 4
+  },
+  "knife_7": {
+    "name": "Нож7",
+    "price": 120,
+    "weight": 1,
+    "probability": 100,
+    "minAmount": 2,
+    "maxAmount": 4
+  },
+  "knife_8": {
+    "name": "Нож8",
+    "price": 120,
+    "weight": 1,
+    "probability": 100,
+    "minAmount": 2,
+    "maxAmount": 4
+  },
+  "knife_9": {
+    "name": "Нож9",
+    "price": 120,
+    "weight": 1,
+    "probability": 100,
+    "minAmount": 2,
+    "maxAmount": 4
+  },
+  "knife_10": {
+    "name": "Нож10",
+    "price": 120,
+    "weight": 1,
+    "probability": 100,
+    "minAmount": 2,
+    "maxAmount": 4
+  },
+  "knife_11": {
+    "name": "Нож11",
+    "price": 120,
+    "weight": 1,
+    "probability": 100,
+    "minAmount": 2,
+    "maxAmount": 4
+  },
+  "knife_12": {
+    "name": "Нож12",
+    "price": 120,
+    "weight": 1,
+    "probability": 100,
+    "minAmount": 2,
+    "maxAmount": 4
+  },
+  "knife_13": {
+    "name": "Нож13",
+    "price": 120,
+    "weight": 1,
+    "probability": 100,
+    "minAmount": 2,
+    "maxAmount": 4
+  },
+  "knife_14": {
+    "name": "Нож14",
+    "price": 120,
+    "weight": 1,
+    "probability": 100,
+    "minAmount": 2,
+    "maxAmount": 4
+  },
+  "knife_15": {
+    "name": "Нож15",
+    "price": 120,
+    "weight": 1,
+    "probability": 100,
+    "minAmount": 2,
+    "maxAmount": 4
+  }
+}

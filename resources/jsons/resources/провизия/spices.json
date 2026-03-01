@@ -1,0 +1,125 @@
+{
+    "_config": {
+        "emoji": "👁️"
+    },
+    "spi_1": {
+        "name": "Мешочек соли",
+        "price": 10,
+        "weight": 1,
+        "probability": 90,
+        "minAmount": 1,
+        "maxAmount": 4
+    },
+    "spi_2": {
+        "name": "Перец горошком",
+        "price": 20,
+        "weight": 1,
+        "probability": 75,
+        "minAmount": 1,
+        "maxAmount": 3
+    },
+    "spi_3": {
+        "name": "Корица (палочка)",
+        "price": 15,
+        "weight": 1,
+        "probability": 70,
+        "minAmount": 1,
+        "maxAmount": 4
+    },
+    "spi_4": {
+        "name": "Тмин",
+        "price": 8,
+        "weight": 1,
+        "probability": 85,
+        "minAmount": 1,
+        "maxAmount": 5
+    },
+    "spi_5": {
+        "name": "Шафран (щепотка)",
+        "price": 60,
+        "weight": 1,
+        "probability": 30,
+        "minAmount": 1,
+        "maxAmount": 2
+    },
+    "spi_6": {
+        "name": "Имбирный корень",
+        "price": 12,
+        "weight": 1,
+        "probability": 75,
+        "minAmount": 1,
+        "maxAmount": 4
+    },
+    "spi_7": {
+        "name": "Сухая горчица",
+        "price": 9,
+        "weight": 1,
+        "probability": 80,
+        "minAmount": 1,
+        "maxAmount": 4
+    },
+    "spi_8": {
+        "name": "Чеснок (головка)",
+        "price": 5,
+        "weight": 1,
+        "probability": 90,
+        "minAmount": 2,
+        "maxAmount": 6
+    },
+    "spi_9": {
+        "name": "Уксус (бутылочка)",
+        "price": 14,
+        "weight": 1,
+        "probability": 70,
+        "minAmount": 1,
+        "maxAmount": 3
+    },
+    "spi_10": {
+        "name": "Острый перец (связка)",
+        "price": 16,
+        "weight": 1,
+        "probability": 65,
+        "minAmount": 1,
+        "maxAmount": 3
+    },
+    "spi_11": {
+        "name": "Ванильный стручок",
+        "price": 35,
+        "weight": 1,
+        "probability": 40,
+        "minAmount": 1,
+        "maxAmount": 3
+    },
+    "spi_12": {
+        "name": "Кориандр",
+        "price": 7,
+        "weight": 1,
+        "probability": 85,
+        "minAmount": 2,
+        "maxAmount": 5
+    },
+    "spi_13": {
+        "name": "Засахаренный имбирь",
+        "price": 22,
+        "weight": 1,
+        "probability": 55,
+        "minAmount": 1,
+        "maxAmount": 3
+    },
+    "spi_14": {
+        "name": "Лавровый лист (пучок)",
+        "price": 6,
+        "weight": 1,
+        "probability": 88,
+        "minAmount": 1,
+        "maxAmount": 5
+    },
+    "spi_15": {
+        "name": "Неизвестный порошок",
+        "price": 3,
+        "weight": 1,
+        "probability": 80,
+        "minAmount": 1,
+        "maxAmount": 4
+    }
+}

@@ -1,0 +1,109 @@
+{
+  "_config": {
+    "emoji": "🔨"
+  },
+  "arm_1": {
+    "name": "Кожаный наплечник",
+    "price": 35,
+    "weight": 2,
+    "probability": 60,
+    "minAmount": 1,
+    "maxAmount": 2
+  },
+  "arm_2": {
+    "name": "Железная наручь",
+    "price": 55,
+    "weight": 2,
+    "probability": 45,
+    "minAmount": 1,
+    "maxAmount": 2
+  },
+  "arm_3": {
+    "name": "Заплатка на кольчугу",
+    "price": 20,
+    "weight": 1,
+    "probability": 70,
+    "minAmount": 1,
+    "maxAmount": 3
+  },
+  "arm_4": {
+    "name": "Стальная поножь",
+    "price": 70,
+    "weight": 3,
+    "probability": 35,
+    "minAmount": 1,
+    "maxAmount": 2
+  },
+  "arm_5": {
+    "name": "Кожаный шлем (потрёпанный)",
+    "price": 30,
+    "weight": 2,
+    "probability": 55,
+    "minAmount": 1,
+    "maxAmount": 1
+  },
+  "arm_6": {
+    "name": "Железный горжет",
+    "price": 45,
+    "weight": 2,
+    "probability": 45,
+    "minAmount": 1,
+    "maxAmount": 1
+  },
+  "arm_7": {
+    "name": "Кольчужный капюшон",
+    "price": 80,
+    "weight": 2,
+    "probability": 28,
+    "minAmount": 1,
+    "maxAmount": 1
+  },
+  "arm_8": {
+    "name": "Пластинчатый наколенник",
+    "price": 60,
+    "weight": 2,
+    "probability": 38,
+    "minAmount": 1,
+    "maxAmount": 2
+  },
+  "arm_9": {
+    "name": "Щиток для предплечья",
+    "price": 25,
+    "weight": 1,
+    "probability": 65,
+    "minAmount": 1,
+    "maxAmount": 2
+  },
+  "arm_10": {
+    "name": "Кольцо кольчуги (звено)",
+    "price": 3,
+    "weight": 1,
+    "probability": 90,
+    "minAmount": 5,
+    "maxAmount": 20
+  },
+  "arm_11": {
+    "name": "Стальная пластина (нагрудная)",
+    "price": 100,
+    "weight": 4,
+    "probability": 20,
+    "minAmount": 1,
+    "maxAmount": 1
+  },
+  "arm_12": {
+    "name": "Поножь орочьей кости",
+    "price": 90,
+    "weight": 3,
+    "probability": 18,
+    "minAmount": 1,
+    "maxAmount": 1
+  },
+  "arm_13": {
+    "name": "Латная перчатка (одна)",
+    "price": 40,
+    "weight": 1,
+    "probability": 45,
+    "minAmount": 1,
+    "maxAmount": 2
+  }
+}

@@ -1,0 +1,125 @@
+{
+  "_config": {
+    "emoji": "🔨"
+  },
+  "gem_1": {
+    "name": "Кусок кварца",
+    "price": 15,
+    "weight": 1,
+    "probability": 80,
+    "minAmount": 1,
+    "maxAmount": 3
+  },
+  "gem_2": {
+    "name": "Необработанный рубин",
+    "price": 120,
+    "weight": 1,
+    "probability": 25,
+    "minAmount": 1,
+    "maxAmount": 2
+  },
+  "gem_3": {
+    "name": "Необработанный сапфир",
+    "price": 100,
+    "weight": 1,
+    "probability": 28,
+    "minAmount": 1,
+    "maxAmount": 2
+  },
+  "gem_4": {
+    "name": "Необработанный изумруд",
+    "price": 110,
+    "weight": 1,
+    "probability": 25,
+    "minAmount": 1,
+    "maxAmount": 2
+  },
+  "gem_5": {
+    "name": "Необработанный топаз",
+    "price": 70,
+    "weight": 1,
+    "probability": 35,
+    "minAmount": 1,
+    "maxAmount": 2
+  },
+  "gem_6": {
+    "name": "Аметист",
+    "price": 55,
+    "weight": 1,
+    "probability": 40,
+    "minAmount": 1,
+    "maxAmount": 2
+  },
+  "gem_7": {
+    "name": "Гранёный алмаз",
+    "price": 500,
+    "weight": 1,
+    "probability": 5,
+    "minAmount": 1,
+    "maxAmount": 1
+  },
+  "gem_8": {
+    "name": "Необработанный алмаз",
+    "price": 300,
+    "weight": 1,
+    "probability": 8,
+    "minAmount": 1,
+    "maxAmount": 1
+  },
+  "gem_9": {
+    "name": "Чёрный опал",
+    "price": 180,
+    "weight": 1,
+    "probability": 12,
+    "minAmount": 1,
+    "maxAmount": 1
+  },
+  "gem_10": {
+    "name": "Лунный камень",
+    "price": 90,
+    "weight": 1,
+    "probability": 30,
+    "minAmount": 1,
+    "maxAmount": 2
+  },
+  "gem_11": {
+    "name": "Кусок малахита",
+    "price": 25,
+    "weight": 1,
+    "probability": 65,
+    "minAmount": 1,
+    "maxAmount": 3
+  },
+  "gem_12": {
+    "name": "Осколок обсидиана",
+    "price": 20,
+    "weight": 1,
+    "probability": 70,
+    "minAmount": 1,
+    "maxAmount": 4
+  },
+  "gem_13": {
+    "name": "Речная галька (блестящая)",
+    "price": 3,
+    "weight": 1,
+    "probability": 90,
+    "minAmount": 2,
+    "maxAmount": 6
+  },
+  "gem_14": {
+    "name": "Кровавый рубин",
+    "price": 250,
+    "weight": 1,
+    "probability": 8,
+    "minAmount": 1,
+    "maxAmount": 1
+  },
+  "gem_15": {
+    "name": "Тигровый глаз",
+    "price": 45,
+    "weight": 1,
+    "probability": 45,
+    "minAmount": 1,
+    "maxAmount": 2
+  }
+}

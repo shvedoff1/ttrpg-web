@@ -1,0 +1,125 @@
+{
+  "_config": {
+    "emoji": "📦"
+  },
+  "hlam_1": {
+    "name": "Хлам1",
+    "price": 120,
+    "weight": 1,
+    "probability": 100,
+    "minAmount": 2,
+    "maxAmount": 4
+  },
+  "hlam_2": {
+    "name": "Хлам2",
+    "price": 120,
+    "weight": 1,
+    "probability": 100,
+    "minAmount": 2,
+    "maxAmount": 4
+  },
+  "hlam_3": {
+    "name": "Хлам3",
+    "price": 120,
+    "weight": 1,
+    "probability": 100,
+    "minAmount": 2,
+    "maxAmount": 4
+  },
+  "hlam_4": {
+    "name": "Хлам4",
+    "price": 120,
+    "weight": 1,
+    "probability": 100,
+    "minAmount": 2,
+    "maxAmount": 4
+  },
+  "hlam_5": {
+    "name": "Хлам5",
+    "price": 120,
+    "weight": 1,
+    "probability": 100,
+    "minAmount": 2,
+    "maxAmount": 4
+  },
+  "hlam_6": {
+    "name": "Хлам6",
+    "price": 120,
+    "weight": 1,
+    "probability": 100,
+    "minAmount": 2,
+    "maxAmount": 4
+  },
+  "hlam_7": {
+    "name": "Хлам7",
+    "price": 120,
+    "weight": 1,
+    "probability": 100,
+    "minAmount": 2,
+    "maxAmount": 4
+  },
+  "hlam_8": {
+    "name": "Хлам8",
+    "price": 120,
+    "weight": 1,
+    "probability": 100,
+    "minAmount": 2,
+    "maxAmount": 4
+  },
+  "hlam_9": {
+    "name": "Хлам9",
+    "price": 120,
+    "weight": 1,
+    "probability": 100,
+    "minAmount": 2,
+    "maxAmount": 4
+  },
+  "hlam_10": {
+    "name": "Хлам10",
+    "price": 120,
+    "weight": 1,
+    "probability": 100,
+    "minAmount": 2,
+    "maxAmount": 4
+  },
+  "hlam_11": {
+    "name": "Хлам11",
+    "price": 120,
+    "weight": 1,
+    "probability": 100,
+    "minAmount": 2,
+    "maxAmount": 4
+  },
+  "hlam_12": {
+    "name": "Хлам12",
+    "price": 120,
+    "weight": 1,
+    "probability": 100,
+    "minAmount": 2,
+    "maxAmount": 4
+  },
+  "hlam_13": {
+    "name": "Хлам13",
+    "price": 120,
+    "weight": 1,
+    "probability": 100,
+    "minAmount": 2,
+    "maxAmount": 4
+  },
+  "hlam_14": {
+    "name": "Хлам14",
+    "price": 120,
+    "weight": 1,
+    "probability": 100,
+    "minAmount": 2,
+    "maxAmount": 4
+  },
+  "hlam_15": {
+    "name": "Хлам15",
+    "price": 120,
+    "weight": 1,
+    "probability": 100,
+    "minAmount": 2,
+    "maxAmount": 4
+  }
+}

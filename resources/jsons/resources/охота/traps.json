@@ -1,0 +1,101 @@
+{
+    "_config": {
+        "emoji": "🪤"
+    },
+    "trap_1": {
+        "name": "Капкан на животных",
+        "price": 40,
+        "weight": 3,
+        "probability": 55,
+        "minAmount": 1,
+        "maxAmount": 2
+    },
+    "trap_2": {
+        "name": "Верёвочная петля",
+        "price": 8,
+        "weight": 1,
+        "probability": 80,
+        "minAmount": 1,
+        "maxAmount": 3
+    },
+    "trap_3": {
+        "name": "Ловушка с ядом",
+        "price": 70,
+        "weight": 1,
+        "probability": 30,
+        "minAmount": 1,
+        "maxAmount": 2
+    },
+    "trap_4": {
+        "name": "Шипы-рогатки (пакет)",
+        "price": 15,
+        "weight": 1,
+        "probability": 65,
+        "minAmount": 1,
+        "maxAmount": 4
+    },
+    "trap_5": {
+        "name": "Сигнальная нить (моток)",
+        "price": 12,
+        "weight": 1,
+        "probability": 70,
+        "minAmount": 1,
+        "maxAmount": 3
+    },
+    "trap_6": {
+        "name": "Дымовая шашка",
+        "price": 35,
+        "weight": 1,
+        "probability": 40,
+        "minAmount": 1,
+        "maxAmount": 3
+    },
+    "trap_7": {
+        "name": "Горшок с горючей смесью",
+        "price": 50,
+        "weight": 2,
+        "probability": 35,
+        "minAmount": 1,
+        "maxAmount": 2
+    },
+    "trap_8": {
+        "name": "Взрывной бочонок",
+        "price": 120,
+        "weight": 5,
+        "probability": 15,
+        "minAmount": 1,
+        "maxAmount": 1
+    },
+    "trap_9": {
+        "name": "Капкан-ноголомка",
+        "price": 90,
+        "weight": 4,
+        "probability": 22,
+        "minAmount": 1,
+        "maxAmount": 1
+    },
+    "trap_10": {
+        "name": "Колокольчик сигнальный",
+        "price": 6,
+        "weight": 1,
+        "probability": 85,
+        "minAmount": 1,
+        "maxAmount": 5
+    },
+    "trap_11": {
+        "name": "Сеть охотничья",
+        "price": 45,
+        "weight": 3,
+        "probability": 40,
+        "minAmount": 1,
+        "maxAmount": 1
+    },
+    "trap_12": {
+        "name": "Магическая руна тревоги",
+        "price": 160,
+        "weight": 1,
+        "probability": 12,
+        "minAmount": 1,
+        "maxAmount": 1
+    }
+}

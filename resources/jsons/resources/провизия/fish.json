@@ -1,0 +1,101 @@
+{
+    "_config": {
+        "emoji": "🍣"
+    },
+    "fish_1": {
+        "name": "Карп",
+        "price": 10,
+        "weight": 1,
+        "probability": 85,
+        "minAmount": 1,
+        "maxAmount": 3
+    },
+    "fish_2": {
+        "name": "Лосось",
+        "price": 22,
+        "weight": 1,
+        "probability": 65,
+        "minAmount": 1,
+        "maxAmount": 2
+    },
+    "fish_3": {
+        "name": "Угорь речной",
+        "price": 28,
+        "weight": 1,
+        "probability": 55,
+        "minAmount": 1,
+        "maxAmount": 2
+    },
+    "fish_4": {
+        "name": "Окунь",
+        "price": 12,
+        "weight": 1,
+        "probability": 80,
+        "minAmount": 1,
+        "maxAmount": 3
+    },
+    "fish_5": {
+        "name": "Щука",
+        "price": 35,
+        "weight": 2,
+        "probability": 45,
+        "minAmount": 1,
+        "maxAmount": 2
+    },
+    "fish_6": {
+        "name": "Осьминог мелкий",
+        "price": 40,
+        "weight": 1,
+        "probability": 35,
+        "minAmount": 1,
+        "maxAmount": 2
+    },
+    "fish_7": {
+        "name": "Пещерная рыба (слепая)",
+        "price": 55,
+        "weight": 1,
+        "probability": 25,
+        "minAmount": 1,
+        "maxAmount": 2
+    },
+    "fish_8": {
+        "name": "Чёрная форель",
+        "price": 48,
+        "weight": 1,
+        "probability": 30,
+        "minAmount": 1,
+        "maxAmount": 2
+    },
+    "fish_9": {
+        "name": "Вяленая рыба (пачка)",
+        "price": 18,
+        "weight": 1,
+        "probability": 75,
+        "minAmount": 1,
+        "maxAmount": 3
+    },
+    "fish_10": {
+        "name": "Тухлая рыба",
+        "price": 1,
+        "weight": 1,
+        "probability": 70,
+        "minAmount": 1,
+        "maxAmount": 4
+    },
+    "fish_11": {
+        "name": "Икра (горшочек)",
+        "price": 90,
+        "weight": 1,
+        "probability": 20,
+        "minAmount": 1,
+        "maxAmount": 1
+    },
+    "fish_12": {
+        "name": "Морской краб (сушёный)",
+        "price": 32,
+        "weight": 1,
+        "probability": 40,
+        "minAmount": 1,
+        "maxAmount": 2
+    }
+}

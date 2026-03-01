@@ -1,0 +1,35 @@
+{
+  "_config": {
+    "description": "Positive weapon properties"
+  },
+  "sharp": {
+    "name": "Острое",
+    "price": 50,
+    "probability": 70
+  },
+  "balanced": {
+    "name": "Сбалансированное",
+    "price": 80,
+    "probability": 50
+  },
+  "enchanted": {
+    "name": "Зачарованное",
+    "price": 200,
+    "probability": 20
+  },
+  "reinforced": {
+    "name": "Укреплённое",
+    "price": 60,
+    "probability": 45
+  },
+  "poisoned": {
+    "name": "Отравленное",
+    "price": 100,
+    "probability": 15
+  },
+  "flaming": {
+    "name": "Огненное",
+    "price": 150,
+    "probability": 10
+  }
+}

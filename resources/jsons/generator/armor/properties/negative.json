@@ -1,0 +1,35 @@
+{
+  "_config": {
+    "description": "Negative armor properties"
+  },
+  "heavy": {
+    "name": "Тяжёлая",
+    "price": -40,
+    "probability": 55
+  },
+  "restrictive": {
+    "name": "Ограничивающая",
+    "price": -35,
+    "probability": 50
+  },
+  "rusty": {
+    "name": "Заржавленная",
+    "price": -60,
+    "probability": 40
+  },
+  "damaged": {
+    "name": "Повреждённая",
+    "price": -80,
+    "probability": 30
+  },
+  "cursed": {
+    "name": "Проклятая",
+    "price": -120,
+    "probability": 10
+  },
+  "tight": {
+    "name": "Тесная",
+    "price": -25,
+    "probability": 45
+  }
+}

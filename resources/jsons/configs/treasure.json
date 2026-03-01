@@ -1,0 +1,22 @@
+{
+  "categories": {
+    "potion": {
+      "label": "Зелье",
+      "icon": "🧪",
+      "weight": 40,
+      "resource_file": "resources/алхимия/potions.json"
+    },
+    "weapon": {
+      "label": "Хорошее оружие",
+      "icon": "⚔",
+      "weight": 30,
+      "resource_file": "resources/ремесло/weapons.json"
+    },
+    "scroll": {
+      "label": "Свиток",
+      "icon": "📜",
+      "weight": 30,
+      "resource_file": "resources/прочее/scrolls.json"
+    }
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "_config": {
+    "description": "Negative weapon properties"
+  },
+  "heavy": {
+    "name": "Тяжёлое",
+    "price": -30,
+    "probability": 60
+  },
+  "dull": {
+    "name": "Тупое",
+    "price": -40,
+    "probability": 50
+  },
+  "fragile": {
+    "name": "Хрупкое",
+    "price": -50,
+    "probability": 35
+  },
+  "cursed": {
+    "name": "Проклятое",
+    "price": -100,
+    "probability": 10
+  },
+  "imbalanced": {
+    "name": "Несбалансированное",
+    "price": -25,
+    "probability": 45
+  }
+}

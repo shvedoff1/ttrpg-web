@@ -1,0 +1,149 @@
+{
+  "_config": {
+    "emoji": "🍖"
+  },
+  "food_1": {
+    "name": "Краюха черного",
+    "price": 8,
+    "weight": 1,
+    "probability": 90,
+    "minAmount": 1,
+    "maxAmount": 3
+  },
+  "food_2": {
+    "name": "Головка сыра",
+    "price": 15,
+    "weight": 1,
+    "probability": 75,
+    "minAmount": 1,
+    "maxAmount": 2
+  },
+  "food_3": {
+    "name": "Вяленое мясо",
+    "price": 20,
+    "weight": 1,
+    "probability": 70,
+    "minAmount": 1,
+    "maxAmount": 3
+  },
+  "food_4": {
+    "name": "Копчёная колбаса",
+    "price": 25,
+    "weight": 1,
+    "probability": 65,
+    "minAmount": 1,
+    "maxAmount": 2
+  },
+  "food_5": {
+    "name": "Жареная курица",
+    "price": 18,
+    "weight": 1,
+    "probability": 60,
+    "minAmount": 1,
+    "maxAmount": 2
+  },
+  "food_6": {
+    "name": "Мешок картошки",
+    "price": 12,
+    "weight": 3,
+    "probability": 80,
+    "minAmount": 1,
+    "maxAmount": 2
+  },
+  "food_7": {
+    "name": "Дикий мёд",
+    "price": 30,
+    "weight": 1,
+    "probability": 50,
+    "minAmount": 1,
+    "maxAmount": 2
+  },
+  "food_8": {
+    "name": "Сушёные грибы",
+    "price": 10,
+    "weight": 1,
+    "probability": 70,
+    "minAmount": 1,
+    "maxAmount": 4
+  },
+  "food_9": {
+    "name": "Горсть орехов",
+    "price": 7,
+    "weight": 1,
+    "probability": 85,
+    "minAmount": 1,
+    "maxAmount": 5
+  },
+  "food_10": {
+    "name": "Свежая рыба",
+    "price": 14,
+    "weight": 1,
+    "probability": 65,
+    "minAmount": 1,
+    "maxAmount": 3
+  },
+  "food_11": {
+    "name": "Ягоды можжевельника",
+    "price": 6,
+    "weight": 1,
+    "probability": 75,
+    "minAmount": 2,
+    "maxAmount": 6
+  },
+  "food_12": {
+    "name": "Круг ливерной колбасы",
+    "price": 22,
+    "weight": 2,
+    "probability": 55,
+    "minAmount": 1,
+    "maxAmount": 2
+  },
+  "food_13": {
+    "name": "Кабанья нога",
+    "price": 35,
+    "weight": 2,
+    "probability": 40,
+    "minAmount": 1,
+    "maxAmount": 2
+  },
+  "food_14": {
+    "name": "Бочонок солёных огурцов",
+    "price": 28,
+    "weight": 3,
+    "probability": 45,
+    "minAmount": 1,
+    "maxAmount": 1
+  },
+  "food_15": {
+    "name": "Чёрствый сухарь",
+    "price": 3,
+    "weight": 1,
+    "probability": 95,
+    "minAmount": 2,
+    "maxAmount": 8
+  },
+  "food_16": {
+    "name": "Пирог с мясом",
+    "price": 40,
+    "weight": 1,
+    "probability": 35,
+    "minAmount": 1,
+    "maxAmount": 2
+  },
+  "food_17": {
+    "name": "Вяленый угорь",
+    "price": 32,
+    "weight": 1,
+    "probability": 40,
+    "minAmount": 1,
+    "maxAmount": 2
+  },
+  "food_18": {
+    "name": "Луковица",
+    "price": 4,
+    "weight": 1,
+    "probability": 90,
+    "minAmount": 2,
+    "maxAmount": 6
+  }
+}

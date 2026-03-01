@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="/favicon.png" type="image/png">
+<title>Gothic Admin</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:       #0d1117;
+  --panel:    #161b22;
+  --hover:    #1f2937;
+  --border:   #30363d;
+  --text:     #c9d1d9;
+  --muted:    #8b949e;
+  --accent:   #58a6ff;
+  --success:  #3fb950;
+  --danger:   #f85149;
+}
+
+html, body { height: 100%; overflow: hidden; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 13px;
+  background: var(--bg);
+  color: var(--text);
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── HEADER ── */
+header {
+  display: flex; align-items: center; gap: 12px;
+  padding: 0 16px; height: 48px; flex-shrink: 0;
+  background: var(--panel); border-bottom: 1px solid var(--border);
+}
+.logo { font-weight: 700; letter-spacing: 2px; color: var(--accent); white-space: nowrap; }
+.breadcrumb { font-size: 0.82rem; color: var(--muted); flex: 1; }
+.breadcrumb span { color: var(--text); }
+.save-hint { font-size: 0.78rem; color: var(--success); white-space: nowrap; }
+
+/* ── LAYOUT ── */
+.layout { display: flex; flex: 1; overflow: hidden; }
+
+/* ── SIDEBAR ── */
+.sidebar {
+  width: 230px; flex-shrink: 0; display: flex; flex-direction: column;
+  background: var(--panel); border-right: 1px solid var(--border); overflow: hidden;
+}
+.search-wrap { padding: 8px; flex-shrink: 0; }
+.search-input {
+  width: 100%; background: var(--bg); border: 1px solid var(--border);
+  border-radius: 5px; padding: 5px 8px; color: var(--text);
+  font-size: 0.8rem; outline: none;
+}
+.search-input:focus { border-color: var(--accent); }
+.tree { overflow-y: auto; flex: 1; padding: 2px 0 8px; }
+
+/* tree nodes */
+.t-folder {
+  display: flex; align-items: center; gap: 5px;
+  padding: 5px 8px; cursor: pointer; user-select: none;
+  font-size: 0.75rem; font-weight: 600; letter-spacing: 0.5px;
+  color: var(--muted); text-transform: uppercase;
+  border-top: 1px solid var(--border);
+}
+.t-folder:first-child { border-top: none; }
+.t-folder:hover { color: var(--text); }
+.t-chevron { font-size: 0.6rem; transition: transform .15s; margin-left: auto; }
+.t-chevron.open { transform: rotate(90deg); }
+.t-folder-body { display: none; }
+.t-folder-body.open { display: block; }
+
+.t-sub {
+  display: flex; align-items: center; gap: 5px;
+  padding: 4px 8px 4px 18px; cursor: pointer; user-select: none;
+  font-size: 0.75rem; color: var(--muted);
+  font-weight: 500; letter-spacing: 0.3px;
+}
+.t-sub:hover { color: var(--text); }
+.t-sub-chevron { font-size: 0.6rem; transition: transform .15s; margin-left: auto; }
+.t-sub-chevron.open { transform: rotate(90deg); }
+.t-sub-body { display: none; }
+.t-sub-body.open { display: block; }
+
+.t-file {
+  padding: 4px 8px; cursor: pointer;
+  border-left: 2px solid transparent; transition: background .1s;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  color: var(--text);
+}
+.t-file:hover { background: var(--hover); }
+.t-file.active { background: var(--hover); border-left-color: var(--accent); color: var(--accent); }
+
+/* indent levels */
+.t-file[data-level="1"] { padding-left: 20px; }
+.t-file[data-level="2"] { padding-left: 32px; }
+.t-file[data-level="3"] { padding-left: 44px; }
+.t-file[data-level="4"] { padding-left: 56px; }
+.t-file[data-level="5"] { padding-left: 68px; }
+.t-file[data-level="6"] { padding-left: 80px; }
+
+/* ── MAIN ── */
+.main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+
+.tab-bar {
+  display: none; align-items: center; gap: 2px;
+  padding: 6px 12px; flex-shrink: 0;
+  background: var(--panel); border-bottom: 1px solid var(--border);
+}
+.tab {
+  background: none; border: 1px solid transparent; border-radius: 5px;
+  padding: 4px 14px; font-size: 0.8rem; color: var(--muted); cursor: pointer;
+}
+.tab:hover { color: var(--text); background: var(--hover); }
+.tab.active { background: var(--hover); border-color: var(--border); color: var(--text); }
+.tab-spacer { flex: 1; }
+
+/* ── CONTENT ── */
+.content { flex: 1; overflow-y: auto; min-height: 0; }
+#editorWrap { display: none; flex: 1; min-height: 0; }
+
+/* empty state */
+.empty {
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; height: 100%; gap: 10px;
+  color: var(--muted);
+}
+.empty-icon { font-size: 2.5rem; opacity: .3; }
+
+/* ── ITEMS TABLE ── */
+.table-wrap { padding: 16px 20px 40px; }
+
+.items-table {
+  width: 100%; border-collapse: collapse;
+  font-size: 0.83rem;
+}
+.items-table th {
+  background: rgba(255,255,255,.03); color: var(--muted);
+  font-weight: 500; font-size: 0.72rem; text-transform: uppercase; letter-spacing: .5px;
+  padding: 7px 10px; text-align: left;
+  border-bottom: 1px solid var(--border);
+  position: sticky; top: 0;
+}
+.items-table td {
+  padding: 5px 10px; border-bottom: 1px solid rgba(48,54,61,.5);
+  vertical-align: middle;
+}
+.items-table tr:last-child td { border-bottom: none; }
+.items-table tr:hover td { background: rgba(255,255,255,.015); }
+
+.cell-edit {
+  display: inline-block; min-width: 20px; border-radius: 3px;
+  padding: 2px 4px; outline: none; cursor: text;
+  transition: background .12s;
+}
+.cell-edit:hover  { background: rgba(255,255,255,.07); }
+.cell-edit:focus  { background: rgba(88,166,255,.12); outline: 1px solid var(--accent); }
+.cell-edit.num    { font-variant-numeric: tabular-nums; color: var(--muted); }
+.cell-edit.num:focus { color: var(--text); }
+
+.prob-cell { display: flex; align-items: center; gap: 8px; }
+.prob-bar  { height: 3px; width: 70px; background: rgba(255,255,255,.08); border-radius: 2px; flex-shrink: 0; }
+.prob-fill { height: 100%; background: var(--accent); border-radius: 2px; transition: width .2s; }
+
+.del-btn {
+  background: none; border: none; color: transparent; cursor: pointer;
+  font-size: 0.9rem; padding: 2px 6px; border-radius: 3px; transition: color .12s;
+}
+.items-table tr:hover .del-btn { color: var(--muted); }
+.del-btn:hover { color: var(--danger) !important; }
+
+.add-row-btn {
+  margin-top: 10px; background: none; border: 1px dashed var(--border);
+  color: var(--muted); border-radius: 5px; padding: 5px 16px;
+  cursor: pointer; font-size: 0.8rem; transition: border-color .12s, color .12s;
+}
+.add-row-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+/* ── LOCATION EDITOR ── */
+.loc-editor { padding: 16px 20px 40px; }
+.loc-card {
+  background: var(--panel); border: 1px solid var(--border);
+  border-radius: 8px; margin-bottom: 12px; overflow: hidden;
+}
+.loc-header {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 14px; cursor: pointer; user-select: none;
+  font-weight: 600; font-size: 0.9rem; transition: background .12s;
+}
+.loc-header:hover { background: var(--hover); }
+.loc-chevron {
+  font-size: 0.6rem; transition: transform .15s;
+  margin-left: auto; color: var(--muted);
+}
+.loc-chevron.open { transform: rotate(90deg); }
+.loc-body { display: none; border-top: 1px solid var(--border); }
+.loc-body.open { display: block; }
+.loc-count {
+  background: rgba(88,166,255,.15); color: var(--accent);
+  font-size: 0.72rem; padding: 2px 8px; border-radius: 10px; font-weight: 500;
+}
+.loc-table { width: 100%; border-collapse: collapse; font-size: 0.83rem; }
+.loc-table th {
+  background: rgba(255,255,255,.03); color: var(--muted);
+  font-weight: 500; font-size: 0.72rem; text-transform: uppercase;
+  letter-spacing: .5px; padding: 6px 10px; text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+.loc-table td {
+  padding: 4px 10px; border-bottom: 1px solid rgba(48,54,61,.5);
+  vertical-align: middle;
+}
+.loc-table tr:last-child td { border-bottom: none; }
+.loc-table tr:hover td { background: rgba(255,255,255,.015); }
+
+.loc-add-wrap { padding: 8px 10px; }
+.loc-add-btn {
+  background: none; border: 1px dashed var(--border);
+  color: var(--muted); border-radius: 5px; padding: 5px 14px;
+  cursor: pointer; font-size: 0.8rem;
+  transition: border-color .12s, color .12s; width: 100%;
+}
+.loc-add-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+.loc-dropdown {
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: 6px; max-height: 250px; overflow: hidden;
+  margin-top: 6px; display: flex; flex-direction: column;
+}
+.loc-dropdown-search {
+  width: 100%; background: transparent; border: none;
+  border-bottom: 1px solid var(--border);
+  padding: 8px 10px; color: var(--text); font-size: 0.82rem; outline: none;
+}
+.loc-dropdown-list { overflow-y: auto; flex: 1; }
+.loc-dropdown-item {
+  display: flex; align-items: center; gap: 8px;
+  padding: 6px 10px; cursor: pointer; font-size: 0.82rem;
+  transition: background .1s;
+}
+.loc-dropdown-item:hover { background: var(--hover); }
+.loc-dropdown-item .item-name { flex: 1; }
+.loc-dropdown-item .item-meta { color: var(--muted); font-size: 0.75rem; }
+
+/* ── BUTTONS ── */
+.btn {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 5px 14px; font-size: 0.82rem; border-radius: 5px;
+  border: 1px solid transparent; cursor: pointer; background: none; color: var(--text);
+  white-space: nowrap; transition: opacity .12s;
+}
+.btn:hover { opacity: .85; }
+.btn:disabled { opacity: .4; cursor: not-allowed; }
+.btn-ghost   { border-color: var(--border); }
+.btn-primary { background: var(--accent); color: #0d1117; border-color: var(--accent); font-weight: 600; }
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--muted); }
+
+/* ── LOADER ── */
+.loader-overlay {
+  display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(13, 17, 23, 0.8); z-index: 9999;
+  align-items: center; justify-content: center;
+}
+.loader-overlay.active { display: flex; }
+
+.loader-content { display: flex; flex-direction: column; align-items: center; gap: 16px; }
+
+.spinner {
+  width: 40px; height: 40px;
+  border: 3px solid rgba(88, 166, 255, 0.2);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loader-text {
+  color: var(--text); font-size: 14px; text-align: center;
+}
+.loader-hint {
+  color: var(--muted); font-size: 12px; margin-top: 4px;
+}
+</style>
+</head>
+<body>
+
+<div class="loader-overlay" id="loader">
+  <div class="loader-content">
+    <div class="spinner"></div>
+    <div class="loader-text" id="loaderText">Загрузка...</div>
+    <div class="loader-hint" id="loaderHint"></div>
+  </div>
+</div>
+
+<header>
+  <div class="logo">⚔ GOTHIC ADMIN</div>
+  <div class="breadcrumb" id="breadcrumb"></div>
+  <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
+    <span class="save-hint" id="saveHint"></span>
+    <button class="btn btn-ghost" id="resetCacheBtn" onclick="resetTradersCache()" title="Сброс кеша торговцев">🔄 Сброс кеша</button>
+    <button class="btn btn-primary" id="saveBtn" onclick="saveFile()" style="display:none">💾 Сохранить</button>
+  </div>
+</header>
+
+<div class="layout">
+
+  <aside class="sidebar">
+    <div class="search-wrap">
+      <input class="search-input" type="text" placeholder="Поиск файла…" oninput="filterTree(this.value)">
+    </div>
+    <div class="tree" id="tree">
+      <div style="padding:12px;color:var(--muted)">Загрузка…</div>
+    </div>
+  </aside>
+
+  <div class="main">
+    <div class="tab-bar" id="tabBar">
+      <button class="tab active" id="tabVisual" onclick="switchTab('visual')">👁 Таблица</button>
+      <button class="tab" id="tabJson" onclick="switchTab('json')">{ } JSON</button>
+      <div class="tab-spacer"></div>
+    </div>
+    <div class="content" id="content">
+      <div class="empty">
+        <div class="empty-icon">📁</div>
+        <div>Выберите файл слева</div>
+      </div>
+    </div>
+    <div id="editorWrap"></div>
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.44.0/min/vs/loader.js"></script>
+<script>
+// ── STATE ──────────────────────────────────────────────────────────────────
+let currentPath = null;
+let currentData = null;
+let tab         = 'visual';
+let dirty       = false;
+let editor      = null;
+let suppressEditorDirty = false;
+let locationResources   = null;
+let openLocCards        = new Set();
+
+const LOCATION_SOURCES = {
+  'configs/herb_locations.json':    'resources/алхимия/herbs.json',
+  'configs/ore_locations.json':     'resources/ремесло/ores.json',
+  'configs/trophy_locations.json':  'resources/охота/trophies.json',
+};
+
+// ── LOADER ──────────────────────────────────────────────────────────────────
+function showLoader(text = 'Загрузка...', hint = '') {
+  document.getElementById('loader').classList.add('active');
+  document.getElementById('loaderText').textContent = text;
+  document.getElementById('loaderHint').textContent = hint;
+}
+
+function hideLoader() {
+  document.getElementById('loader').classList.remove('active');
+}
+
+// ── MONACO ─────────────────────────────────────────────────────────────────
+require.config({ paths: { vs: 'https://cdn.jsdelivr.net/npm/monaco-editor@0.44.0/min/vs' } });
+require(['vs/editor/editor.main'], () => {
+  const wrap = document.getElementById('editorWrap');
+  editor = monaco.editor.create(wrap, {
+    value: '', language: 'json', theme: 'vs-dark',
+    automaticLayout: true, minimap: { enabled: false },
+    fontSize: 13, scrollBeyondLastLine: false, tabSize: 4,
+  });
+  editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS, saveFile);
+  editor.onDidChangeModelContent(() => {
+    if (!suppressEditorDirty) markDirty();
+  });
+});
+
+// ── INIT ───────────────────────────────────────────────────────────────────
+async function init() {
+  showLoader('Загрузка списка файлов...');
+  try {
+    const files = await fetch('/api/files').then(r => r.json());
+    renderTree(files);
+  } finally {
+    hideLoader();
+  }
+}
+
+// ── EMOJI MAP ──────────────────────────────────────────────────────────────
+const categoryEmojiMap = {
+  'охота': '🏹',
+  'алхимия': '🧪',
+  'ремесло': '🔨',
+  'прочее': '📦',
+  'провизия': '🍖',
+  'generator': '⚙️',
+  'weapon': '⚔️',
+  'armor': '🛡️',
+  'parts': '🔧',
+  'properties': '✨',
+  'positive': '👍',
+  'negative': '👎',
+  'локации': '📍',
+  'торговцы': '🏪',
+  'другое': '📋'
+};
+
+// Display names for top-level folders
+const folderDisplayMap = {
+  'configs': '⚙️ Настройки',
+  'generator': '⚙️ Generator',
+  'resources': '📦 Resources'
+};
+
+function getCategoryEmoji(category) {
+  return categoryEmojiMap[category] || '❓';
+}
+
+// ── VIRTUAL SUBCATEGORIES FOR CONFIGS ─────────────────────────────────────
+function categorizeConfigFiles(content) {
+  const files = content.__files__ || [];
+  const subcategories = {
+    'локации': { __files__: [], __children__: {} },
+    'торговцы': { __files__: [], __children__: {} },
+    'другое': { __files__: [], __children__: {} }
+  };
+
+  for (const f of files) {
+    if (f.name.includes('locations')) {
+      subcategories['локации'].__files__.push(f);
+    } else if (f.name === 'stores' || f.name === 'standard_traders') {
+      subcategories['торговцы'].__files__.push(f);
+    } else {
+      subcategories['другое'].__files__.push(f);
+    }
+  }
+
+  // Remove empty subcategories
+  for (const key of Object.keys(subcategories)) {
+    if (subcategories[key].__files__.length === 0) delete subcategories[key];
+  }
+
+  return { __files__: [], __children__: subcategories };
+}
+
+// ── TREE ───────────────────────────────────────────────────────────────────
+function renderTree(files) {
+  const tree = {};
+
+  // Build nested tree structure
+  for (const file of files) {
+    const path = file.path;
+    const emoji = file.emoji || '';
+    const parts = path.split('/');
+    let current = tree;
+
+    // Navigate/create nested structure
+    for (let i = 0; i < parts.length - 1; i++) {
+      const part = parts[i];
+      if (!current[part]) current[part] = { __files__: [] };
+      if (!current[part].__children__) current[part].__children__ = {};
+      if (i === parts.length - 2) {
+        // Last dir level - add file here
+        current[part].__files__.push({ name: parts[i+1].replace('.json',''), path, emoji });
+        break;
+      }
+      current = current[part].__children__;
+    }
+  }
+
+  const container = document.getElementById('tree');
+  container.innerHTML = '';
+
+  // Apply virtual subcategories for configs
+  if (tree['configs']) {
+    tree['configs'] = categorizeConfigFiles(tree['configs']);
+  }
+
+  // Render top-level folders
+  for (const [folderName, content] of Object.entries(tree)) {
+    const folderEl = document.createElement('div');
+    const header = el('div', 'g-header t-folder');
+    const displayName = folderDisplayMap[folderName] || `📁 ${folderName}`;
+    header.innerHTML = `${displayName} <span class="t-chevron">▶</span>`;
+    const body = el('div', 'g-body t-folder-body');
+
+    header.onclick = () => {
+      body.classList.toggle('open');
+      header.querySelector('.t-chevron').classList.toggle('open', body.classList.contains('open'));
+    };
+
+    // Add files at this level
+    for (const f of (content.__files__ || [])) {
+      body.appendChild(fileNode(f, 1));
+    }
+
+    // Add nested directories recursively
+    if (content.__children__) {
+      renderNestedDirs(body, content.__children__, 2);
+    }
+
+    folderEl.appendChild(header);
+    folderEl.appendChild(body);
+    container.appendChild(folderEl);
+  }
+}
+
+// Recursively render nested directories
+function renderNestedDirs(parentBody, dirs, level) {
+  for (const [dirName, content] of Object.entries(dirs)) {
+    const subHeader = el('div', 't-sub');
+    const emoji = getCategoryEmoji(dirName);
+    subHeader.innerHTML = `${emoji} ${dirName} <span class="t-sub-chevron">▶</span>`;
+    const subBody = el('div', 't-sub-body');
+
+    subHeader.onclick = () => {
+      subBody.classList.toggle('open');
+      subHeader.querySelector('.t-sub-chevron').classList.toggle('open', subBody.classList.contains('open'));
+    };
+
+    // Add files at this level
+    for (const f of (content.__files__ || [])) {
+      subBody.appendChild(fileNode(f, level));
+    }
+
+    // Recursively add nested directories
+    if (content.__children__) {
+      renderNestedDirs(subBody, content.__children__, level + 1);
+    }
+
+    parentBody.appendChild(subHeader);
+    parentBody.appendChild(subBody);
+  }
+}
+
+function el(tag, cls) { const e = document.createElement(tag); e.className = cls; return e; }
+
+function fileNode(f, level) {
+  const e = el('div', 't-file');
+  e.dataset.path  = f.path;
+  e.dataset.level = level;
+
+  const prefix = f.emoji ? f.emoji + ' ' : '';
+  e.innerHTML = `${prefix}${esc(f.name)}`;
+  e.onclick   = () => openFile(f.path);
+  return e;
+}
+
+function filterTree(q) {
+  q = q.toLowerCase();
+  document.querySelectorAll('.t-file').forEach(e => {
+    const match = !q || e.dataset.path.toLowerCase().includes(q);
+    e.style.display = match ? '' : 'none';
+  });
+  // auto-expand groups with matches
+  document.querySelectorAll('.g-body, .s-body').forEach(body => {
+    if (!q) return;
+    const hasMatch = [...body.querySelectorAll('.t-file')].some(e => e.style.display !== 'none');
+    if (hasMatch) {
+      body.classList.add('open');
+      const ch = body.previousElementSibling?.querySelector('.t-chevron, .t-sub-chevron');
+      if (ch) ch.classList.add('open');
+    }
+  });
+}
+
+// ── OPEN FILE ──────────────────────────────────────────────────────────────
+async function openFile(path) {
+  if (dirty && !confirm('Есть несохранённые изменения. Продолжить?')) return;
+
+  dirty = false;
+  currentPath = path;
+  document.getElementById('saveBtn').style.display = 'none';
+  document.getElementById('saveHint').textContent = '';
+
+  // breadcrumb
+  const parts = path.split('/');
+  document.getElementById('breadcrumb').innerHTML =
+    parts.map((p, i) => i < parts.length - 1 ? p : `<span>${p}</span>`).join(' / ');
+
+  // highlight tree
+  document.querySelectorAll('.t-file').forEach(e => e.classList.remove('active'));
+  const node = document.querySelector(`.t-file[data-path="${path}"]`);
+  if (node) {
+    node.classList.add('active');
+    // open parents
+    let p = node.parentElement;
+    while (p) {
+      if (p.classList.contains('g-body') || p.classList.contains('s-body')) {
+        p.classList.add('open');
+        const ch = p.previousElementSibling?.querySelector('.t-chevron, .t-sub-chevron');
+        if (ch) ch.classList.add('open');
+      }
+      p = p.parentElement;
+    }
+    node.scrollIntoView({ block: 'nearest' });
+  }
+
+  showLoader(`Загрузка ${parts[parts.length - 1]}...`);
+  try {
+    const res = await fetch(`/api/files/${encodeURIPathFull(path)}`);
+    if (!res.ok) { alert('Ошибка загрузки файла'); return; }
+    currentData = await res.json();
+
+    const isItem = path.startsWith('resources/') && isItemFile(currentData);
+    const isLoc  = isLocationFile(currentData) && !!LOCATION_SOURCES[currentPath];
+
+    if (isLoc) {
+      locationResources = await loadLocationResources(currentPath);
+      openLocCards.clear();
+    } else {
+      locationResources = null;
+    }
+
+    document.getElementById('tabBar').style.display = 'flex';
+    document.getElementById('tabVisual').style.display = (isItem || isLoc) ? '' : 'none';
+    document.getElementById('tabVisual').textContent = isLoc ? '📍 Локации' : '👁 Таблица';
+
+    switchTab((isItem || isLoc) ? 'visual' : 'json');
+  } finally {
+    hideLoader();
+  }
+}
+
+function isItemFile(data) {
+  if (typeof data !== 'object' || Array.isArray(data) || !data) return false;
+  const vals = Object.entries(data)
+    .filter(([k]) => k !== '_config')
+    .map(([, v]) => v);
+  return vals.length > 0 && vals.every(v => typeof v === 'object' && v !== null && 'name' in v);
+}
+
+function isLocationFile(data) {
+  if (typeof data !== 'object' || Array.isArray(data) || !data) return false;
+  const vals = Object.values(data);
+  return vals.length > 0 && vals.every(v =>
+    typeof v === 'object' && v !== null && 'name' in v && 'overrides' in v
+  );
+}
+
+async function loadLocationResources(path) {
+  const resourcePath = LOCATION_SOURCES[path];
+  if (!resourcePath) return null;
+  const res = await fetch(`/api/files/${encodeURIPathFull(resourcePath)}`);
+  if (!res.ok) return null;
+  return await res.json();
+}
+
+function encodeURIPathFull(path) {
+  return path.split('/').map(encodeURIComponent).join('/');
+}
+
+// ── TABS ───────────────────────────────────────────────────────────────────
+function switchTab(newTab) {
+  tab = newTab;
+  document.getElementById('tabVisual').classList.toggle('active', tab === 'visual');
+  document.getElementById('tabJson').classList.toggle('active', tab === 'json');
+
+  const content   = document.getElementById('content');
+  const editorWrap = document.getElementById('editorWrap');
+
+  if (tab === 'visual') {
+    content.style.display    = 'block';
+    editorWrap.style.display = 'none';
+    if (locationResources && isLocationFile(currentData)) {
+      renderLocationEditor();
+    } else {
+      renderVisual();
+    }
+  } else {
+    content.style.display    = 'none';
+    editorWrap.style.display = 'block';
+    if (editor) {
+      suppressEditorDirty = true;
+      // sync from currentData if switching from visual
+      editor.setValue(JSON.stringify(currentData, null, 4));
+      editor.setScrollPosition({ scrollTop: 0 });
+      suppressEditorDirty = false;
+    }
+  }
+}
+
+// ── VISUAL EDITOR ──────────────────────────────────────────────────────────
+function renderVisual() {
+  const content = document.getElementById('content');
+  if (!currentData) { content.innerHTML = ''; return; }
+
+  const entries = Object.entries(currentData)
+    .filter(([k]) => k !== '_config')
+    .sort((a, b) => (b[1].probability || 0) - (a[1].probability || 0));
+  const maxProb = entries.reduce((m, [,v]) => Math.max(m, v.probability || 0), 0);
+
+  let rows = '';
+  for (const [key, item] of entries) {
+    const prob = item.probability || 0;
+    const pct  = maxProb > 0 ? Math.round(prob / maxProb * 100) : 0;
+    const pk   = esc(key);
+    rows += `<tr>
+      <td><span class="cell-edit" data-key="${pk}" data-oldkey="${pk}" contenteditable spellcheck="false"
+            onblur="editKey(this)" onkeydown="cellKey(event)">${pk}</span></td>
+      <td><span class="cell-edit" data-key="${pk}" data-field="name" contenteditable spellcheck="false"
+            onblur="editField(this)" onkeydown="cellKey(event)">${esc(item.name||'')}</span></td>
+      <td><span class="cell-edit num" data-key="${pk}" data-field="price" contenteditable spellcheck="false"
+            onblur="editNum(this)" onkeydown="cellKey(event)">${item.price??''}</span></td>
+      <td><div class="prob-cell">
+            <span class="cell-edit num" data-key="${pk}" data-field="probability" contenteditable spellcheck="false"
+              onblur="editNum(this)" onkeydown="cellKey(event)">${prob}</span>
+            <div class="prob-bar"><div class="prob-fill" style="width:${pct}%"></div></div>
+          </div></td>
+      <td><button class="del-btn" onclick="delItem('${pk}')" tabindex="-1">✕</button></td>
+    </tr>`;
+  }
+
+  content.innerHTML = `
+    <div class="table-wrap">
+      <table class="items-table">
+        <thead><tr>
+          <th>Ключ</th><th>Название</th><th>Цена</th>
+          <th style="width:160px">Вероятность</th><th style="width:30px"></th>
+        </tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+      <button class="add-row-btn" onclick="addItem()">+ Добавить</button>
+    </div>`;
+}
+
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function cellKey(e) {
+  if (e.key === 'Enter')  { e.preventDefault(); e.target.blur(); }
+  if (e.key === 'Escape') { e.target.blur(); }
+}
+
+function editKey(el) {
+  const oldKey = el.dataset.oldkey;
+  const newKey = el.textContent.trim();
+  if (!newKey || newKey === oldKey || !currentData) return;
+  if (currentData[newKey] !== undefined) { el.textContent = oldKey; return; }
+  const rebuilt = {};
+  for (const [k, v] of Object.entries(currentData)) rebuilt[k === oldKey ? newKey : k] = v;
+  currentData = rebuilt;
+  markDirty();
+  renderVisual();
+}
+
+function editField(el) {
+  const key = el.dataset.key, field = el.dataset.field;
+  if (currentData?.[key]) { currentData[key][field] = el.textContent.trim(); markDirty(); }
+}
+
+function editNum(el) {
+  const key = el.dataset.key, field = el.dataset.field;
+  const raw = el.textContent.trim();
+  const val = raw === '' ? null : Number(raw);
+  if (currentData?.[key]) {
+    currentData[key][field] = val;
+    markDirty();
+    if (field === 'probability') renderVisual();
+  }
+}
+
+function delItem(key) {
+  if (!currentData) return;
+  delete currentData[key];
+  markDirty(); renderVisual();
+}
+
+function addItem() {
+  if (!currentData) return;
+  const keys  = Object.keys(currentData);
+  const pfx   = keys.length ? keys[0].replace(/\d+$/, '') : 'item_';
+  const nums  = keys.map(k => parseInt(k.replace(/\D/g,''))).filter(n => !isNaN(n));
+  const next  = nums.length ? Math.max(...nums) + 1 : 1;
+  const newKey = pfx + next;
+  currentData[newKey] = { name: '', price: 0, probability: 1 };
+  markDirty(); renderVisual();
+  setTimeout(() => {
+    const el = document.querySelector(`[data-key="${newKey}"][data-field="name"]`);
+    if (el) { el.focus(); document.execCommand('selectAll', false, null); }
+  }, 40);
+}
+
+// ── LOCATION EDITOR ─────────────────────────────────────────────────────────
+function renderLocationEditor() {
+  const content = document.getElementById('content');
+  if (!currentData || !locationResources) { content.innerHTML = ''; return; }
+
+  const resEmoji = locationResources._config?.emoji || '📍';
+  let html = '<div class="loc-editor">';
+
+  for (const [locKey, loc] of Object.entries(currentData)) {
+    const overrides = loc.overrides || {};
+    const entries = Object.entries(overrides).sort((a, b) => b[1] - a[1]);
+    const totalWeight = entries.reduce((s, [,w]) => s + w, 0);
+    const maxWeight = entries.length > 0 ? Math.max(...entries.map(([,w]) => w)) : 1;
+
+    let rows = '';
+    for (const [itemKey, weight] of entries) {
+      const itemName = locationResources[itemKey]?.name || itemKey;
+      const pct = totalWeight > 0 ? (weight / totalWeight * 100).toFixed(1) : '0';
+      const barPct = maxWeight > 0 ? Math.round(weight / maxWeight * 100) : 0;
+
+      rows += `<tr>
+        <td>${esc(itemName)}</td>
+        <td style="color:var(--muted);font-size:0.78rem">${esc(itemKey)}</td>
+        <td><div class="prob-cell">
+          <span class="cell-edit num" data-loc="${esc(locKey)}" data-item="${esc(itemKey)}"
+            contenteditable spellcheck="false"
+            onblur="editLocWeight(this)" onkeydown="cellKey(event)">${weight}</span>
+          <div class="prob-bar"><div class="prob-fill" style="width:${barPct}%"></div></div>
+        </div></td>
+        <td style="color:var(--muted);font-size:0.78rem">${pct}%</td>
+        <td><button class="del-btn" onclick="delLocItem('${esc(locKey)}','${esc(itemKey)}')" tabindex="-1">✕</button></td>
+      </tr>`;
+    }
+
+    html += `<div class="loc-card" data-loc="${esc(locKey)}">
+      <div class="loc-header" onclick="toggleLocCard(this)">
+        <span>${resEmoji} ${esc(loc.name)}</span>
+        <span class="loc-count">${entries.length} шт.</span>
+        <span class="loc-chevron">▶</span>
+      </div>
+      <div class="loc-body">
+        <table class="loc-table">
+          <thead><tr>
+            <th>Название</th><th>Ключ</th>
+            <th style="width:160px">Вес</th>
+            <th style="width:60px">%</th>
+            <th style="width:30px"></th>
+          </tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+        <div class="loc-add-wrap">
+          <button class="loc-add-btn" onclick="toggleLocDropdown(this,'${esc(locKey)}')">+ Добавить</button>
+          <div class="loc-dropdown" style="display:none" data-loc="${esc(locKey)}">
+            <input class="loc-dropdown-search" placeholder="Поиск…" oninput="filterLocDropdown(this)">
+            <div class="loc-dropdown-list"></div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  }
+
+  html += '</div>';
+  content.innerHTML = html;
+
+  // restore open cards
+  for (const locKey of openLocCards) {
+    const card = content.querySelector(`.loc-card[data-loc="${locKey}"]`);
+    if (card) {
+      card.querySelector('.loc-body').classList.add('open');
+      card.querySelector('.loc-chevron').classList.add('open');
+    }
+  }
+}
+
+function toggleLocCard(header) {
+  const card = header.closest('.loc-card');
+  const locKey = card.dataset.loc;
+  const body = header.nextElementSibling;
+  body.classList.toggle('open');
+  header.querySelector('.loc-chevron').classList.toggle('open');
+  if (body.classList.contains('open')) openLocCards.add(locKey); else openLocCards.delete(locKey);
+}
+
+function editLocWeight(el) {
+  const locKey = el.dataset.loc;
+  const itemKey = el.dataset.item;
+  const val = Number(el.textContent.trim());
+  if (isNaN(val) || val < 0) { renderLocationEditor(); return; }
+  if (currentData?.[locKey]?.overrides) {
+    currentData[locKey].overrides[itemKey] = val;
+    markDirty();
+    renderLocationEditor();
+  }
+}
+
+function delLocItem(locKey, itemKey) {
+  if (currentData?.[locKey]?.overrides) {
+    delete currentData[locKey].overrides[itemKey];
+    markDirty();
+    renderLocationEditor();
+  }
+}
+
+function toggleLocDropdown(btn, locKey) {
+  const dropdown = btn.nextElementSibling;
+  const wasHidden = dropdown.style.display === 'none';
+  // close all dropdowns
+  document.querySelectorAll('.loc-dropdown').forEach(d => d.style.display = 'none');
+  if (wasHidden) {
+    dropdown.style.display = 'flex';
+    populateLocDropdown(dropdown, locKey);
+    const input = dropdown.querySelector('.loc-dropdown-search');
+    input.value = '';
+    input.focus();
+  }
+}
+
+function populateLocDropdown(dropdown, locKey) {
+  const overrides = currentData?.[locKey]?.overrides || {};
+  const list = dropdown.querySelector('.loc-dropdown-list');
+  const available = Object.entries(locationResources)
+    .filter(([k]) => k !== '_config' && !(k in overrides))
+    .sort((a, b) => a[1].name.localeCompare(b[1].name));
+
+  if (available.length === 0) {
+    list.innerHTML = '<div style="padding:12px;color:var(--muted);text-align:center">Все элементы уже добавлены</div>';
+    return;
+  }
+
+  list.innerHTML = available.map(([key, item]) =>
+    `<div class="loc-dropdown-item" onclick="addLocItem('${esc(locKey)}','${esc(key)}')">
+      <span class="item-name">${esc(item.name)}</span>
+      <span class="item-meta">${esc(key)} · ${item.price ?? 0}💰</span>
+    </div>`
+  ).join('');
+}
+
+function filterLocDropdown(input) {
+  const q = input.value.toLowerCase();
+  input.parentElement.querySelectorAll('.loc-dropdown-item').forEach(item => {
+    item.style.display = item.textContent.toLowerCase().includes(q) ? '' : 'none';
+  });
+}
+
+function addLocItem(locKey, itemKey) {
+  if (currentData?.[locKey]) {
+    if (!currentData[locKey].overrides) currentData[locKey].overrides = {};
+    currentData[locKey].overrides[itemKey] = 1;
+    markDirty();
+    renderLocationEditor();
+  }
+}
+
+// close location dropdowns on outside click
+document.addEventListener('click', e => {
+  if (!e.target.closest('.loc-add-wrap')) {
+    document.querySelectorAll('.loc-dropdown').forEach(d => d.style.display = 'none');
+  }
+});
+
+// ── DIRTY / SAVE ───────────────────────────────────────────────────────────
+function markDirty() {
+  dirty = true;
+  document.getElementById('saveBtn').style.display = 'inline-flex';
+  document.getElementById('saveHint').textContent = '';
+}
+
+async function saveFile() {
+  if (!currentPath) return;
+
+  let data = currentData;
+  if (tab === 'json' && editor) {
+    try { data = JSON.parse(editor.getValue()); currentData = data; }
+    catch(e) { alert('Ошибка JSON: ' + e.message); return; }
+  }
+
+  showLoader('Сохранение...');
+  try {
+    const res = await fetch(`/api/files/${encodeURIPathFull(currentPath)}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+
+    if (res.ok) {
+      dirty = false;
+      document.getElementById('saveBtn').style.display = 'none';
+      document.getElementById('saveHint').textContent = '✓ Сохранено';
+      setTimeout(() => document.getElementById('saveHint').textContent = '', 2000);
+    } else {
+      alert('Ошибка сохранения');
+    }
+  } finally {
+    hideLoader();
+  }
+}
+
+async function resetTradersCache() {
+  const btn = document.getElementById('resetCacheBtn');
+  const originalText = btn.textContent;
+  btn.disabled = true;
+  showLoader('Очистка кеша торговцев...');
+  try {
+    const res = await fetch('/api/admin/reset-traders-cache', { method: 'POST' });
+    if (res.ok) {
+      btn.textContent = '✓ Кеш сброшен';
+      setTimeout(() => { btn.textContent = originalText; btn.disabled = false; }, 2000);
+    } else {
+      alert('Ошибка сброса кеша');
+      btn.disabled = false;
+    }
+  } catch (e) {
+    alert('Ошибка сброса кеша: ' + e.message);
+    btn.disabled = false;
+  } finally {
+    hideLoader();
+  }
+}
+
+// ── GLOBAL SHORTCUTS ───────────────────────────────────────────────────────
+document.addEventListener('keydown', e => {
+  if ((e.ctrlKey || e.metaKey) && e.key === 's') { e.preventDefault(); saveFile(); }
+});
+window.addEventListener('beforeunload', e => {
+  if (dirty) { e.preventDefault(); e.returnValue = ''; }
+});
+
+// ── START ──────────────────────────────────────────────────────────────────
+init();
+</script>
+<script src="changelog_notify.js"></script>
+</body>
+</html>

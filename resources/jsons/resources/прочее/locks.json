@@ -1,0 +1,101 @@
+{
+  "_config": {
+    "emoji": "📦"
+  },
+  "lock_1": {
+    "name": "Простой замок",
+    "price": 25,
+    "weight": 1,
+    "probability": 75,
+    "minAmount": 1,
+    "maxAmount": 2
+  },
+  "lock_2": {
+    "name": "Добротный замок",
+    "price": 60,
+    "weight": 1,
+    "probability": 50,
+    "minAmount": 1,
+    "maxAmount": 2
+  },
+  "lock_3": {
+    "name": "Дварфийский замок",
+    "price": 150,
+    "weight": 2,
+    "probability": 20,
+    "minAmount": 1,
+    "maxAmount": 1
+  },
+  "lock_4": {
+    "name": "Ключ (простой)",
+    "price": 10,
+    "weight": 1,
+    "probability": 80,
+    "minAmount": 1,
+    "maxAmount": 3
+  },
+  "lock_5": {
+    "name": "Ключ (фигурный)",
+    "price": 30,
+    "weight": 1,
+    "probability": 55,
+    "minAmount": 1,
+    "maxAmount": 2
+  },
+  "lock_6": {
+    "name": "Мастер-ключ",
+    "price": 200,
+    "weight": 1,
+    "probability": 8,
+    "minAmount": 1,
+    "maxAmount": 1
+  },
+  "lock_7": {
+    "name": "Шпилька для замка",
+    "price": 15,
+    "weight": 1,
+    "probability": 70,
+    "minAmount": 1,
+    "maxAmount": 4
+  },
+  "lock_8": {
+    "name": "Цепь с замком",
+    "price": 40,
+    "weight": 2,
+    "probability": 45,
+    "minAmount": 1,
+    "maxAmount": 1
+  },
+  "lock_9": {
+    "name": "Ключница кожаная",
+    "price": 20,
+    "weight": 1,
+    "probability": 60,
+    "minAmount": 1,
+    "maxAmount": 1
+  },
+  "lock_10": {
+    "name": "Сломанный ключ",
+    "price": 2,
+    "weight": 1,
+    "probability": 80,
+    "minAmount": 1,
+    "maxAmount": 3
+  },
+  "lock_11": {
+    "name": "Печатная восковая матрица",
+    "price": 35,
+    "weight": 1,
+    "probability": 40,
+    "minAmount": 1,
+    "maxAmount": 2
+  },
+  "lock_12": {
+    "name": "Засов с секретом",
+    "price": 80,
+    "weight": 2,
+    "probability": 25,
+    "minAmount": 1,
+    "maxAmount": 1
+  }
+}

@@ -1,0 +1,133 @@
+{
+  "_config": {
+    "emoji": "📦"
+  },
+  "tool_1": {
+    "name": "Верёвка (5 м)",
+    "price": 18,
+    "weight": 2,
+    "probability": 80,
+    "minAmount": 1,
+    "maxAmount": 2
+  },
+  "tool_2": {
+    "name": "Кремень и огниво",
+    "price": 12,
+    "weight": 1,
+    "probability": 85,
+    "minAmount": 1,
+    "maxAmount": 2
+  },
+  "tool_3": {
+    "name": "Факел",
+    "price": 8,
+    "weight": 1,
+    "probability": 90,
+    "minAmount": 2,
+    "maxAmount": 5
+  },
+  "tool_4": {
+    "name": "Лопата",
+    "price": 45,
+    "weight": 4,
+    "probability": 60,
+    "minAmount": 1,
+    "maxAmount": 1
+  },
+  "tool_5": {
+    "name": "Кирка",
+    "price": 55,
+    "weight": 5,
+    "probability": 55,
+    "minAmount": 1,
+    "maxAmount": 1
+  },
+  "tool_6": {
+    "name": "Крюк кошка",
+    "price": 70,
+    "weight": 2,
+    "probability": 40,
+    "minAmount": 1,
+    "maxAmount": 1
+  },
+  "tool_7": {
+    "name": "Ключ-отмычка",
+    "price": 100,
+    "weight": 1,
+    "probability": 30,
+    "minAmount": 1,
+    "maxAmount": 2
+  },
+  "tool_8": {
+    "name": "Кожаный мешок",
+    "price": 22,
+    "weight": 1,
+    "probability": 75,
+    "minAmount": 1,
+    "maxAmount": 2
+  },
+  "tool_9": {
+    "name": "Точильный камень",
+    "price": 15,
+    "weight": 1,
+    "probability": 80,
+    "minAmount": 1,
+    "maxAmount": 2
+  },
+  "tool_10": {
+    "name": "Масляный фонарь",
+    "price": 35,
+    "weight": 2,
+    "probability": 65,
+    "minAmount": 1,
+    "maxAmount": 1
+  },
+  "tool_11": {
+    "name": "Моток проволоки",
+    "price": 20,
+    "weight": 1,
+    "probability": 70,
+    "minAmount": 1,
+    "maxAmount": 3
+  },
+  "tool_12": {
+    "name": "Напильник",
+    "price": 28,
+    "weight": 1,
+    "probability": 65,
+    "minAmount": 1,
+    "maxAmount": 2
+  },
+  "tool_13": {
+    "name": "Молоток",
+    "price": 30,
+    "weight": 2,
+    "probability": 70,
+    "minAmount": 1,
+    "maxAmount": 1
+  },
+  "tool_14": {
+    "name": "Верёвочная лестница",
+    "price": 80,
+    "weight": 3,
+    "probability": 35,
+    "minAmount": 1,
+    "maxAmount": 1
+  },
+  "tool_15": {
+    "name": "Плотницкий топор",
+    "price": 60,
+    "weight": 4,
+    "probability": 50,
+    "minAmount": 1,
+    "maxAmount": 1
+  },
+  "tool_16": {
+    "name": "Сапожный нож",
+    "price": 25,
+    "weight": 1,
+    "probability": 70,
+    "minAmount": 1,
+    "maxAmount": 2
+  }
+}

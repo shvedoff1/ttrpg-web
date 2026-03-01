@@ -1,0 +1,125 @@
+{
+  "_config": {
+    "emoji": "📦"
+  },
+  "scr_1": {
+    "name": "Свиток телепортации",
+    "price": 120,
+    "weight": 1,
+    "probability": 35,
+    "minAmount": 1,
+    "maxAmount": 2
+  },
+  "scr_2": {
+    "name": "Свиток малого исцеления",
+    "price": 50,
+    "weight": 1,
+    "probability": 60,
+    "minAmount": 1,
+    "maxAmount": 3
+  },
+  "scr_3": {
+    "name": "Свиток огненного шара",
+    "price": 80,
+    "weight": 1,
+    "probability": 45,
+    "minAmount": 1,
+    "maxAmount": 2
+  },
+  "scr_4": {
+    "name": "Свиток ледяной стрелы",
+    "price": 75,
+    "weight": 1,
+    "probability": 45,
+    "minAmount": 1,
+    "maxAmount": 2
+  },
+  "scr_5": {
+    "name": "Свиток призыва скелета",
+    "price": 150,
+    "weight": 1,
+    "probability": 25,
+    "minAmount": 1,
+    "maxAmount": 1
+  },
+  "scr_6": {
+    "name": "Свиток обнаружения магии",
+    "price": 60,
+    "weight": 1,
+    "probability": 50,
+    "minAmount": 1,
+    "maxAmount": 2
+  },
+  "scr_7": {
+    "name": "Свиток молнии",
+    "price": 100,
+    "weight": 1,
+    "probability": 35,
+    "minAmount": 1,
+    "maxAmount": 2
+  },
+  "scr_8": {
+    "name": "Свиток левитации",
+    "price": 200,
+    "weight": 1,
+    "probability": 15,
+    "minAmount": 1,
+    "maxAmount": 1
+  },
+  "scr_9": {
+    "name": "Свиток проклятия",
+    "price": 90,
+    "weight": 1,
+    "probability": 25,
+    "minAmount": 1,
+    "maxAmount": 2
+  },
+  "scr_10": {
+    "name": "Свиток ускорения",
+    "price": 110,
+    "weight": 1,
+    "probability": 30,
+    "minAmount": 1,
+    "maxAmount": 2
+  },
+  "scr_11": {
+    "name": "Свиток каменной кожи",
+    "price": 140,
+    "weight": 1,
+    "probability": 20,
+    "minAmount": 1,
+    "maxAmount": 1
+  },
+  "scr_12": {
+    "name": "Свиток немоты",
+    "price": 70,
+    "weight": 1,
+    "probability": 40,
+    "minAmount": 1,
+    "maxAmount": 2
+  },
+  "scr_13": {
+    "name": "Свиток призыва волка",
+    "price": 130,
+    "weight": 1,
+    "probability": 25,
+    "minAmount": 1,
+    "maxAmount": 1
+  },
+  "scr_14": {
+    "name": "Свиток великого исцеления",
+    "price": 200,
+    "weight": 1,
+    "probability": 10,
+    "minAmount": 1,
+    "maxAmount": 1
+  },
+  "scr_15": {
+    "name": "Замусоленный свиток (нечитаемый)",
+    "price": 5,
+    "weight": 1,
+    "probability": 70,
+    "minAmount": 1,
+    "maxAmount": 3
+  }
+}

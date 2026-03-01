@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="/favicon.png" type="image/png">
+    <title>Changelog</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            color: #333;
+        }
+        h1, h2, h3 {
+            margin-top: 24px;
+            margin-bottom: 16px;
+            font-weight: 600;
+        }
+        h1 {
+            border-bottom: 1px solid #eaecef;
+            padding-bottom: 0.3em;
+        }
+        h2 {
+            border-bottom: 1px solid #eaecef;
+            padding-bottom: 0.3em;
+        }
+        ul {
+            margin: 10px 0;
+            padding-left: 2em;
+        }
+        li {
+            margin: 5px 0;
+        }
+        code {
+            background-color: #f6f8fa;
+            padding: 0.2em 0.4em;
+            margin: 0;
+            border-radius: 3px;
+            font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+        }
+        pre {
+            background-color: #f6f8fa;
+            padding: 16px;
+            overflow: auto;
+            border-radius: 6px;
+        }
+        blockquote {
+            padding: 0 15px;
+            color: #6a737d;
+            border-left: 4px solid #dfe2e5;
+            margin: 0 0 16px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Changelog</h1>
+
+    <h2>28 февраля 2026 (обновление 9)</h2>
+
+    <h3>📄 Рендеринг Markdown</h3>
+    <ul>
+        <li>✅ <strong>Markdown-файлы теперь рендерятся как HTML</strong>: при открытии <code>.md</code> файлов через веб-сервер они отображаются с форматированием вместо сырого текста</li>
+        <li>🎨 Тёмная тема оформления, поддержка блоков кода, таблиц, цитат</li>
+        <li>📁 Затронутые файлы: <code>web_app.py</code></li>
+    </ul>
+
+    <h2>28 февраля 2026 (обновление 8)</h2>
+
+    <h3>📍 Визуальный редактор локаций</h3>
+    <ul>
+        <li>✅ <strong>Редактор трав/руд/трофеев в локациях</strong>:
+            <ul>
+                <li>При открытии файлов <code>herb_locations.json</code>, <code>ore_locations.json</code>, <code>trophy_locations.json</code> показывается визуальный редактор вместо сырого JSON</li>
+                <li>Каждая локация отображается как раскрываемая карточка с таблицей элементов</li>
+            </ul>
+        </li>
+        <li>🎨 <strong>Удобный интерфейс</strong>:
+            <ul>
+                <li>Таблица с названием, ключом, весом и процентной вероятностью для каждого элемента</li>
+                <li>Визуальная полоса вероятности (prob-bar) для наглядности</li>
+                <li>Инлайн-редактирование веса прямо в таблице</li>
+                <li>Кнопка удаления элемента из локации</li>
+            </ul>
+        </li>
+        <li>➕ <strong>Добавление элементов</strong>:
+            <ul>
+                <li>Кнопка «+ Добавить» с выпадающим списком доступных элементов</li>
+                <li>Поиск по названию в выпадающем списке</li>
+                <li>Автоматическая фильтрация уже добавленных элементов</li>
+                <li>Названия и цены подгружаются из соответствующих файлов ресурсов (<code>herbs.json</code>, <code>ores.json</code>, <code>trophies.json</code>)</li>
+            </ul>
+        </li>
+    </ul>
+    <p><strong>Затронутые файлы:</strong> <code>admin.html</code></p>
+
+    <hr>
+
+    <h2>28 февраля 2026 (обновление 7)</h2>
+
+    <h3>🗂️ Виртуальные подкатегории в Настройках (configs)</h3>
+    <ul>
+        <li>🔄 <strong>Configs → Настройки</strong>:
+            <ul>
+                <li>Папка <code>configs</code> переименована в <code>⚙️ Настройки</code> в боковой панели админки</li>
+                <li>Все топ-уровневые папки теперь отображаются с эмодзи вместо 📁</li>
+            </ul>
+        </li>
+        <li>📍 <strong>Подкатегория «Локации»</strong>:
+            <ul>
+                <li>JSON-файлы с <code>locations</code> в названии автоматически попадают в подкатегорию 📍 Локации</li>
+                <li>Включает: <code>herb_locations</code>, <code>ore_locations</code>, <code>trophy_locations</code></li>
+            </ul>
+        </li>
+        <li>🏪 <strong>Подкатегория «Торговцы»</strong>:
+            <ul>
+                <li>Файлы <code>stores</code> и <code>standard_traders</code> попадают в подкатегорию 🏪 Торговцы</li>
+            </ul>
+        </li>
+        <li>📋 <strong>Подкатегория «Другое»</strong>:
+            <ul>
+                <li>Все остальные конфигурационные файлы попадают в подкатегорию 📋 Другое</li>
+            </ul>
+        </li>
+        <li>📝 <strong>Затронутые файлы</strong>:
+            <ul>
+                <li><code>resources/static/admin.html</code> — добавлена функция <code>categorizeConfigFiles()</code>, обновлён <code>renderTree()</code>, расширен <code>categoryEmojiMap</code></li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>28 февраля 2026 (обновление 6)</h2>
+
+    <h3>🎨 Эмодзи файлов в админке из _config</h3>
+    <ul>
+        <li>🔄 <strong>Эмодзи файлов теперь берутся из <code>_config.emoji</code></strong>:
+            <ul>
+                <li>Эндпоинт <code>/api/files</code> теперь возвращает объекты <code>{path, emoji}</code> вместо строк</li>
+                <li>Эмодзи читаются из поля <code>_config.emoji</code> каждого JSON-файла</li>
+                <li>Если <code>_config.emoji</code> пустой или отсутствует — файл отображается без эмодзи</li>
+            </ul>
+        </li>
+        <li>❌ <strong>Убрана старая логика эмодзи для файлов</strong>:
+            <ul>
+                <li>Файлы больше не используют <code>categoryEmojiMap</code> для определения эмодзи</li>
+                <li>Эмодзи папок (<code>categoryEmojiMap</code>) оставлены без изменений</li>
+            </ul>
+        </li>
+        <li>📝 <strong>Затронутые файлы</strong>:
+            <ul>
+                <li><code>resources/web_app.py</code> — эндпоинт <code>/api/files</code> возвращает emoji из _config</li>
+                <li><code>resources/static/admin.html</code> — fileNode использует emoji из ответа API</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>28 февраля 2026 (обновление 5)</h2>
+
+    <h3>🛠️ Исправления генератора оружия и брони</h3>
+    <ul>
+        <li>✅ <strong>Свойства (properties) теперь отображаются у торговца</strong>:
+            <ul>
+                <li>Добавлено отображение свойств предметов в инвентаре торговца на странице Play</li>
+                <li>Свойства выводятся под названием товара и ценой мелким серым текстом</li>
+                <li>Также отображаются части (parts) для сгенерированных предметов</li>
+                <li>Обновлена функция <code>showTraderInventory()</code> в <code>play.js</code></li>
+            </ul>
+        </li>
+        <li>🗂️ <strong>Админка теперь показывает файлы из generator</strong>:
+            <ul>
+                <li>Исправлена функция <code>renderTree()</code> для поддержки любой глубины вложенности папок</li>
+                <li>Теперь админка работает с рекурсивной структурой вместо жёстко ограниченной 2-3 уровневой</li>
+                <li>Добавлена новая функция <code>renderNestedDirs()</code> для рекурсивного рендера папок</li>
+                <li>Файлы из <code>generator/armor/properties/</code>, <code>generator/weapon/properties/</code> и т.д. теперь доступны для редактирования</li>
+            </ul>
+        </li>
+        <li>📝 <strong>Затронутые файлы</strong>:
+            <ul>
+                <li><code>resources/static/play.js</code> — отображение properties и parts в инвентаре торговца</li>
+                <li><code>resources/static/admin.html</code> — рекурсивная структура дерева файлов</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>28 февраля 2026 (обновление 4)</h2>
+
+    <h3>🎰 Модуль генерации оружия и брони</h3>
+    <ul>
+        <li>✨ <strong>Добавлена процедурная генерация оружия и брони</strong>:
+            <ul>
+                <li>Новый модуль <code>item_generator.py</code> для инкапсулированной генерации предметов</li>
+                <li>Предметы состоят из двух категорий: <strong>основа</strong> (что это: меч/топор/броня) и <strong>материал</strong> (из чего: сталь/серебро/мифрил) + <strong>свойства</strong> (позитивные/негативные)</li>
+                <li>Структура: <strong>[Основа], [материал], [свойства]</strong> (например, "Меч, сталь" или "Тяжёлая броня, железо")</li>
+                <li>Цена = сумма цен основы + материала + цен свойств (свойства могут иметь отрицательную цену)</li>
+                <li>Все параметры генерации конфигурируются в JSON</li>
+            </ul>
+        </li>
+        <li>⚔️ <strong>Типы предметов</strong>:
+            <ul>
+                <li><strong>Оружие</strong>: 7 типов основ (меч, кинжал, топор, булава, копьё, лук, двуручный меч) × 8 материалов (железо, сталь, бронза, серебро, мифрил, магическая сталь, орочья сталь, адамантит)</li>
+                <li><strong>Броня</strong>: 7 типов основ (лёгкая, средняя, тяжёлая, пластинчатая, чешуйчатая, кожаная, кольчуга) × 8 материалов (железо, сталь, бронза, кожа, серебро, мифрил, магическая сталь, драконья чешуя)</li>
+                <li>Свойства: Позитивные (острое, зачарованное, укреплённое, гибкое, устойчивое, благословённое, непробиваемое) + Негативные (тяжёлое, тупое, хрупкое, проклятое, несбалансированное, ограничивающая, ржавая, повреждённая, тесная)</li>
+            </ul>
+        </li>
+        <li>🔗 <strong>Интеграция с торговцами</strong>:
+            <ul>
+                <li>Оружейник (⚔️) теперь генерирует мечи вместо выборки из файла</li>
+                <li>Бронник (🛡️) теперь генерирует броню вместо выборки из файла</li>
+                <li>В конфиге торговца вместо <code>resource_file</code> используется <code>generate</code> (например, <code>"generate": "weapon", "subtype": "sword"</code>)</li>
+                <li>Другие предметы в инвентаре (стрелы, металл) выбираются как обычно</li>
+                <li>Кэширование ассортимента полностью сохранено</li>
+            </ul>
+        </li>
+        <li>📊 <strong>API endpoints для прямой генерации</strong>:
+            <ul>
+                <li><code>GET /api/generate/weapon?subtype=sword&count=5</code> — генерировать 5 мечей</li>
+                <li><code>GET /api/generate/armor?subtype=heavy&count=3</code> — генерировать 3 комплекта брони</li>
+                <li>Полезны для тестирования и прямого использования в клиентских приложениях</li>
+            </ul>
+        </li>
+        <li>📈 <strong>Структура ответа торговца</strong>:
+            <ul>
+                <li>Теперь каждый предмет может содержать <code>parts</code> (массив имён частей) и <code>properties</code> (массив имён свойств)</li>
+                <li>Для сгенерированных предметов эти поля заполнены, для обычных = <code>null</code></li>
+                <li>Примеры:</li>
+            </ul>
+        </li>
+        <li>📝 <strong>Затронутые файлы</strong>:
+            <ul>
+                <li><code>resources/item_generator.py</code> — новый модуль генерации</li>
+                <li><code>resources/jsons/configs/item_generator.json</code> — конфиг типов предметов (основа + материал для каждого типа)</li>
+                <li><code>resources/jsons/generator/weapon/parts/bases.json</code> — 7 типов оружия</li>
+                <li><code>resources/jsons/generator/weapon/parts/materials.json</code> — 8 материалов для оружия</li>
+                <li><code>resources/jsons/generator/weapon/properties/*.json</code> — позитивные и негативные свойства оружия</li>
+                <li><code>resources/jsons/generator/armor/parts/bases.json</code> — 7 типов брони</li>
+                <li><code>resources/jsons/generator/armor/parts/materials.json</code> — 8 материалов для брони</li>
+                <li><code>resources/jsons/generator/armor/properties/*.json</code> — позитивные и негативные свойства брони</li>
+                <li><code>resources/jsons/configs/standard_traders.json</code> — обновлены weapon_smith и armorer</li>
+                <li><code>resources/web_app.py</code> — добавлена поддержка <code>generate</code> в категориях, добавлены endpoints для генерации</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>28 февраля 2026 (обновление 3)</h2>
+
+    <h3>Улучшения на странице Play</h3>
+    <ul>
+        <li>❌ <strong>Удален вывод стоимости в золоте для Следов</strong>:
+            <ul>
+                <li>Цена в золоте больше не отображается в попапе результата для профессии "Следы"</li>
+                <li>Цена в золоте больше не отображается в логе для профессии "Следы"</li>
+                <li>Обновлена функция <code>showResultPopup()</code> в <code>play.js</code></li>
+                <li>Обновлена функция <code>renderLogEntry()</code> в <code>play.js</code></li>
+            </ul>
+        </li>
+        <li>📝 <strong>Затронутые файлы</strong>:
+            <ul>
+                <li><code>resources/static/play.js</code> — удален вывод цены для Следов</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>28 февраля 2026 (обновление 2)</h2>
+
+    <h3>Эмоджик-конфиг для JSON файлов</h3>
+    <ul>
+        <li>✨ <strong>Добавлен верхнеуровневый конфиг с эмоджиком</strong> во все JSON файлы ресурсов:
+            <ul>
+                <li>Каждый JSON файл теперь содержит поле <code>_config</code> с эмоджиком категории</li>
+                <li>🏹 Охота — эмоджик для файлов охотничьих ресурсов</li>
+                <li>🧪 Алхимия — эмоджик для алхимических компонентов</li>
+                <li>🔨 Ремесло — эмоджик для ремесленных материалов</li>
+                <li>🍖 Провизия — эмоджик для продовольствия</li>
+                <li>📦 Прочее — эмоджик для прочих предметов</li>
+            </ul>
+        </li>
+        <li>🎨 <strong>Обновлена админ-панель</strong>:
+            <ul>
+                <li>В боковом меню (дереве файлов) теперь отображаются эмоджики категорий рядом с названиями категорий</li>
+                <li>Эмоджики также отображаются рядом с каждым файлом в дереве</li>
+                <li>Улучшена визуализация структуры файлов</li>
+                <li>Добавлена функция <code>getCategoryEmoji()</code> для маппинга категорий к эмоджикам</li>
+                <li>Обновлена функция <code>fileNode()</code> для отображения эмоджиков файлов</li>
+            </ul>
+        </li>
+        <li>🐛 <strong>Исправлен визуальный редактор</strong>:
+            <ul>
+                <li>Визуальный редактор теперь правильно игнорирует конфиг-поля (<code>_config</code>)</li>
+                <li>Обновлена функция <code>isItemFile()</code> для фильтрации конфига при определении типа файла</li>
+                <li>Обновлена функция <code>renderVisual()</code> для исключения конфига из редактируемых элементов</li>
+            </ul>
+        </li>
+        <li>📝 <strong>Затронутые файлы</strong>:
+            <ul>
+                <li><code>resources/jsons/resources/**/*.json</code> — все 30 JSON файлов ресурсов</li>
+                <li><code>resources/static/admin.html</code> — обновлена логика отображения дерева файлов</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>28 февраля 2026</h2>
+
+    <h3>Улучшения админ-панели</h3>
+    <ul>
+        <li>✨ <strong>Добавлена анимация загрузки</strong> во время операций с файлами:
+            <ul>
+                <li>Спиннер с полупрозрачным оверлеем при загрузке списка файлов</li>
+                <li>Индикатор при открытии файла на сервере</li>
+                <li>Фидбек при сохранении и сбросе кеша торговцев</li>
+                <li>Улучшен UX на медленных соединениях и с большими файлами</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>27 февраля 2026</h2>
+
+    <h3>Последние исправления</h3>
+    <ul>
+        <li>🐛 <strong>Модальное окно changelog</strong> — теперь закрывается при нажатии на кнопку "Посмотреть changelog"</li>
+    </ul>
+
+    <h3>Основные изменения от старой версии</h3>
+
+    <h4>API Endpoints</h4>
+    <ul>
+        <li>✅ <strong>Добавлены</strong> эндпоинты для мини-игры сундуков:
+            <ul>
+                <li><code>POST /api/play/chest-start</code> — начать игру в сундук</li>
+                <li><code>POST /api/play/chest-guess</code> — угадать направление</li>
+            </ul>
+        </li>
+        <li>✅ <strong>Добавлен</strong> эндпоинт сброса кеша:
+            <ul>
+                <li><code>POST /api/admin/reset-traders-cache</code> — сброс кеша инвентаря торговцев</li>
+            </ul>
+        </li>
+        <li>❌ <strong>Удалены</strong> из старого: эндпоинты ролла по сундукам через обычный <code>/api/play/roll</code></li>
+    </ul>
+
+    <h4>Система Торговцев</h4>
+    <ul>
+        <li>🔄 <strong>Переработана</strong> конфигурация торговцев — теперь единая структура для стандартных и именных:
+            <ul>
+                <li>Добавлены поля: <code>coefficient</code>, <code>objects_count</code>, <code>categories</code> (с приоритизацией), <code>resources_override</code></li>
+                <li>Удалены: простые списки источников в виде таблиц</li>
+            </ul>
+        </li>
+        <li>✅ <strong>Добавлен</strong> механизм приоритизации товаров:
+            <ul>
+                <li>Категории группируются по <code>priority</code> (убывание)</li>
+                <li>Товары рандомятся по приоритетам до заполнения всех слотов</li>
+                <li>Применяется новая функция <code>_build_trader_inventory()</code></li>
+            </ul>
+        </li>
+        <li>✅ <strong>Введено кеширование</strong> инвентаря торговцев:
+            <ul>
+                <li>Каждый торговец генерируется один раз и хранится в памяти</li>
+                <li>Сброс кеша через админку кнопкой <strong>🔄 Сброс кеша</strong></li>
+                <li>Удалена функция <code>_roll_merged_items()</code> — заменена на <code>_build_trader_inventory()</code></li>
+            </ul>
+        </li>
+        <li>📋 <strong>Структура файла <code>stores.json</code></strong> теперь содержит объекты с полной конфигурацией (coefficient, categories с приоритетами, resources_override)</li>
+    </ul>
+
+    <h4>Система Сокровищ</h4>
+    <ul>
+        <li>🔄 <strong>Изменена структура</strong> <code>treasure.json</code>:
+            <ul>
+                <li><strong>Было</strong>: <code>category_weights</code> + <code>categories.{key}.items</code> (плоская структура)</li>
+                <li><strong>Стало</strong>: <code>categories.{key}</code> с <code>{ label, icon, weight, resource_file }</code> (ссылка на файл ресурсов)</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h4>Система Сундуков</h4>
+    <ul>
+        <li>🎮 <strong>Добавлена мини-игра</strong> вместо простого ролла:
+            <ul>
+                <li>Новый режим взаимодействия: пользователь угадывает последовательность направлений (↑↓←→)</li>
+                <li>Эндпоинты: <code>chest-start</code> (начать игру), <code>chest-guess</code> (угадать направление)</li>
+                <li>Счётчик попыток передаётся в лог</li>
+            </ul>
+        </li>
+        <li>📝 <strong>Конфигурация сундуков</strong> теперь содержит секцию <code>game</code>:
+            <pre><code>"game": {
+  "length": 3,
+  "directions": ["up", "down", "left", "right"]
+}</code></pre>
+        </li>
+    </ul>
+
+    <h4>Новые файлы</h4>
+    <ul>
+        <li>✅ <code>resources/static/chest_game.js</code> — логика мини-игры (инкапсулирована)</li>
+        <li>✅ <code>resources/static/chest_game.css</code> — стили для игры (слоты, кнопки направлений, прогресс)</li>
+        <li>✅ <code>resources/chest_game_api.py</code> — APIRouter для сундуков</li>
+    </ul>
+
+    <h4>Удалённые/Изменённые Функции</h4>
+    <ul>
+        <li>❌ <code>_roll_merged_items()</code> → заменена на <code>_build_trader_inventory()</code></li>
+        <li>✅ <strong>Добавлена</strong> <code>_sample_weighted()</code> — взвешенная выборка без замены (для торговцев)</li>
+        <li>✅ <strong>Добавлена</strong> <code>_roll_cache()</code> — ролл для сундуков (аналог схронам, но вызывается из мини-игры)</li>
+    </ul>
+
+    <h4>Структура JSON-файлов</h4>
+    <ul>
+        <li><strong>Удалены</strong> из документации: <code>standard_traders.json</code> (переехал в конфиг торговцев)</li>
+        <li><strong>Обновлены</strong> описания: <code>stores.json</code>, <code>chests_config.json</code>, <code>treasure.json</code></li>
+    </ul>
+
+    <h4>Состояние (play.js)</h4>
+    <ul>
+        <li><code>activeLocation</code> теперь содержит дополнительные поля для сундуков:
+            <ul>
+                <li>Старое: <code>{ name, locationKey?, param1Key?, param2Key?, subtype?, key? }</code></li>
+                <li><strong>Для сундуков добавляется</strong>: логика взаимодействия с мини-игрой через <code>game_id</code></li>
+            </ul>
+        </li>
+    </ul>
+
+    <hr>
+
+    <h3>Исправленные баги</h3>
+    <ul>
+        <li>🐛 <strong>Имя персонажа</strong> — теперь можно вводить на русском языке</li>
+        <li>🐛 <strong>Treasure система</strong> — полностью переведена на использование JSON файлов</li>
+        <li>🐛 <strong>Размер инвентаря торговцев</strong> — ограничен и оптимизирован для корректного отображения</li>
+        <li>🐛 <strong>Адаптивная верстка</strong> — полностью переработана для корректного отображения на маленьких экранах</li>
+        <li>🐛 <strong>Панель выбора</strong> — теперь скрывается при смене категории товаров</li>
+    </ul>
+
+    <hr>
+
+    <h3>Последние улучшения UI</h3>
+    <ul>
+        <li>🎨 <strong>Центрирование элементов в interactArea</strong>:
+            <ul>
+                <li>Панель взаимодействия теперь центрирована на странице</li>
+                <li>Все элементы внутри (кнопки, сетки, заголовки) выстроены по центру</li>
+                <li>Улучшена визуальная иерархия и читаемость</li>
+            </ul>
+        </li>
+        <li>✨ <strong>Удалены декоративные полоски</strong> из заголовков:
+            <ul>
+                <li>«Выбери место» теперь без боковых линий</li>
+                <li>«Что делаем» теперь без боковых линий</li>
+                <li>Дизайн выглядит чище и аккуратнее</li>
+            </ul>
+        </li>
+        <li>📐 <strong>Оптимизированы отступы и спейсинг</strong>:
+            <ul>
+                <li>Увеличены промежутки между блоками для лучшего воздуха</li>
+                <li>Кнопки и сетки выглядят более сбалансировано</li>
+                <li>Улучшена общая эстетика интерфейса</li>
+            </ul>
+        </li>
+    </ul>
+
+    <hr>
+
+    <h3>Итого</h3>
+    <p><strong>Основной вектор изменений:</strong> миграция с простого ролла сундуков на интерактивную мини-игру + переработка системы торговцев с приоритизацией и кешированием. Последние улучшения сосредоточены на визуальной составляющей и центрировании интерфейса взаимодействия.</p>
+</body>
+</html>

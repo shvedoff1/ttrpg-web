@@ -1,0 +1,125 @@
+{
+  "_config": {
+    "emoji": "🔨"
+  },
+  "jew_1": {
+    "name": "Медное кольцо",
+    "price": 20,
+    "weight": 1,
+    "probability": 75,
+    "minAmount": 1,
+    "maxAmount": 2
+  },
+  "jew_2": {
+    "name": "Серебряное кольцо",
+    "price": 80,
+    "weight": 1,
+    "probability": 40,
+    "minAmount": 1,
+    "maxAmount": 2
+  },
+  "jew_3": {
+    "name": "Золотое кольцо",
+    "price": 180,
+    "weight": 1,
+    "probability": 20,
+    "minAmount": 1,
+    "maxAmount": 1
+  },
+  "jew_4": {
+    "name": "Медный браслет",
+    "price": 25,
+    "weight": 1,
+    "probability": 70,
+    "minAmount": 1,
+    "maxAmount": 2
+  },
+  "jew_5": {
+    "name": "Серебряный медальон",
+    "price": 120,
+    "weight": 1,
+    "probability": 25,
+    "minAmount": 1,
+    "maxAmount": 1
+  },
+  "jew_6": {
+    "name": "Амулет защиты",
+    "price": 200,
+    "weight": 1,
+    "probability": 15,
+    "minAmount": 1,
+    "maxAmount": 1
+  },
+  "jew_7": {
+    "name": "Оберег из кости",
+    "price": 30,
+    "weight": 1,
+    "probability": 60,
+    "minAmount": 1,
+    "maxAmount": 2
+  },
+  "jew_8": {
+    "name": "Цепочка из зубов",
+    "price": 15,
+    "weight": 1,
+    "probability": 65,
+    "minAmount": 1,
+    "maxAmount": 2
+  },
+  "jew_9": {
+    "name": "Кольцо с рубином",
+    "price": 300,
+    "weight": 1,
+    "probability": 8,
+    "minAmount": 1,
+    "maxAmount": 1
+  },
+  "jew_10": {
+    "name": "Перстень мага",
+    "price": 350,
+    "weight": 1,
+    "probability": 7,
+    "minAmount": 1,
+    "maxAmount": 1
+  },
+  "jew_11": {
+    "name": "Сломанная серьга",
+    "price": 10,
+    "weight": 1,
+    "probability": 80,
+    "minAmount": 1,
+    "maxAmount": 3
+  },
+  "jew_12": {
+    "name": "Золотая цепочка",
+    "price": 150,
+    "weight": 1,
+    "probability": 18,
+    "minAmount": 1,
+    "maxAmount": 1
+  },
+  "jew_13": {
+    "name": "Талисман удачи",
+    "price": 90,
+    "weight": 1,
+    "probability": 30,
+    "minAmount": 1,
+    "maxAmount": 1
+  },
+  "jew_14": {
+    "name": "Брошь с гербом",
+    "price": 60,
+    "weight": 1,
+    "probability": 35,
+    "minAmount": 1,
+    "maxAmount": 1
+  },
+  "jew_15": {
+    "name": "Орочий оберег (клыки и бусины)",
+    "price": 40,
+    "weight": 1,
+    "probability": 45,
+    "minAmount": 1,
+    "maxAmount": 2
+  }
+}

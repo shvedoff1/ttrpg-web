@@ -1,0 +1,210 @@
+{
+    "store_kantar": {
+        "name": "Кантар",
+        "coefficient": 1.7,
+        "objects_count": 6,
+        "categories": [
+            {
+                "resource_file": "resources/ремесло/weapons.json",
+                "count": 5,
+                "priority": 1
+            },
+            {
+                "resource_file": "resources/прочее/hlam.json",
+                "count": 1,
+                "priority": 0
+            }
+        ],
+        "resources_override": {
+            "knife_1": {
+                "name": "Нож 1",
+                "price": 120,
+                "probability": 100,
+                "weight": 1,
+                "minAmount": 2,
+                "maxAmount": 4
+            }
+        }
+    },
+    "store_wanderer": {
+        "name": "Странствующий торговец",
+        "coefficient": 1.3,
+        "objects_count": 15,
+        "categories": [
+            {
+                "resource_file": "resources/ремесло/weapons.json",
+                "count": 1,
+                "priority": 0
+            },
+            {
+                "resource_file": "resources/прочее/hlam.json",
+                "count": 1,
+                "priority": 0
+            },
+            {
+                "resource_file": "resources/провизия/food.json",
+                "count": 1,
+                "priority": 0
+            },
+            {
+                "resource_file": "resources/алхимия/potions.json",
+                "count": 1,
+                "priority": 0
+            },
+            {
+                "resource_file": "resources/прочее/tools.json",
+                "count": 1,
+                "priority": 0
+            },
+            {
+                "resource_file": "resources/прочее/cloth.json",
+                "count": 1,
+                "priority": 0
+            },
+            {
+                "resource_file": "resources/провизия/alcohol.json",
+                "count": 1,
+                "priority": 0
+            },
+            {
+                "resource_file": "resources/прочее/scrolls.json",
+                "count": 1,
+                "priority": 0
+            },
+            {
+                "resource_file": "resources/охота/pelts.json",
+                "count": 1,
+                "priority": 0
+            },
+            {
+                "resource_file": "resources/охота/arrows.json",
+                "count": 1,
+                "priority": 0
+            },
+            {
+                "resource_file": "resources/прочее/books.json",
+                "count": 1,
+                "priority": 0
+            },
+            {
+                "resource_file": "resources/алхимия/reagents.json",
+                "count": 1,
+                "priority": 0
+            },
+            {
+                "resource_file": "resources/ремесло/jewelry.json",
+                "count": 1,
+                "priority": 0
+            },
+            {
+                "resource_file": "resources/провизия/spices.json",
+                "count": 1,
+                "priority": 0
+            },
+            {
+                "resource_file": "resources/прочее/hardware.json",
+                "count": 1,
+                "priority": 0
+            },
+            {
+                "resource_file": "resources/прочее/candles.json",
+                "count": 1,
+                "priority": 0
+            },
+            {
+                "resource_file": "resources/охота/trophies.json",
+                "count": 1,
+                "priority": 0
+            },
+            {
+                "resource_file": "resources/провизия/fish.json",
+                "count": 1,
+                "priority": 0
+            },
+            {
+                "resource_file": "resources/прочее/bags.json",
+                "count": 1,
+                "priority": 0
+            },
+            {
+                "resource_file": "resources/прочее/wood.json",
+                "count": 1,
+                "priority": 0
+            },
+            {
+                "resource_file": "resources/прочее/locks.json",
+                "count": 1,
+                "priority": 0
+            },
+            {
+                "resource_file": "resources/ремесло/metal.json",
+                "count": 1,
+                "priority": 0
+            },
+            {
+                "resource_file": "resources/охота/traps.json",
+                "count": 1,
+                "priority": 0
+            },
+            {
+                "resource_file": "resources/ремесло/armor_parts.json",
+                "count": 1,
+                "priority": 0
+            },
+            {
+                "resource_file": "resources/прочее/curiosities.json",
+                "count": 1,
+                "priority": 0
+            }
+        ],
+        "resources_override": {}
+    },
+    "store_dolabeb": {
+        "name": "Долабеб",
+        "coefficient": 1.5,
+        "objects_count": 10,
+        "categories": [
+            {
+                "resource_file": "resources/ремесло/weapons.json",
+                "count": 2,
+                "priority": 1
+            },
+            {
+                "resource_file": "resources/прочее/hlam.json",
+                "count": 2,
+                "priority": 0
+            }
+        ],
+        "resources_override": {
+            "knife_1": {
+                "name": "Нож 1",
+                "price": 120,
+                "weight": 1,
+                "minAmount": 2,
+                "maxAmount": 4
+            }
+        }
+    },
+    "store_test": {
+        "name": "store_test",
+        "coefficient": 1,
+        "objects_count": 5,
+        "categories": [
+            {
+                "resource_file": "resources/прочее/wood.json",
+                "count": 1,
+                "priority": 1
+            }
+        ],
+        "resources_override": {
+            "unique_1": {
+                "name": "Уникальный",
+                "price": 69,
+                "weight": 1,
+                "probability": 100,
+                "minAmount": 1,
+                "maxAmount": 1
+            }
+        }
+    }
+}

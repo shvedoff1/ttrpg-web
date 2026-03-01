@@ -1,0 +1,101 @@
+{
+  "_config": {
+    "emoji": "📦"
+  },
+  "wood_1": {
+    "name": "Охапка дров",
+    "price": 5,
+    "weight": 3,
+    "probability": 95,
+    "minAmount": 1,
+    "maxAmount": 5
+  },
+  "wood_2": {
+    "name": "Доска сосновая",
+    "price": 8,
+    "weight": 3,
+    "probability": 85,
+    "minAmount": 1,
+    "maxAmount": 4
+  },
+  "wood_3": {
+    "name": "Брус дубовый",
+    "price": 20,
+    "weight": 5,
+    "probability": 65,
+    "minAmount": 1,
+    "maxAmount": 2
+  },
+  "wood_4": {
+    "name": "Мешок угля",
+    "price": 15,
+    "weight": 4,
+    "probability": 75,
+    "minAmount": 1,
+    "maxAmount": 3
+  },
+  "wood_5": {
+    "name": "Смола древесная",
+    "price": 10,
+    "weight": 1,
+    "probability": 80,
+    "minAmount": 1,
+    "maxAmount": 4
+  },
+  "wood_6": {
+    "name": "Щепа берёзовая (вязанка)",
+    "price": 4,
+    "weight": 2,
+    "probability": 90,
+    "minAmount": 1,
+    "maxAmount": 6
+  },
+  "wood_7": {
+    "name": "Мореный дуб (кусок)",
+    "price": 45,
+    "weight": 4,
+    "probability": 35,
+    "minAmount": 1,
+    "maxAmount": 2
+  },
+  "wood_8": {
+    "name": "Чёрное дерево (обломок)",
+    "price": 80,
+    "weight": 2,
+    "probability": 20,
+    "minAmount": 1,
+    "maxAmount": 2
+  },
+  "wood_9": {
+    "name": "Еловая кора",
+    "price": 3,
+    "weight": 1,
+    "probability": 90,
+    "minAmount": 2,
+    "maxAmount": 8
+  },
+  "wood_10": {
+    "name": "Деревянная чурка",
+    "price": 6,
+    "weight": 2,
+    "probability": 88,
+    "minAmount": 1,
+    "maxAmount": 4
+  },
+  "wood_11": {
+    "name": "Волшебное дерево (ветка)",
+    "price": 120,
+    "weight": 1,
+    "probability": 10,
+    "minAmount": 1,
+    "maxAmount": 2
+  },
+  "wood_12": {
+    "name": "Бамбуковый шест",
+    "price": 12,
+    "weight": 2,
+    "probability": 70,
+    "minAmount": 1,
+    "maxAmount": 3
+  }
+}

@@ -1,0 +1,133 @@
+{
+    "_config": {
+        "emoji": ""
+    },
+    "rea_1": {
+        "name": "Магическая пыль",
+        "price": 30,
+        "weight": 1,
+        "probability": 70,
+        "minAmount": 1,
+        "maxAmount": 4
+    },
+    "rea_2": {
+        "name": "Толчёный рубин",
+        "price": 80,
+        "weight": 1,
+        "probability": 35,
+        "minAmount": 1,
+        "maxAmount": 2
+    },
+    "rea_3": {
+        "name": "Лунный порошок",
+        "price": 60,
+        "weight": 1,
+        "probability": 40,
+        "minAmount": 1,
+        "maxAmount": 3
+    },
+    "rea_4": {
+        "name": "Пепел феникса",
+        "price": 200,
+        "weight": 1,
+        "probability": 10,
+        "minAmount": 1,
+        "maxAmount": 1
+    },
+    "rea_5": {
+        "name": "Кровь нежити",
+        "price": 45,
+        "weight": 1,
+        "probability": 45,
+        "minAmount": 1,
+        "maxAmount": 3
+    },
+    "rea_6": {
+        "name": "Серный кристалл",
+        "price": 25,
+        "weight": 1,
+        "probability": 60,
+        "minAmount": 1,
+        "maxAmount": 3
+    },
+    "rea_7": {
+        "name": "Слизь болотного духа",
+        "price": 35,
+        "weight": 1,
+        "probability": 50,
+        "minAmount": 1,
+        "maxAmount": 3
+    },
+    "rea_8": {
+        "name": "Мозг пещерного краба",
+        "price": 15,
+        "weight": 1,
+        "probability": 65,
+        "minAmount": 1,
+        "maxAmount": 4
+    },
+    "rea_9": {
+        "name": "Глаз гарпии",
+        "price": 55,
+        "weight": 1,
+        "probability": 38,
+        "minAmount": 1,
+        "maxAmount": 2
+    },
+    "rea_10": {
+        "name": "Зуб дракона (осколок)",
+        "price": 150,
+        "weight": 1,
+        "probability": 12,
+        "minAmount": 1,
+        "maxAmount": 2
+    },
+    "rea_11": {
+        "name": "Хвост тролля",
+        "price": 40,
+        "weight": 2,
+        "probability": 40,
+        "minAmount": 1,
+        "maxAmount": 2
+    },
+    "rea_12": {
+        "name": "Жёлчь минесентлинга",
+        "price": 70,
+        "weight": 1,
+        "probability": 25,
+        "minAmount": 1,
+        "maxAmount": 2
+    },
+    "rea_13": {
+        "name": "Паучий яд",
+        "price": 50,
+        "weight": 1,
+        "probability": 40,
+        "minAmount": 1,
+        "maxAmount": 3
+    },
+    "rea_14": {
+        "name": "Магическая руда (обломок)",
+        "price": 90,
+        "weight": 2,
+        "probability": 20,
+        "minAmount": 1,
+        "maxAmount": 2
+    },
+    "rea_15": {
+        "name": "Высушенное сердце зомби",
+        "price": 100,
+        "weight": 1,
+        "probability": 15,
+        "minAmount": 1,
+        "maxAmount": 1
+    },
+    "rea_16": {
+        "name": "Кристалл маны",
+        "price": 120,
+        "weight": 1,
+        "probability": 18,
+        "minAmount": 1,
+        "maxAmount": 2
+    }
+}

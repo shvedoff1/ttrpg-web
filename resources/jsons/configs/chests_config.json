@@ -1,0 +1,150 @@
+{
+    "common": {
+        "name": "Деревянный сундук",
+        "game": {
+            "length": 3,
+            "directions": [
+                "left",
+                "right"
+            ]
+        },
+        "gold_min": 0,
+        "gold_max": 25,
+        "items_min": 1,
+        "items_max": 2,
+        "categories": [
+            "resources/провизия/food.json",
+            "resources/провизия/alcohol.json",
+            "resources/провизия/spices.json",
+            "resources/провизия/fish.json",
+            "resources/прочее/tools.json",
+            "resources/прочее/hardware.json",
+            "resources/прочее/locks.json",
+            "resources/прочее/wood.json",
+            "resources/прочее/cloth.json",
+            "resources/прочее/bags.json",
+            "resources/прочее/candles.json",
+            "resources/прочее/curiosities.json",
+            "resources/прочее/hlam.json"
+        ]
+    },
+    "metal": {
+        "name": "Металлический сундук",
+        "game": {
+            "length": 4,
+            "directions": [
+                "up",
+                "down",
+                "left",
+                "right"
+            ]
+        },
+        "gold_min": 20,
+        "gold_max": 80,
+        "items_min": 2,
+        "items_max": 3,
+        "categories": [
+            "resources/провизия/food.json",
+            "resources/провизия/alcohol.json",
+            "resources/провизия/spices.json",
+            "resources/провизия/fish.json",
+            "resources/прочее/tools.json",
+            "resources/прочее/hardware.json",
+            "resources/прочее/locks.json",
+            "resources/охота/traps.json",
+            "resources/прочее/wood.json",
+            "resources/ремесло/metal.json",
+            "resources/прочее/cloth.json",
+            "resources/прочее/bags.json",
+            "resources/прочее/candles.json",
+            "resources/алхимия/potions.json",
+            "resources/прочее/scrolls.json",
+            "resources/алхимия/reagents.json",
+            "resources/прочее/books.json",
+            "resources/прочее/curiosities.json",
+            "resources/прочее/hlam.json",
+            "resources/ремесло/weapons.json",
+            "resources/ремесло/armor_parts.json",
+            "resources/охота/arrows.json",
+            "resources/охота/pelts.json",
+            "resources/охота/trophies.json",
+            "resources/алхимия/herbs.json"
+        ]
+    },
+    "special": {
+        "name": "Особое хранилище",
+        "game": {
+            "length": 5,
+            "directions": [
+                "up",
+                "down",
+                "left",
+                "right"
+            ]
+        },
+        "gold_min": 80,
+        "gold_max": 300,
+        "items_min": 3,
+        "items_max": 5,
+        "categories": [
+            "resources/провизия/food.json",
+            "resources/провизия/alcohol.json",
+            "resources/провизия/spices.json",
+            "resources/провизия/fish.json",
+            "resources/прочее/tools.json",
+            "resources/прочее/hardware.json",
+            "resources/прочее/locks.json",
+            "resources/охота/traps.json",
+            "resources/прочее/wood.json",
+            "resources/ремесло/metal.json",
+            "resources/прочее/cloth.json",
+            "resources/прочее/bags.json",
+            "resources/прочее/candles.json",
+            "resources/ремесло/jewelry.json",
+            "resources/алхимия/potions.json",
+            "resources/прочее/scrolls.json",
+            "resources/алхимия/reagents.json",
+            "resources/прочее/books.json",
+            "resources/прочее/curiosities.json",
+            "resources/ремесло/weapons.json",
+            "resources/ремесло/armor_parts.json",
+            "resources/охота/arrows.json",
+            "resources/охота/pelts.json",
+            "resources/охота/trophies.json",
+            "resources/алхимия/herbs.json"
+        ]
+    },
+    "magic": {
+        "name": "Магический сундук",
+        "game": {
+            "length": 4,
+            "directions": [
+                "up",
+                "down",
+                "left",
+                "right"
+            ]
+        },
+        "gold_min": 50,
+        "gold_max": 250,
+        "items_min": 2,
+        "items_max": 4,
+        "categories": [
+            "resources/прочее/scrolls.json",
+            "resources/алхимия/reagents.json",
+            "resources/алхимия/potions.json",
+            "resources/прочее/books.json",
+            "resources/прочее/curiosities.json",
+            "resources/ремесло/jewelry.json",
+            "resources/алхимия/herbs.json",
+            "resources/провизия/food.json",
+            "resources/прочее/candles.json",
+            "resources/прочее/cloth.json",
+            "resources/прочее/tools.json",
+            "resources/прочее/bags.json",
+            "resources/прочее/hardware.json",
+            "resources/ремесло/weapons.json",
+            "resources/ремесло/armor_parts.json"
+        ]
+    }
+}

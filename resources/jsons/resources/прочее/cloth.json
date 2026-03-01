@@ -1,0 +1,125 @@
+{
+  "_config": {
+    "emoji": "📦"
+  },
+  "cloth_1": {
+    "name": "Лоскут грубой ткани",
+    "price": 5,
+    "weight": 1,
+    "probability": 90,
+    "minAmount": 2,
+    "maxAmount": 6
+  },
+  "cloth_2": {
+    "name": "Кусок кожи",
+    "price": 15,
+    "weight": 1,
+    "probability": 80,
+    "minAmount": 1,
+    "maxAmount": 4
+  },
+  "cloth_3": {
+    "name": "Моток льна",
+    "price": 10,
+    "weight": 1,
+    "probability": 85,
+    "minAmount": 1,
+    "maxAmount": 4
+  },
+  "cloth_4": {
+    "name": "Шерстяная пряжа",
+    "price": 12,
+    "weight": 1,
+    "probability": 75,
+    "minAmount": 1,
+    "maxAmount": 3
+  },
+  "cloth_5": {
+    "name": "Кусок шёлка",
+    "price": 80,
+    "weight": 1,
+    "probability": 25,
+    "minAmount": 1,
+    "maxAmount": 2
+  },
+  "cloth_6": {
+    "name": "Дублёная кожа",
+    "price": 35,
+    "weight": 2,
+    "probability": 55,
+    "minAmount": 1,
+    "maxAmount": 2
+  },
+  "cloth_7": {
+    "name": "Полоска бандажа",
+    "price": 8,
+    "weight": 1,
+    "probability": 85,
+    "minAmount": 2,
+    "maxAmount": 6
+  },
+  "cloth_8": {
+    "name": "Ветошь",
+    "price": 2,
+    "weight": 1,
+    "probability": 95,
+    "minAmount": 3,
+    "maxAmount": 8
+  },
+  "cloth_9": {
+    "name": "Кусок войлока",
+    "price": 6,
+    "weight": 1,
+    "probability": 80,
+    "minAmount": 1,
+    "maxAmount": 3
+  },
+  "cloth_10": {
+    "name": "Кожаный пояс",
+    "price": 22,
+    "weight": 1,
+    "probability": 65,
+    "minAmount": 1,
+    "maxAmount": 2
+  },
+  "cloth_11": {
+    "name": "Шерстяное одеяло",
+    "price": 18,
+    "weight": 2,
+    "probability": 60,
+    "minAmount": 1,
+    "maxAmount": 1
+  },
+  "cloth_12": {
+    "name": "Тонкая парча",
+    "price": 120,
+    "weight": 1,
+    "probability": 15,
+    "minAmount": 1,
+    "maxAmount": 1
+  },
+  "cloth_13": {
+    "name": "Кожаный мешочек для монет",
+    "price": 14,
+    "weight": 1,
+    "probability": 70,
+    "minAmount": 1,
+    "maxAmount": 3
+  },
+  "cloth_14": {
+    "name": "Бурый холст",
+    "price": 8,
+    "weight": 1,
+    "probability": 85,
+    "minAmount": 2,
+    "maxAmount": 5
+  },
+  "cloth_15": {
+    "name": "Кусок меха",
+    "price": 45,
+    "weight": 1,
+    "probability": 40,
+    "minAmount": 1,
+    "maxAmount": 2
+  }
+}

@@ -1,0 +1,95 @@
+{
+  "_config": {
+    "emoji": "🔨"
+  },
+  "ore_1": {
+    "name": "Железная руда",
+    "price": 4,
+    "probability": 20
+  },
+  "ore_2": {
+    "name": "Медная руда",
+    "price": 6,
+    "probability": 10
+  },
+  "ore_3": {
+    "name": "Серебряная руда",
+    "price": 15,
+    "probability": 8
+  },
+  "ore_4": {
+    "name": "Кобальт",
+    "price": 25,
+    "probability": 5
+  },
+  "ore_5": {
+    "name": "Золотая руда",
+    "price": 40,
+    "probability": 2
+  },
+  "ore_6": {
+    "name": "Магическая руда",
+    "price": 60,
+    "probability": 1
+  },
+  "ore_7": {
+    "name": "Топаз",
+    "price": 80,
+    "probability": 1
+  },
+  "ore_8": {
+    "name": "Рубин",
+    "price": 100,
+    "probability": 1
+  },
+  "ore_9": {
+    "name": "Сапфир",
+    "price": 90,
+    "probability": 1
+  },
+  "ore_10": {
+    "name": "Изумруд",
+    "price": 95,
+    "probability": 1
+  },
+  "ore_11": {
+    "name": "Алмаз",
+    "price": 200,
+    "probability": 0
+  },
+  "ore_12": {
+    "name": "Гранат",
+    "price": 50,
+    "probability": 1
+  },
+  "ore_13": {
+    "name": "Аквамарин",
+    "price": 55,
+    "probability": 1
+  },
+  "ore_14": {
+    "name": "Янтарь",
+    "price": 45,
+    "probability": 1
+  },
+  "ore_15": {
+    "name": "Оникс",
+    "price": 65,
+    "probability": 1
+  },
+  "ore_16": {
+    "name": "Аметист",
+    "price": 70,
+    "probability": 1
+  },
+  "ore_17": {
+    "name": "Кварц",
+    "price": 8,
+    "probability": 2
+  },
+  "ore_18": {
+    "name": "Агат",
+    "price": 35,
+    "probability": 1
+  }
+}

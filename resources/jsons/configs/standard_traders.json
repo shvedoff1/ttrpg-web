@@ -1,0 +1,175 @@
+{
+  "weapon_smith": {
+    "name": "⚔ Оружейник",
+    "coefficient": 1.5,
+    "objects_count": 8,
+    "categories": [
+      {
+        "generate": "weapon",
+        "subtype": "sword",
+        "count": 5,
+        "priority": 2
+      },
+      {
+        "resource_file": "resources/охота/arrows.json",
+        "count": 3,
+        "priority": 1
+      }
+    ]
+  },
+  "armorer": {
+    "name": "🛡 Бронник",
+    "coefficient": 1.5,
+    "objects_count": 8,
+    "categories": [
+      {
+        "generate": "armor",
+        "subtype": "heavy",
+        "count": 5,
+        "priority": 2
+      },
+      {
+        "resource_file": "resources/ремесло/metal.json",
+        "count": 3,
+        "priority": 1
+      }
+    ]
+  },
+  "hunter": {
+    "name": "🐾 Охотник",
+    "coefficient": 1.5,
+    "objects_count": 10,
+    "categories": [
+      {
+        "resource_file": "resources/охота/trophies.json",
+        "count": 5,
+        "priority": 3
+      },
+      {
+        "resource_file": "resources/прочее/tools.json",
+        "count": 3,
+        "priority": 2
+      },
+      {
+        "resource_file": "resources/охота/arrows.json",
+        "count": 2,
+        "priority": 1
+      }
+    ]
+  },
+  "herbalist": {
+    "name": "🌿 Травник",
+    "coefficient": 1.5,
+    "objects_count": 8,
+    "categories": [
+      {
+        "resource_file": "resources/алхимия/herbs.json",
+        "count": 5,
+        "priority": 2
+      },
+      {
+        "resource_file": "resources/провизия/food.json",
+        "count": 3,
+        "priority": 1
+      }
+    ]
+  },
+  "alchemist": {
+    "name": "⚗ Алхимик",
+    "coefficient": 1.5,
+    "objects_count": 10,
+    "categories": [
+      {
+        "resource_file": "resources/алхимия/reagents.json",
+        "count": 4,
+        "priority": 3
+      },
+      {
+        "resource_file": "resources/алхимия/potions.json",
+        "count": 4,
+        "priority": 2
+      },
+      {
+        "resource_file": "resources/прочее/scrolls.json",
+        "count": 2,
+        "priority": 1
+      }
+    ]
+  },
+  "haberdasher": {
+    "name": "🧵 Галантерейщик",
+    "coefficient": 1.5,
+    "objects_count": 11,
+    "categories": [
+      {
+        "resource_file": "resources/прочее/cloth.json",
+        "count": 4,
+        "priority": 3
+      },
+      {
+        "resource_file": "resources/прочее/tools.json",
+        "count": 2,
+        "priority": 2
+      },
+      {
+        "resource_file": "resources/прочее/hardware.json",
+        "count": 2,
+        "priority": 2
+      },
+      {
+        "resource_file": "resources/прочее/bags.json",
+        "count": 2,
+        "priority": 1
+      },
+      {
+        "resource_file": "resources/прочее/candles.json",
+        "count": 1,
+        "priority": 1
+      }
+    ]
+  },
+  "jeweler": {
+    "name": "💎 Ювелир",
+    "coefficient": 1.5,
+    "objects_count": 8,
+    "categories": [
+      {
+        "resource_file": "resources/ремесло/jewelry.json",
+        "count": 5,
+        "priority": 2
+      },
+      {
+        "resource_file": "resources/ремесло/gems.json",
+        "count": 3,
+        "priority": 1
+      }
+    ]
+  },
+  "food_drinks": {
+    "name": "🍺 Еда и напитки",
+    "coefficient": 1.5,
+    "objects_count": 11,
+    "categories": [
+      {
+        "resource_file": "resources/провизия/food.json",
+        "count": 4,
+        "priority": 3
+      },
+      {
+        "resource_file": "resources/провизия/alcohol.json",
+        "count": 3,
+        "priority": 2
+      },
+      {
+        "resource_file": "resources/провизия/spices.json",
+        "count": 2,
+        "priority": 1
+      },
+      {
+        "resource_file": "resources/провизия/fish.json",
+        "count": 2,
+        "priority": 1
+      }
+    ]
+  }
+}

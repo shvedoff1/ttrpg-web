@@ -1,0 +1,109 @@
+{
+  "_config": {
+    "emoji": "🔨"
+  },
+  "met_1": {
+    "name": "Слиток железа",
+    "price": 30,
+    "weight": 3,
+    "probability": 75,
+    "minAmount": 1,
+    "maxAmount": 3
+  },
+  "met_2": {
+    "name": "Слиток стали",
+    "price": 60,
+    "weight": 3,
+    "probability": 55,
+    "minAmount": 1,
+    "maxAmount": 2
+  },
+  "met_3": {
+    "name": "Слиток меди",
+    "price": 20,
+    "weight": 2,
+    "probability": 80,
+    "minAmount": 1,
+    "maxAmount": 3
+  },
+  "met_4": {
+    "name": "Слиток серебра",
+    "price": 100,
+    "weight": 2,
+    "probability": 30,
+    "minAmount": 1,
+    "maxAmount": 2
+  },
+  "met_5": {
+    "name": "Слиток золота",
+    "price": 200,
+    "weight": 2,
+    "probability": 15,
+    "minAmount": 1,
+    "maxAmount": 2
+  },
+  "met_6": {
+    "name": "Кусок магической руды",
+    "price": 150,
+    "weight": 3,
+    "probability": 12,
+    "minAmount": 1,
+    "maxAmount": 2
+  },
+  "met_7": {
+    "name": "Железный лом",
+    "price": 5,
+    "weight": 2,
+    "probability": 90,
+    "minAmount": 2,
+    "maxAmount": 6
+  },
+  "met_8": {
+    "name": "Оловянная пластина",
+    "price": 15,
+    "weight": 2,
+    "probability": 75,
+    "minAmount": 1,
+    "maxAmount": 3
+  },
+  "met_9": {
+    "name": "Свинцовый слиток",
+    "price": 18,
+    "weight": 4,
+    "probability": 65,
+    "minAmount": 1,
+    "maxAmount": 2
+  },
+  "met_10": {
+    "name": "Стальная заготовка (клинок)",
+    "price": 80,
+    "weight": 2,
+    "probability": 35,
+    "minAmount": 1,
+    "maxAmount": 2
+  },
+  "met_11": {
+    "name": "Бронзовый слиток",
+    "price": 45,
+    "weight": 2,
+    "probability": 55,
+    "minAmount": 1,
+    "maxAmount": 2
+  },
+  "met_12": {
+    "name": "Осколок магостали",
+    "price": 250,
+    "weight": 2,
+    "probability": 7,
+    "minAmount": 1,
+    "maxAmount": 1
+  },
+  "met_13": {
+    "name": "Медная стружка (горсть)",
+    "price": 8,
+    "weight": 1,
+    "probability": 85,
+    "minAmount": 2,
+    "maxAmount": 6
+  }
+}

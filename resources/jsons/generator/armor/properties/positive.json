@@ -1,0 +1,35 @@
+{
+  "_config": {
+    "description": "Positive armor properties"
+  },
+  "reinforced": {
+    "name": "Укреплённая",
+    "price": 80,
+    "probability": 65
+  },
+  "enchanted": {
+    "name": "Зачарованная",
+    "price": 200,
+    "probability": 20
+  },
+  "flexible": {
+    "name": "Гибкая",
+    "price": 100,
+    "probability": 40
+  },
+  "resistant": {
+    "name": "Устойчивая",
+    "price": 120,
+    "probability": 30
+  },
+  "blessed": {
+    "name": "Благословённая",
+    "price": 180,
+    "probability": 15
+  },
+  "impenetrable": {
+    "name": "Непробиваемая",
+    "price": 300,
+    "probability": 5
+  }
+}

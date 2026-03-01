@@ -1,0 +1,101 @@
+{
+  "_config": {
+    "emoji": "📦"
+  },
+  "cnd_1": {
+    "name": "Сальная свеча",
+    "price": 4,
+    "weight": 1,
+    "probability": 95,
+    "minAmount": 2,
+    "maxAmount": 8
+  },
+  "cnd_2": {
+    "name": "Восковая свеча",
+    "price": 8,
+    "weight": 1,
+    "probability": 85,
+    "minAmount": 2,
+    "maxAmount": 6
+  },
+  "cnd_3": {
+    "name": "Церковная свеча (большая)",
+    "price": 15,
+    "weight": 1,
+    "probability": 65,
+    "minAmount": 1,
+    "maxAmount": 3
+  },
+  "cnd_4": {
+    "name": "Масло для лампы (фляга)",
+    "price": 12,
+    "weight": 1,
+    "probability": 80,
+    "minAmount": 1,
+    "maxAmount": 4
+  },
+  "cnd_5": {
+    "name": "Факельная смола (кусок)",
+    "price": 6,
+    "weight": 1,
+    "probability": 88,
+    "minAmount": 1,
+    "maxAmount": 5
+  },
+  "cnd_6": {
+    "name": "Ароматическая свеча",
+    "price": 20,
+    "weight": 1,
+    "probability": 55,
+    "minAmount": 1,
+    "maxAmount": 3
+  },
+  "cnd_7": {
+    "name": "Масляный светильник",
+    "price": 40,
+    "weight": 2,
+    "probability": 40,
+    "minAmount": 1,
+    "maxAmount": 1
+  },
+  "cnd_8": {
+    "name": "Фитиль (моток)",
+    "price": 5,
+    "weight": 1,
+    "probability": 90,
+    "minAmount": 1,
+    "maxAmount": 4
+  },
+  "cnd_9": {
+    "name": "Подсвечник медный",
+    "price": 18,
+    "weight": 2,
+    "probability": 60,
+    "minAmount": 1,
+    "maxAmount": 2
+  },
+  "cnd_10": {
+    "name": "Трут (мешочек)",
+    "price": 7,
+    "weight": 1,
+    "probability": 88,
+    "minAmount": 1,
+    "maxAmount": 4
+  },
+  "cnd_11": {
+    "name": "Светящийся мох (пучок)",
+    "price": 30,
+    "weight": 1,
+    "probability": 35,
+    "minAmount": 1,
+    "maxAmount": 3
+  },
+  "cnd_12": {
+    "name": "Магический огонёк (кристалл)",
+    "price": 80,
+    "weight": 1,
+    "probability": 20,
+    "minAmount": 1,
+    "maxAmount": 1
+  }
+}
