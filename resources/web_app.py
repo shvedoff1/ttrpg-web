@@ -1,4 +1,11 @@
-from fastapi import FastAPI, HTTPException, Request, Query
+import os
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
+
+from fastapi import FastAPI, Depends, HTTPException, Request, Query
 from fastapi.responses import JSONResponse, FileResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
 import json
@@ -9,7 +16,8 @@ import hashlib
 from pathlib import Path
 from typing import Optional
 import markdown
-from auth import router as auth_router, get_current_user_optional
+from routers.auth import router as auth_router
+from core.auth import get_current_user_optional, AuthUser
 from chest_game_api import router as chest_game_router
 from item_generator import generate_items
 
@@ -367,9 +375,11 @@ async def get_log(after: int = Query(default=0, ge=0)):
 
 
 @app.post("/api/log")
-async def append_log(request: Request):
+async def append_log(
+    request: Request,
+    user: Optional[AuthUser] = Depends(get_current_user_optional),
+):
     entry = await request.json()
-    user = get_current_user_optional(request)
     if user:
         entry["user"] = user.name
     entries = _read_log()
@@ -637,6 +647,11 @@ async def play():
 @app.get("/admin")
 async def admin():
     return FileResponse(str(STATIC_DIR / "admin.html"))
+
+
+@app.get("/login")
+async def login_page():
+    return FileResponse(str(STATIC_DIR / "login.html"))
 
 
 def _get_changelog_hash() -> str:

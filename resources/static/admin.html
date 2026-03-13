@@ -308,6 +308,9 @@ header {
   <div class="breadcrumb" id="breadcrumb"></div>
   <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
     <span class="save-hint" id="saveHint"></span>
+    <span id="adminUserName" style="font-size:0.8rem;color:var(--muted)"></span>
+    <a id="adminLoginBtn" href="/login?next=/admin" class="btn btn-ghost" style="display:none">Войти</a>
+    <button id="adminLogoutBtn" class="btn btn-ghost" onclick="doLogout()" style="display:none">Выйти</button>
     <button class="btn btn-ghost" id="resetCacheBtn" onclick="resetTradersCache()" title="Сброс кеша торговцев">🔄 Сброс кеша</button>
     <button class="btn btn-primary" id="saveBtn" onclick="saveFile()" style="display:none">💾 Сохранить</button>
   </div>
@@ -1019,7 +1022,53 @@ window.addEventListener('beforeunload', e => {
   if (dirty) { e.preventDefault(); e.returnValue = ''; }
 });
 
+// ── AUTH ───────────────────────────────────────────────────────────────────
+async function initAdminAuth() {
+  const token = localStorage.getItem('access_token');
+  let username = null;
+  if (token) {
+    username = await _fetchMe(token);
+  }
+  if (!username) {
+    const newToken = await _tryRefresh();
+    if (newToken) username = await _fetchMe(newToken);
+  }
+  if (!username) localStorage.removeItem('access_token');
+
+  const nameEl  = document.getElementById('adminUserName');
+  const loginBtn  = document.getElementById('adminLoginBtn');
+  const logoutBtn = document.getElementById('adminLogoutBtn');
+  if (nameEl)   nameEl.textContent = username ? `👤 ${username}` : '';
+  if (loginBtn)  loginBtn.style.display  = username ? 'none' : '';
+  if (logoutBtn) logoutBtn.style.display = username ? '' : 'none';
+}
+
+async function _fetchMe(token) {
+  try {
+    const r = await fetch('/auth/me', { headers: { 'Authorization': `Bearer ${token}` } });
+    if (!r.ok) return null;
+    return (await r.json()).username;
+  } catch { return null; }
+}
+
+async function _tryRefresh() {
+  try {
+    const r = await fetch('/auth/refresh', { method: 'POST', credentials: 'include' });
+    if (!r.ok) return null;
+    const data = await r.json();
+    localStorage.setItem('access_token', data.access_token);
+    return data.access_token;
+  } catch { return null; }
+}
+
+async function doLogout() {
+  try { await fetch('/auth/logout', { method: 'POST', credentials: 'include' }); } catch {}
+  localStorage.removeItem('access_token');
+  window.location.href = '/login?next=/admin';
+}
+
 // ── START ──────────────────────────────────────────────────────────────────
+initAdminAuth();
 init();
 </script>
 <script src="changelog_notify.js"></script>

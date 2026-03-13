@@ -127,11 +127,14 @@ game_invites: id, game_id, token, created_by, role, expires_at, used_at
 - [x] Настроить SQLAlchemy 2.x + Alembic (`alembic/`, `alembic.ini`, `resources/core/database.py`)
 - [x] Создать базовые таблицы (`users`, `games`, `game_members`, `game_invites`, `game_engines`) — миграция `c4be1ed24337`
 
-### Этап 1: Авторизация
-- [ ] Таблица `users`
-- [ ] Эндпоинты login/register с JWT
-- [ ] Google OAuth
-- [ ] Middleware для защиты роутов
+### Этап 1: Авторизация ✅ _выполнен 2026-03-13_
+- [x] Таблица `users` — уже была из этапа 0
+- [x] Эндпоинты login/register с JWT (`POST /auth/register`, `POST /auth/login`)
+- [x] Google OAuth (`GET /auth/google`, `GET /auth/google/callback`)
+- [x] Refresh/logout (`POST /auth/refresh`, `POST /auth/logout`)
+- [x] Dependency `get_current_user` / `get_current_user_optional` — защита роутов
+- [x] Страница `/login` (login.html)
+- [x] `.env.example` с документацией переменных
 
 ### Этап 2: Игры и роли
 - [ ] CRUD для игр (`POST /api/games`, `GET /api/games`, etc.)

@@ -13,11 +13,12 @@
 <div class="left-col">
 
 <header>
-    <h1>⚔ Готика</h1>
+    <h1>⚔ Готика Debug</h1>
     <p>Выбери категорию для изучения мира</p>
     <span class="header-user" id="headerUserArea">
         <span id="userName"></span>
-        <span class="header-user-change" onclick="showLoginModal()">сменить</span>
+        <a id="headerLoginBtn" href="/login?next=/play" class="header-login-btn">Войти</a>
+        <button id="headerLogoutBtn" class="header-logout-btn" onclick="doLogout()">выйти</button>
     </span>
     <a href="/admin" class="header-link">← Редактор</a>
 </header>
@@ -105,16 +106,6 @@
   </div>
 </aside>
 
-<!-- ── Auth modal ──────────────────────────────────── -->
-<div class="auth-overlay" id="authOverlay">
-    <div class="auth-modal">
-        <div class="auth-modal-title">Кто ты?</div>
-        <p class="auth-modal-hint">Имя будет записано в журнал</p>
-        <input type="text" class="auth-input" id="authInput"
-               placeholder="Введи имя..." maxlength="60" autocomplete="off">
-        <button class="search-btn" id="authSubmitBtn" onclick="submitLogin()">⚔ Войти</button>
-    </div>
-</div>
 
 <script src="changelog_notify.js"></script>
 <script src="chest_game.js"></script>

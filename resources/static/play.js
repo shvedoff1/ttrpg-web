@@ -2,61 +2,56 @@
 let currentUser = null;
 
 async function initAuth() {
+    const token = localStorage.getItem('access_token');
+    if (token) {
+        const user = await _fetchMe(token);
+        if (user) { currentUser = user; _updateUserDisplay(); return; }
+    }
+    // No valid token — try silent refresh via httpOnly cookie
+    const newToken = await _tryRefresh();
+    if (newToken) {
+        const user = await _fetchMe(newToken);
+        if (user) { currentUser = user; _updateUserDisplay(); return; }
+    }
+    localStorage.removeItem('access_token');
+    currentUser = null;
+    _updateUserDisplay();
+}
+
+async function _fetchMe(token) {
     try {
-        const r = await fetch('/auth/me');
-        if (r.ok) {
-            const { name } = await r.json();
-            currentUser = name;
-            _updateUserDisplay();
-            return;
-        }
-    } catch {}
-    showLoginModal();
+        const r = await fetch('/auth/me', { headers: { 'Authorization': `Bearer ${token}` } });
+        if (!r.ok) return null;
+        const data = await r.json();
+        return data.username;
+    } catch { return null; }
 }
 
-function showLoginModal() {
-    document.getElementById('authOverlay').classList.add('visible');
-    setTimeout(() => document.getElementById('authInput').focus(), 50);
-}
-
-function hideLoginModal() {
-    document.getElementById('authOverlay').classList.remove('visible');
-}
-
-async function submitLogin() {
-    const input = document.getElementById('authInput');
-    const name = input.value.trim();
-    if (!name) { input.focus(); return; }
-    const btn = document.getElementById('authSubmitBtn');
-    btn.disabled = true;
+async function _tryRefresh() {
     try {
-        const r = await fetch('/auth/login', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name }),
-        });
-        if (r.ok) {
-            const data = await r.json();
-            currentUser = data.name;
-            _updateUserDisplay();
-            hideLoginModal();
-        }
-    } catch {}
-    btn.disabled = false;
+        const r = await fetch('/auth/refresh', { method: 'POST', credentials: 'include' });
+        if (!r.ok) return null;
+        const data = await r.json();
+        localStorage.setItem('access_token', data.access_token);
+        return data.access_token;
+    } catch { return null; }
+}
+
+async function doLogout() {
+    try { await fetch('/auth/logout', { method: 'POST', credentials: 'include' }); } catch {}
+    localStorage.removeItem('access_token');
+    currentUser = null;
+    _updateUserDisplay();
 }
 
 function _updateUserDisplay() {
-    const el = document.getElementById('userName');
-    if (el) el.textContent = currentUser ? `👤 ${currentUser}` : '';
-    const area = document.getElementById('headerUserArea');
-    if (area) area.style.visibility = currentUser ? 'visible' : 'hidden';
+    const nameEl = document.getElementById('userName');
+    const loginBtn = document.getElementById('headerLoginBtn');
+    const logoutBtn = document.getElementById('headerLogoutBtn');
+    if (nameEl) nameEl.textContent = currentUser ? `👤 ${currentUser}` : '';
+    if (loginBtn) loginBtn.style.display = currentUser ? 'none' : '';
+    if (logoutBtn) logoutBtn.style.display = currentUser ? '' : 'none';
 }
-
-document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('authInput').addEventListener('keydown', e => {
-        if (e.key === 'Enter') submitLogin();
-    });
-});
 
 // ── Category definitions ───────────────────────────
 const CATS = {

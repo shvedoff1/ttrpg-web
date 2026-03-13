@@ -58,6 +58,41 @@
 <body>
     <h1>Changelog</h1>
 
+    <h2>13 марта 2026 — UI авторизации: убрать старый модал, кнопки Войти/Выйти</h2>
+    <ul>
+        <li>❌ <strong>Удалён модал «Кто ты?»</strong> из play.html и вся его CSS</li>
+        <li>🎨 <strong>play.html / admin.html</strong>: добавлены кнопки <strong>Войти</strong> (→ /login) и <strong>Выйти</strong> в хидер</li>
+        <li>🔄 <strong>play.js</strong>: auth полностью переписан под JWT — автоматический тихий refresh через httpOnly cookie, хранение access_token в localStorage</li>
+        <li>🎨 <strong>play.css</strong>: заменены стили auth overlay на стили кнопок хидера</li>
+    </ul>
+
+    <h2>13 марта 2026 — Этап 1: Авторизация (JWT + Google OAuth)</h2>
+
+    <h3>🔐 Новая система аутентификации</h3>
+    <ul>
+        <li>✅ <strong>Заменена старая cookie-авторизация</strong> (имя без пароля) на полноценный JWT-стек</li>
+        <li>✅ <strong>Добавлен <code>resources/core/auth.py</code></strong>: утилиты JWT, хэширование bcrypt, FastAPI-зависимости <code>get_current_user</code> / <code>get_current_user_optional</code></li>
+        <li>✅ <strong>Создан <code>resources/routers/auth.py</code></strong> — новые эндпоинты:</li>
+        <ul>
+            <li><code>POST /auth/register</code> — регистрация (username, email?, password)</li>
+            <li><code>POST /auth/login</code> — вход, возвращает JWT access_token</li>
+            <li><code>GET /auth/google</code> + <code>GET /auth/google/callback</code> — Google OAuth2</li>
+            <li><code>POST /auth/refresh</code> — обновление access_token по refresh_token cookie</li>
+            <li><code>POST /auth/logout</code> — удаление refresh_token cookie</li>
+            <li><code>GET /auth/me</code> — текущий пользователь</li>
+        </ul>
+        <li>🎨 <strong>Добавлена страница <code>/login</code></strong> (<code>login.html</code>) — форма входа/регистрации + кнопка Google</li>
+        <li>🔑 <strong>Механизм токенов</strong>: access_token (15 мин, Bearer) + refresh_token (30 дней, httpOnly cookie)</li>
+    </ul>
+
+    <h3>🔄 Изменения в существующем коде</h3>
+    <ul>
+        <li>🔄 <code>web_app.py</code>: импорт auth обновлён на <code>routers.auth</code> + <code>core.auth</code></li>
+        <li>🔄 <code>/api/log</code>: переведён на FastAPI Depends вместо прямого вызова</li>
+        <li>✅ <strong>Добавлен <code>.env.example</code></strong> с документацией всех переменных окружения</li>
+        <li>✅ <strong>Обновлён <code>requirements.txt</code></strong>: добавлены <code>httpx</code>, <code>python-dotenv</code></li>
+    </ul>
+
     <h2>13 марта 2026 — Этап 0: Подготовка БД и миграций</h2>
 
     <h3>🗄️ SQLAlchemy + Alembic</h3>
