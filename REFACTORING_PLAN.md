@@ -122,10 +122,10 @@ game_invites: id, game_id, token, created_by, role, expires_at, used_at
 
 ## Этапы реализации
 
-### Этап 0: Подготовка (разово)
-- [ ] Выбрать БД (PostgreSQL / SQLite)
-- [ ] Настроить SQLAlchemy + Alembic
-- [ ] Создать базовые таблицы (`users`, `games`, `game_members`, `game_invites`, `game_engines`)
+### Этап 0: Подготовка ✅ _выполнен 2026-03-13_
+- [x] Выбрать БД — SQLite (dev), легко сменить на PostgreSQL через `DATABASE_URL`
+- [x] Настроить SQLAlchemy 2.x + Alembic (`alembic/`, `alembic.ini`, `resources/core/database.py`)
+- [x] Создать базовые таблицы (`users`, `games`, `game_members`, `game_invites`, `game_engines`) — миграция `c4be1ed24337`
 
 ### Этап 1: Авторизация
 - [ ] Таблица `users`
