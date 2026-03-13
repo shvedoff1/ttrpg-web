@@ -58,6 +58,29 @@
 <body>
     <h1>Changelog</h1>
 
+    <h2>13 марта 2026 — Этап 0: Подготовка БД и миграций</h2>
+
+    <h3>🗄️ SQLAlchemy + Alembic</h3>
+    <ul>
+        <li>✅ <strong>Выбрана БД</strong>: SQLite для dev (легко сменить на PostgreSQL через <code>DATABASE_URL</code>)</li>
+        <li>✅ <strong>Добавлен <code>resources/core/database.py</code></strong>: настройка SQLAlchemy 2.x, <code>SessionLocal</code>, <code>Base</code>, dependency <code>get_db()</code></li>
+        <li>✅ <strong>Добавлен <code>resources/core/models.py</code></strong>: ORM-модели всех базовых таблиц:</li>
+        <ul>
+            <li><code>users</code> — пользователи (email, username, password_hash, google_id)</li>
+            <li><code>games</code> — игры (name, slug, owner_id, settings JSONB)</li>
+            <li><code>game_engines</code> — подключённые движки к игре (engine_id, config, order)</li>
+            <li><code>game_members</code> — участники игры с ролями (owner/admin/moderator/player)</li>
+            <li><code>game_invites</code> — инвайт-токены (token, role, expires_at, used_at)</li>
+        </ul>
+        <li>✅ <strong>Настроен Alembic</strong>: <code>alembic/env.py</code> подключён к моделям, поддержка autogenerate</li>
+        <li>✅ <strong>Первая миграция применена</strong>: <code>alembic/versions/c4be1ed24337_init_base_tables.py</code></li>
+        <li>✅ <strong>БД создана</strong>: <code>resources/ttrpg.db</code></li>
+        <li>🔄 <strong>requirements.txt</strong>: добавлены <code>sqlalchemy</code>, <code>alembic</code>, <code>python-jose</code>, <code>passlib[bcrypt]</code>, <code>python-multipart</code></li>
+    </ul>
+    <p><strong>Затронутые файлы:</strong> <code>requirements.txt</code>, <code>resources/core/database.py</code>, <code>resources/core/models.py</code>, <code>alembic/</code></p>
+
+    <hr>
+
     <h2>28 февраля 2026 (обновление 9)</h2>
 
     <h3>📄 Рендеринг Markdown</h3>
