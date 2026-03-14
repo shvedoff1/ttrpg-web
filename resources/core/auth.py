@@ -48,10 +48,16 @@ def verify_password(plain: str, hashed: str) -> bool:
 
 # ── Token creation ─────────────────────────────────────────────────────────
 
-def create_access_token(user_id: int, username: str) -> str:
+def create_access_token(user_id: int, username: Optional[str], email: str = "") -> str:
     expire = datetime.now(timezone.utc) + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     return jwt.encode(
-        {"sub": str(user_id), "username": username, "exp": expire, "type": "access"},
+        {
+            "sub": str(user_id),
+            "username": username,
+            "email": email,
+            "exp": expire,
+            "type": "access",
+        },
         SECRET_KEY,
         algorithm=ALGORITHM,
     )
@@ -76,15 +82,15 @@ def _decode_token(token: str) -> dict:
 # ── AuthUser ───────────────────────────────────────────────────────────────
 
 class AuthUser:
-    def __init__(self, id: int, username: str, email: Optional[str] = None):
+    def __init__(self, id: int, username: Optional[str], email: str):
         self.id = id
         self.username = username
         self.email = email
 
     @property
     def name(self) -> str:
-        """Backward-compatible alias for username."""
-        return self.username
+        """Display name: username if set, otherwise email prefix."""
+        return self.username or self.email.split("@")[0]
 
 
 # ── FastAPI dependencies ───────────────────────────────────────────────────

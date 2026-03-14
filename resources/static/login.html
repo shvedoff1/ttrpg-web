@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" href="/favicon.png" type="image/png">
 <title>Вход — TTRPG</title>
+<script>document.documentElement.dataset.theme = localStorage.theme || 'dark'</script>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -196,8 +197,8 @@
   <!-- Login form -->
   <form id="loginForm" onsubmit="submitLogin(event)">
     <div class="form-group">
-      <label>Имя пользователя или email</label>
-      <input type="text" id="loginUsername" autocomplete="username" required>
+      <label>Email</label>
+      <input type="email" id="loginUsername" autocomplete="email" required>
     </div>
     <div class="form-group">
       <label>Пароль</label>
@@ -209,12 +210,12 @@
   <!-- Register form -->
   <form id="registerForm" style="display:none" onsubmit="submitRegister(event)">
     <div class="form-group">
-      <label>Имя пользователя</label>
-      <input type="text" id="regUsername" autocomplete="username" required minlength="2" maxlength="60">
+      <label>Email</label>
+      <input type="email" id="regEmail" autocomplete="email" required>
     </div>
     <div class="form-group">
-      <label>Email <span style="color:#555">(необязательно)</span></label>
-      <input type="email" id="regEmail" autocomplete="email">
+      <label>Никнейм <span style="color:#555">(необязательно — можно задать позже)</span></label>
+      <input type="text" id="regUsername" autocomplete="username" minlength="2" maxlength="60">
     </div>
     <div class="form-group">
       <label>Пароль (минимум 6 символов)</label>
@@ -284,7 +285,7 @@
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          username: document.getElementById('loginUsername').value.trim(),
+          email: document.getElementById('loginUsername').value.trim(),
           password: document.getElementById('loginPassword').value,
         }),
         credentials: 'include',
@@ -312,8 +313,8 @@
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          username: document.getElementById('regUsername').value.trim(),
-          email: document.getElementById('regEmail').value.trim() || null,
+          email: document.getElementById('regEmail').value.trim(),
+          username: document.getElementById('regUsername').value.trim() || null,
           password: document.getElementById('regPassword').value,
         }),
         credentials: 'include',

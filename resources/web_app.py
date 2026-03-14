@@ -5,7 +5,8 @@ try:
 except ImportError:
     pass
 
-from fastapi import FastAPI, Depends, HTTPException, Request, Query
+from contextlib import asynccontextmanager
+from fastapi import FastAPI, HTTPException, Request, Query
 from fastapi.responses import JSONResponse, FileResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
 import json
@@ -17,29 +18,86 @@ from pathlib import Path
 from typing import Optional
 import markdown
 from routers.auth import router as auth_router
-from core.auth import get_current_user_optional, AuthUser
-from chest_game_api import router as chest_game_router
+from routers.games import router as games_router
+from routers.engines import router as engines_router
+from routers.user_engines import router as user_engines_router
+from routers.libraries import router as libraries_router
+from routers.log import router as log_router
+from core.database import SessionLocal
+from core.models import DataLibrary
 from item_generator import generate_items
+from engines import registry as engine_registry
+from engines.profession_roll import ProfessionRollEngine
+from engines.chest_game import ChestGameEngine
+from engines.item_gen import ItemGenEngine
+from engines.trader_inventory import TraderInventoryEngine
+from engines.story_motivation import StoryMotivationEngine
+from engines.treasure import TreasureEngine
+from engines.composite import CompositeEngine
 
 RESOURCES_DIR = Path(__file__).parent / "jsons"
 STATIC_DIR = Path(__file__).parent / "static"
 CHANGELOG_FILE = Path(__file__).parent / "static" / "changelog.html"
-LOG_FILE = Path(__file__).parent / "log.json"
-LOG_MAX = 500
 
-app = FastAPI(title="Gothic Resources")
+# Register all engines (до lifespan, чтобы seed мог на них опираться)
+engine_registry.register(ProfessionRollEngine())
+engine_registry.register(ChestGameEngine())
+engine_registry.register(ItemGenEngine())
+engine_registry.register(TraderInventoryEngine())
+engine_registry.register(StoryMotivationEngine())
+engine_registry.register(TreasureEngine())
+engine_registry.register(CompositeEngine())
+
+
+def _make_db_resolver() -> dict:
+    """Загружает все системные библиотеки в память. Возвращает slug→data кеш."""
+    db = SessionLocal()
+    try:
+        rows = db.query(DataLibrary).filter(DataLibrary.owner_id.is_(None)).all()
+        return {row.slug: row.data for row in rows}
+    finally:
+        db.close()
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    from core.seed import run_seed
+    from core.seed_libraries import run_seed_libraries
+    from engines._helpers import set_db_resolver
+
+    run_seed()
+    run_seed_libraries()
+
+    # Кешируем системные библиотеки in-memory для быстрого доступа из движков
+    _sys_cache = _make_db_resolver()
+
+    def _resolve_slug(slug: str) -> dict | list:
+        # Сначала ищем в кеше системных библиотек
+        if slug in _sys_cache:
+            return _sys_cache[slug]
+        # Пользовательские библиотеки — из БД
+        db = SessionLocal()
+        try:
+            row = db.query(DataLibrary).filter(DataLibrary.slug == slug).first()
+            if not row:
+                from fastapi import HTTPException
+                raise HTTPException(404, f"Library not found: {slug}")
+            return row.data
+        finally:
+            db.close()
+
+    set_db_resolver(_resolve_slug)
+    yield
+
+
+app = FastAPI(title="Gothic Resources", lifespan=lifespan)
 app.include_router(auth_router)
-app.include_router(chest_game_router)
+app.include_router(games_router)
+app.include_router(engines_router)
+app.include_router(user_engines_router)
+app.include_router(libraries_router)
+app.include_router(log_router)
 
-
-def _read_log() -> list:
-    if not LOG_FILE.exists():
-        return []
-    return json.loads(LOG_FILE.read_text(encoding="utf-8"))
-
-
-def _write_log(entries: list):
-    LOG_FILE.write_text(json.dumps(entries, ensure_ascii=False, indent=2), encoding="utf-8")
 
 
 def safe_path(filename: str) -> Path:
@@ -54,18 +112,18 @@ def safe_path(filename: str) -> Path:
 # ── Play configuration ────────────────────────────────────────────────────────
 
 PROFESSION_SOURCES: dict[str, tuple[str, str]] = {
-    "Травы":  ("resources/алхимия/herbs.json",    "configs/herb_locations.json"),
-    "Руды":   ("resources/ремесло/ores.json",     "configs/ore_locations.json"),
-    "Следы":  ("resources/охота/trophies.json",   "configs/trophy_locations.json"),
+    "Травы":  ("items.alchemy.herbs",            "config.profession_roll.herbs"),
+    "Руды":   ("items.craft.ores",               "config.profession_roll.ores"),
+    "Следы":  ("items.hunt.trophies",            "config.profession_roll.trophies"),
 }
 
-STEAL_CONFIG_FILE       = "configs/steal_config.json"
-CACHE_CONFIG_FILE       = "configs/cache_config.json"
-CHESTS_CONFIG_FILE      = "configs/chests_config.json"
-TREASURE_FILE           = "configs/treasure.json"
-STANDARD_TRADERS_FILE   = "configs/standard_traders.json"
-STORES_FILE             = "configs/stores.json"
-MOTIVATIONS_FILE        = "configs/motivations.json"
+STEAL_CONFIG_FILE       = "config.profession_roll.steal"
+CACHE_CONFIG_FILE       = "config.profession_roll.cache"
+CHESTS_CONFIG_FILE      = "config.chest_game.default"
+TREASURE_FILE           = "config.treasure.default"
+STANDARD_TRADERS_FILE   = "config.trader.standard"
+STORES_FILE             = "config.trader.named"
+MOTIVATIONS_FILE        = "config.motivation.default"
 TRADER_COEFF_DEFAULT    = 1.5
 
 
@@ -297,109 +355,7 @@ def _build_trader_inventory(categories: list, objects_count: Optional[int]) -> d
     return result
 
 
-@app.get("/api/files")
-async def list_files():
-    result = []
-    for f in sorted(RESOURCES_DIR.glob("**/*.json"), key=lambda p: str(p.relative_to(RESOURCES_DIR))):
-        if f.name.startswith('._'):
-            continue
-        rel = str(f.relative_to(RESOURCES_DIR))
-        emoji = ""
-        try:
-            data = json.loads(f.read_text(encoding="utf-8"))
-            if isinstance(data, dict) and "_config" in data:
-                emoji = data["_config"].get("emoji", "")
-        except Exception:
-            pass
-        result.append({"path": rel, "emoji": emoji})
-    return result
 
-
-@app.get("/api/files/{filename:path}")
-async def get_file(filename: str):
-    path = safe_path(filename)
-    if not path.exists():
-        raise HTTPException(404, "File not found")
-    return json.loads(path.read_text(encoding="utf-8"))
-
-
-@app.post("/api/files/{filename:path}")
-async def create_file(filename: str):
-    if not filename.endswith(".json"):
-        raise HTTPException(400, "Only .json files allowed")
-    path = safe_path(filename)
-    if path.exists():
-        raise HTTPException(409, "File already exists")
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text("{}", encoding="utf-8")
-    return {"status": "ok"}
-
-
-@app.patch("/api/files/{filename:path}")
-async def rename_file(filename: str, request: Request):
-    path = safe_path(filename)
-    if not path.exists():
-        raise HTTPException(404, "File not found")
-    body = await request.json()
-    new_name = body.get("name", "").strip()
-    new_path = safe_path(new_name)
-    if new_path.exists():
-        raise HTTPException(409, "File already exists")
-    path.rename(new_path)
-    return {"status": "ok"}
-
-
-@app.delete("/api/files/{filename:path}")
-async def delete_file(filename: str):
-    path = safe_path(filename)
-    if not path.exists():
-        raise HTTPException(404, "File not found")
-    path.unlink()
-    return {"status": "ok"}
-
-
-@app.put("/api/files/{filename:path}")
-async def save_file(filename: str, request: Request):
-    path = safe_path(filename)
-    if not path.exists():
-        raise HTTPException(404, "File not found")
-    body = await request.json()
-    path.write_text(json.dumps(body, ensure_ascii=False, indent=4), encoding="utf-8")
-    return {"status": "ok"}
-
-
-@app.get("/api/log")
-async def get_log(after: int = Query(default=0, ge=0)):
-    entries = _read_log()
-    return {"entries": entries[after:], "total": len(entries)}
-
-
-@app.post("/api/log")
-async def append_log(
-    request: Request,
-    user: Optional[AuthUser] = Depends(get_current_user_optional),
-):
-    entry = await request.json()
-    if user:
-        entry["user"] = user.name
-    entries = _read_log()
-    entries.append(entry)
-    if len(entries) > LOG_MAX:
-        entries = entries[-LOG_MAX:]
-    _write_log(entries)
-    return {"status": "ok", "total": len(entries)}
-
-
-@app.delete("/api/log")
-async def clear_log_endpoint():
-    _write_log([])
-    return {"status": "ok"}
-
-
-@app.post("/api/admin/reset-traders-cache")
-async def reset_traders_cache():
-    _reset_traders_cache()
-    return {"status": "ok"}
 
 
 @app.post("/api/generate")
@@ -639,14 +595,35 @@ async def play_story_motivation():
     return {"motivations": _roll_motivations(data)}
 
 
+@app.get("/games")
+async def games_page():
+    return FileResponse(str(STATIC_DIR / "games.html"))
+
+
+@app.get("/invite/{token}")
+async def invite_page(token: str):
+    return FileResponse(str(STATIC_DIR / "invite.html"))
+
+
 @app.get("/play")
 async def play():
     return FileResponse(str(STATIC_DIR / "play.html"))
 
 
-@app.get("/admin")
-async def admin():
-    return FileResponse(str(STATIC_DIR / "admin.html"))
+@app.get("/engine-config")
+async def engine_config_page():
+    from starlette.responses import RedirectResponse
+    return RedirectResponse("/my-engines", status_code=301)
+
+
+@app.get("/my-engines")
+async def my_engines_page():
+    return FileResponse(str(STATIC_DIR / "my-engines.html"))
+
+
+@app.get("/libraries")
+async def libraries_page():
+    return FileResponse(str(STATIC_DIR / "libraries.html"))
 
 
 @app.get("/login")

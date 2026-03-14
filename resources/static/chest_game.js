@@ -12,16 +12,37 @@ const ChestGame = (() => {
 
     console.log('✓ ChestGame module initialized');
 
+    async function _apiCall(action, payload) {
+        const gameId = window.currentGameId;
+        const user   = window.currentUser;
+        if (user && gameId) {
+            const token = localStorage.getItem('access_token');
+            const r = await fetch(`/api/games/${gameId}/engines/chest_game/action`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
+                },
+                body: JSON.stringify({ action, payload }),
+            });
+            if (!r.ok) throw new Error('Failed');
+            return r.json();
+        }
+        // fallback: direct API
+        const endpoint = action === 'start' ? '/api/play/chest-start' : '/api/play/chest-guess';
+        const r = await fetch(endpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+        });
+        if (!r.ok) throw new Error('Failed');
+        return r.json();
+    }
+
     async function start(chestKey) {
         console.log('ChestGame.start called with:', chestKey);
         try {
-            const r = await fetch('/api/play/chest-start', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ chest: chestKey }),
-            });
-            if (!r.ok) throw new Error('Failed to start chest game');
-            const data = await r.json();
+            const data = await _apiCall('start', { chest: chestKey });
             console.log('Game started:', data);
             gameId = data.game_id;
             gameLength = data.length;
@@ -40,13 +61,7 @@ const ChestGame = (() => {
     async function guess(direction) {
         if (!gameId) return;
         try {
-            const r = await fetch('/api/play/chest-guess', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ game_id: gameId, direction }),
-            });
-            if (!r.ok) throw new Error('Failed to guess');
-            const data = await r.json();
+            const data = await _apiCall('guess', { game_id: gameId, direction });
             guessed = data.guessed || [];
             attempts = data.attempts || 0;
 

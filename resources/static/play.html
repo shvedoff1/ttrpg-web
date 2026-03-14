@@ -4,112 +4,52 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" href="/favicon.png" type="image/png">
-<title>Готика — Мир</title>
+<title>TTRPG — Игра</title>
+<script>document.documentElement.dataset.theme = localStorage.theme || 'dark'</script>
 <link rel="stylesheet" href="play.css">
-<link rel="stylesheet" href="chest_game.css">
 </head>
 <body>
 
-<div class="left-col">
+<div class="layout">
 
-<header>
-    <h1>⚔ Готика Debug</h1>
-    <p>Выбери категорию для изучения мира</p>
-    <span class="header-user" id="headerUserArea">
-        <span id="userName"></span>
-        <a id="headerLoginBtn" href="/login?next=/play" class="header-login-btn">Войти</a>
-        <button id="headerLogoutBtn" class="header-logout-btn" onclick="doLogout()">выйти</button>
-    </span>
-    <a href="/admin" class="header-link">← Редактор</a>
-</header>
+  <!-- ══ Left column: header + engines ════════════════ -->
+  <div class="left-col">
 
-  <!-- ══ Main column ══════════════════════════════ -->
-  <main class="main-col">
+    <header>
+      <span class="header-title" id="gameTitle">TTRPG</span>
+      <select id="gameSelect" class="header-select" style="display:none"></select>
+      <div class="header-right">
+        <button id="themeToggle" class="theme-toggle" title="Сменить тему">🌙</button>
+        <span id="userName" class="header-btn" style="display:none;border:none;cursor:default"></span>
+        <a id="loginBtn" href="/login?next=/play" class="header-btn">Войти</a>
+        <button id="logoutBtn" class="header-btn" style="display:none">Выйти</button>
+        <a href="/games" class="header-btn">Мои игры</a>
+      </div>
+    </header>
 
-    <div class="categories">
-        <button class="cat-btn" data-cat="professions" onclick="selectCat(this)">
-            <span class="cat-icon">⚔</span>
-            Профессии
-            <span class="arrow-down">▼</span>
-        </button>
-        <button class="cat-btn" data-cat="items" onclick="selectCat(this)">
-            <span class="cat-icon">🎒</span>
-            Предметы
-            <span class="arrow-down">▼</span>
-        </button>
-        <button class="cat-btn" data-cat="story" onclick="selectCat(this)">
-            <span class="cat-icon">📜</span>
-            Сюжет
-            <span class="arrow-down">▼</span>
-        </button>
+    <nav class="engine-tabs" id="engineTabs"></nav>
+
+    <main class="engine-content" id="engineContent">
+      <div class="engine-loading">Загрузка...</div>
+    </main>
+
+  </div><!-- /.left-col -->
+
+  <!-- ══ Right column: journal ════════════════════════ -->
+  <aside class="log-col">
+    <div class="log-header">
+      <span class="log-title">📜 Журнал</span>
+      <div class="log-tabs" id="logTabs"></div>
+      <button id="clearLogBtn" class="log-clear-btn">Очистить</button>
     </div>
-
-    <div class="cat-label-strip" id="catLabelStrip">
-        <span>◆</span><span id="catLabelText"></span><span>◆</span>
-    </div>
-
-    <div class="v-connector" id="vConnector"></div>
-
-    <div class="sub-area" id="subArea">
-        <div class="sub-row-wrap">
-            <div class="sub-row" id="subRow"></div>
-        </div>
-    </div>
-
-    <!-- Interaction panel: location picker + search -->
-    <div class="interact-area" id="interactArea">
-        <div class="interact-inner">
-            <!-- Step 1: action type (shown only for multi-mode professions) -->
-            <div class="param1-section" id="param1Section">
-                <div class="param1-title">Что делаем</div>
-                <div class="param1-grid" id="param1Grid"></div>
-                <div class="interact-sep"></div>
-            </div>
-            <!-- Chest mini-game -->
-            <div class="chest-game-area" id="chestGameArea" style="display:none">
-                <div class="chest-game-progress" id="chestGameProgress"></div>
-                <div class="chest-game-dirs" id="chestGameDirs">
-                    <button class="dir-btn" data-dir="up" onclick="guessDir('up')">↑</button>
-                    <button class="dir-btn" data-dir="left" onclick="guessDir('left')">←</button>
-                    <button class="dir-btn" data-dir="down" onclick="guessDir('down')">↓</button>
-                    <button class="dir-btn" data-dir="right" onclick="guessDir('right')">→</button>
-                </div>
-                <div class="chest-game-attempts" id="chestGameAttempts"></div>
-            </div>
-            <!-- Step 2: location / district -->
-            <div class="interact-title" id="interactTitle">Выбери место</div>
-            <div class="loc-grid" id="locGrid"></div>
-            <div class="search-wrap">
-                <div class="result-popup" id="resultPopup"></div>
-                <button class="search-btn" id="searchBtn" disabled onclick="doSearch()">
-                    ⚔ Ищем
-                </button>
-            </div>
-            <div class="trader-inventory" id="traderInventory"></div>
-        </div>
-    </div>
-
-  </main>
-
-<footer>Готика · Мир и Легенды</footer>
-
-</div><!-- /.left-col -->
-
-<!-- ══ Log panel ════════════════════════════════ -->
-<aside class="log-panel">
-  <div class="log-header">
-      <span class="log-header-title">📜 Журнал</span>
-      <button class="log-clear-btn" onclick="clearLog()">Очистить</button>
-  </div>
-  <div class="log-entries" id="logEntries">
+    <div class="log-entries" id="logEntries">
       <div class="log-empty">Результаты появятся здесь</div>
-  </div>
-</aside>
+    </div>
+  </aside>
 
+</div><!-- /.layout -->
 
-<script src="changelog_notify.js"></script>
-<script src="chest_game.js"></script>
-<script src="play.js"></script>
+<script type="module" src="/js/main.js"></script>
 
 </body>
 </html>

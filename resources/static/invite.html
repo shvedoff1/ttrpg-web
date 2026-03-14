@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="/favicon.png" type="image/png">
+<title>Приглашение в игру</title>
+<style>
+  :root {
+    --bg: #1a1a2e; --bg2: #16213e; --gold: #c9a84c;
+    --text: #e0e0e0; --muted: #888; --danger: #e06c75;
+    --success: #98c379; --border: #2a2a4a;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
+  .card { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 32px; max-width: 420px; width: 100%; text-align: center; }
+  .icon { font-size: 3rem; margin-bottom: 16px; }
+  h1 { font-size: 1.3rem; color: var(--gold); margin-bottom: 8px; }
+  .game-name { font-size: 1.1rem; font-weight: 600; margin-bottom: 4px; }
+  .role-badge { display: inline-block; font-size: 0.78rem; padding: 3px 12px; border-radius: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; margin: 8px 0 16px; }
+  .role-player    { background: #2a2a2a; color: #888; }
+  .role-moderator { background: #1a2040; color: #61afef; }
+  .role-admin     { background: #1a2d1a; color: #98c379; }
+  .meta { font-size: 0.85rem; color: var(--muted); margin-bottom: 24px; }
+  .btn { display: block; width: 100%; padding: 11px; border-radius: 8px; border: none; cursor: pointer; font-size: 1rem; font-weight: 600; transition: opacity .2s; margin-bottom: 10px; }
+  .btn:hover { opacity: .85; }
+  .btn-primary { background: var(--gold); color: #1a1a2e; }
+  .btn-ghost { background: transparent; border: 1px solid var(--border); color: var(--text); }
+  .msg { font-size: 0.9rem; color: var(--muted); margin-top: 8px; }
+  .msg.error { color: var(--danger); }
+  .msg.success { color: var(--success); }
+</style>
+</head>
+<body>
+<div class="card" id="card">
+  <div class="icon">🎲</div>
+  <h1>Приглашение в игру</h1>
+  <div id="content"><div class="msg">Загрузка…</div></div>
+</div>
+
+<script>
+const token = location.pathname.split('/invite/')[1];
+let accessToken = localStorage.getItem('access_token');
+
+async function refreshToken() {
+  const r = await fetch('/auth/refresh', { method: 'POST', credentials: 'include' });
+  if (r.ok) {
+    const d = await r.json();
+    accessToken = d.access_token;
+    localStorage.setItem('access_token', accessToken);
+    return true;
+  }
+  return false;
+}
+
+async function apiJson(method, path, body) {
+  const opts = { method, headers: { 'Content-Type': 'application/json' } };
+  if (accessToken) opts.headers['Authorization'] = 'Bearer ' + accessToken;
+  if (body !== undefined) opts.body = JSON.stringify(body);
+  let res = await fetch(path, opts);
+  if (res.status === 401) {
+    if (await refreshToken()) {
+      opts.headers['Authorization'] = 'Bearer ' + accessToken;
+      res = await fetch(path, opts);
+    }
+  }
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw new Error(data.detail || 'Ошибка ' + res.status);
+  }
+  return res.status === 204 ? null : res.json();
+}
+
+async function init() {
+  if (!token) { show('<div class="msg error">Неверная ссылка</div>'); return; }
+
+  let info;
+  try {
+    info = await apiJson('GET', `/api/invites/${token}`);
+  } catch (e) {
+    show(`<div class="msg error">${e.message}</div>`);
+    return;
+  }
+
+  if (info.used) {
+    show(`<div class="msg error">Эта ссылка уже была использована</div>`);
+    return;
+  }
+  if (info.expired) {
+    show(`<div class="msg error">Срок действия ссылки истёк</div>`);
+    return;
+  }
+
+  const exp = info.expires_at
+    ? 'до ' + new Date(info.expires_at).toLocaleString('ru')
+    : 'без ограничений';
+
+  show(`
+    <div class="game-name">${esc(info.game_name || 'Игра')}</div>
+    <div class="role-badge role-${info.role}">${info.role}</div>
+    <div class="meta">Срок действия: ${exp}</div>
+    <button class="btn btn-primary" onclick="accept()">Принять приглашение</button>
+    <button class="btn btn-ghost" onclick="window.location.href='/'">Отмена</button>
+    <div class="msg" id="msg"></div>
+  `);
+}
+
+async function accept() {
+  if (!accessToken) {
+    // Не авторизован — редирект на логин, вернёмся сюда после
+    localStorage.setItem('invite_redirect', location.href);
+    window.location.href = '/login';
+    return;
+  }
+  try {
+    const result = await apiJson('POST', `/api/invites/${token}/accept`);
+    document.getElementById('msg').textContent = '';
+    show(`
+      <div class="icon">✅</div>
+      <h1>Вы в игре!</h1>
+      <div class="game-name">${esc(result.game_name || '')}</div>
+      <div class="role-badge role-${result.role}">${result.role}</div>
+      <button class="btn btn-primary" onclick="window.location.href='/games'" style="margin-top:20px">Перейти к играм</button>
+    `);
+  } catch (e) {
+    const msgEl = document.getElementById('msg');
+    if (msgEl) msgEl.textContent = e.message;
+    else show(`<div class="msg error">${e.message}</div>`);
+  }
+}
+
+function show(html) { document.getElementById('content').innerHTML = html; }
+function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+// Handle redirect back from login
+const redirect = localStorage.getItem('invite_redirect');
+if (redirect && redirect === location.href) {
+  localStorage.removeItem('invite_redirect');
+}
+
+init();
+</script>
+</body>
+</html>

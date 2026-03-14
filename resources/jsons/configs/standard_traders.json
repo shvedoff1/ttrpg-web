@@ -11,7 +11,7 @@
         "priority": 2
       },
       {
-        "resource_file": "resources/охота/arrows.json",
+        "resource_file": "items.hunt.arrows",
         "count": 3,
         "priority": 1
       }
@@ -29,7 +29,7 @@
         "priority": 2
       },
       {
-        "resource_file": "resources/ремесло/metal.json",
+        "resource_file": "items.craft.metal",
         "count": 3,
         "priority": 1
       }
@@ -41,17 +41,17 @@
     "objects_count": 10,
     "categories": [
       {
-        "resource_file": "resources/охота/trophies.json",
+        "resource_file": "items.hunt.trophies",
         "count": 5,
         "priority": 3
       },
       {
-        "resource_file": "resources/прочее/tools.json",
+        "resource_file": "items.misc.tools",
         "count": 3,
         "priority": 2
       },
       {
-        "resource_file": "resources/охота/arrows.json",
+        "resource_file": "items.hunt.arrows",
         "count": 2,
         "priority": 1
       }
@@ -63,12 +63,12 @@
     "objects_count": 8,
     "categories": [
       {
-        "resource_file": "resources/алхимия/herbs.json",
+        "resource_file": "items.alchemy.herbs",
         "count": 5,
         "priority": 2
       },
       {
-        "resource_file": "resources/провизия/food.json",
+        "resource_file": "items.food.food",
         "count": 3,
         "priority": 1
       }
@@ -80,17 +80,17 @@
     "objects_count": 10,
     "categories": [
       {
-        "resource_file": "resources/алхимия/reagents.json",
+        "resource_file": "items.alchemy.reagents",
         "count": 4,
         "priority": 3
       },
       {
-        "resource_file": "resources/алхимия/potions.json",
+        "resource_file": "items.alchemy.potions",
         "count": 4,
         "priority": 2
       },
       {
-        "resource_file": "resources/прочее/scrolls.json",
+        "resource_file": "items.misc.scrolls",
         "count": 2,
         "priority": 1
       }
@@ -102,27 +102,27 @@
     "objects_count": 11,
     "categories": [
       {
-        "resource_file": "resources/прочее/cloth.json",
+        "resource_file": "items.misc.cloth",
         "count": 4,
         "priority": 3
       },
       {
-        "resource_file": "resources/прочее/tools.json",
+        "resource_file": "items.misc.tools",
         "count": 2,
         "priority": 2
       },
       {
-        "resource_file": "resources/прочее/hardware.json",
+        "resource_file": "items.misc.hardware",
         "count": 2,
         "priority": 2
       },
       {
-        "resource_file": "resources/прочее/bags.json",
+        "resource_file": "items.misc.bags",
         "count": 2,
         "priority": 1
       },
       {
-        "resource_file": "resources/прочее/candles.json",
+        "resource_file": "items.misc.candles",
         "count": 1,
         "priority": 1
       }
@@ -134,12 +134,12 @@
     "objects_count": 8,
     "categories": [
       {
-        "resource_file": "resources/ремесло/jewelry.json",
+        "resource_file": "items.craft.jewelry",
         "count": 5,
         "priority": 2
       },
       {
-        "resource_file": "resources/ремесло/gems.json",
+        "resource_file": "items.craft.gems",
         "count": 3,
         "priority": 1
       }
@@ -151,22 +151,22 @@
     "objects_count": 11,
     "categories": [
       {
-        "resource_file": "resources/провизия/food.json",
+        "resource_file": "items.food.food",
         "count": 4,
         "priority": 3
       },
       {
-        "resource_file": "resources/провизия/alcohol.json",
+        "resource_file": "items.food.alcohol",
         "count": 3,
         "priority": 2
       },
       {
-        "resource_file": "resources/провизия/spices.json",
+        "resource_file": "items.food.spices",
         "count": 2,
         "priority": 1
       },
       {
-        "resource_file": "resources/провизия/fish.json",
+        "resource_file": "items.food.fish",
         "count": 2,
         "priority": 1
       }

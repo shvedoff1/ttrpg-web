@@ -4,19 +4,19 @@
       "label": "Зелье",
       "icon": "🧪",
       "weight": 40,
-      "resource_file": "resources/алхимия/potions.json"
+      "resource_file": "items.alchemy.potions"
     },
     "weapon": {
       "label": "Хорошее оружие",
       "icon": "⚔",
       "weight": 30,
-      "resource_file": "resources/ремесло/weapons.json"
+      "resource_file": "items.craft.weapons"
     },
     "scroll": {
       "label": "Свиток",
       "icon": "📜",
       "weight": 30,
-      "resource_file": "resources/прочее/scrolls.json"
+      "resource_file": "items.misc.scrolls"
     }
   }
 }

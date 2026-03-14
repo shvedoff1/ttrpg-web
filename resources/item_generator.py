@@ -1,22 +1,14 @@
 """
 Item generator module — generates weapons and armor with randomized parts and properties.
+
+Uses slug-based loading through engines/_helpers.load_json (DB-backed DataLibrary).
 """
 
-import json
 import random
-from pathlib import Path
-from typing import Union
 
-RESOURCES_DIR = Path(__file__).parent / "jsons"
-GENERATOR_CONFIG_FILE = "configs/item_generator.json"
+from engines._helpers import load_json
 
-
-def _load_json(filename: str) -> Union[dict, list]:
-    """Load JSON from jsons directory."""
-    path = RESOURCES_DIR / filename
-    if not path.exists():
-        raise FileNotFoundError(f"Config file not found: {filename}")
-    return json.loads(path.read_text(encoding="utf-8"))
+_GENERATOR_CONFIG = "config.item_gen.default"
 
 
 def _pick_one(items: dict) -> dict:
@@ -73,7 +65,7 @@ def generate_item(category: str, subtype: str) -> dict:
             "properties": ["Property 1 name", "Property 2 name"]
         }
     """
-    config = _load_json(GENERATOR_CONFIG_FILE)
+    config = load_json(_GENERATOR_CONFIG)
 
     if category not in config:
         raise ValueError(f"Unknown item category: {category}")
@@ -87,7 +79,7 @@ def generate_item(category: str, subtype: str) -> dict:
 
     # Pick one part from each slot
     for part_slot in type_config["parts"]:
-        slot_items = _load_json(part_slot["source"])
+        slot_items = load_json(part_slot["source"])
         chosen_part = _pick_one(slot_items)
         parts.append(chosen_part)
         parts_price += chosen_part.get("price", 0)
@@ -99,7 +91,7 @@ def generate_item(category: str, subtype: str) -> dict:
     for prop_group in type_config.get("property_groups", []):
         count = random.randint(prop_group["count_min"], prop_group["count_max"])
         if count > 0:
-            prop_items = _load_json(prop_group["source"])
+            prop_items = load_json(prop_group["source"])
             chosen_props = _pick_many(prop_items, count)
             for prop in chosen_props:
                 properties.append(prop)
