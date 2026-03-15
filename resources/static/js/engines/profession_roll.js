@@ -91,6 +91,7 @@ export async function render(container, rec, gameId, postLog) {
         if (result.gold != null) logData.gold = result.gold;
         if (result.items?.length) logData.items = result.items;
         if (showPrice && result.price != null) logData.price = result.price;
+        if (result.weight != null) logData.weight = result.weight;
         await postLog(logData);
 
         // Strip price from popup if not configured to show

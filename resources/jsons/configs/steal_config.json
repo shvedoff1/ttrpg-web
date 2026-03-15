@@ -20,18 +20,22 @@
     ],
     "district_filter": {
         "poor": {
+            "name": "Бедный район",
             "filter": "exclude_rarest",
             "percent": 75
         },
         "normal": {
+            "name": "Обычный район",
             "filter": "exclude_rarest",
             "percent": 20
         },
         "rich": {
+            "name": "Богатый район",
             "filter": "exclude_common",
             "percent": 20
         },
         "magic": {
+            "name": "Обитель магии",
             "filter": "exclude_common",
             "percent": 20
         }

@@ -39,7 +39,7 @@ echo "════════════════════════�
 step "Сборка архива"
 log "Исключаем: venv/, __pycache__, .git, *.pyc"
 
-tar -czf "${ARCHIVE_PATH}" \
+COPYFILE_DISABLE=1 tar --no-xattrs -czf "${ARCHIVE_PATH}" \
     --exclude="./.git" \
     --exclude="./.claude" \
     --exclude="./.idea" \
@@ -77,9 +77,6 @@ mkdir -p "\${DEPLOY_DIR}"
 
 echo "  → Распаковываем архив"
 tar -xzf "\${ARCHIVE}" -C "\${DEPLOY_DIR}"
-
-echo "  → Удаляем macOS-метаданные (._*)"
-find "\${DEPLOY_DIR}" -name '._*' -delete
 
 echo "  → Удаляем архив с сервера"
 rm -f "\${ARCHIVE}"

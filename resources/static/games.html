@@ -163,7 +163,7 @@
 
     <div class="tabs">
       <div class="tab active" data-tab="members">Участники</div>
-      <div class="tab" data-tab="engines">Движки</div>
+      <div class="tab" data-tab="engines">Конфиги</div>
       <div class="tab" data-tab="invites">Инвайты</div>
     </div>
 
@@ -178,12 +178,9 @@
       <div id="active-engines-list"><div class="empty">Нет подключённых движков</div></div>
 
       <div class="engines-available" id="available-engines-section" style="display:none">
-        <div class="section-title" style="font-size:.85rem; margin-top:16px">Системные движки</div>
-        <div id="available-engines-list"></div>
-
-        <div class="section-title" style="font-size:.85rem; margin-top:16px">Мои движки</div>
-        <div id="available-custom-engines-list"></div>
-        <button class="btn btn-ghost btn-sm" style="margin-top:8px" onclick="openModal('modal-new-engine')">+ Создать движок</button>
+        <div class="section-title" style="font-size:.85rem; margin-top:16px">Доступные категории</div>
+        <div id="available-categories-list"></div>
+        <div style="margin-top:8px"><a href="/my-engines" style="color:var(--gold);font-size:.82rem">Настроить категории &rarr;</a></div>
       </div>
 
     </div>
@@ -238,36 +235,6 @@
   </div>
 </div>
 
-<!-- Modal: New custom engine -->
-<div class="modal-backdrop" id="modal-new-engine">
-  <div class="modal" style="max-width:580px">
-    <h3>Создать движок</h3>
-    <div class="field">
-      <label>Название</label>
-      <input type="text" id="new-eng-name" maxlength="255" placeholder="Торговец зельями">
-    </div>
-    <div class="field">
-      <label>Описание <span style="color:var(--muted)">(необязательно)</span></label>
-      <input type="text" id="new-eng-desc" maxlength="500">
-    </div>
-    <div class="field" style="display:flex;align-items:center;gap:10px">
-      <input type="checkbox" id="new-eng-public" style="width:auto">
-      <label style="margin:0;cursor:pointer" for="new-eng-public">Публичный (виден другим пользователям)</label>
-    </div>
-
-    <div style="margin-top:8px">
-      <div class="section-title" style="font-size:.85rem;margin-bottom:8px">Механики</div>
-      <div id="new-eng-mechanics"></div>
-      <button class="btn btn-ghost btn-sm" style="margin-top:6px" onclick="addMechanic()">+ Добавить механику</button>
-    </div>
-
-    <div class="modal-footer">
-      <button class="btn btn-ghost" onclick="closeModal('modal-new-engine')">Отмена</button>
-      <button class="btn btn-primary" onclick="submitNewEngine()">Создать</button>
-    </div>
-  </div>
-</div>
-
 <!-- Toast -->
 <div id="toast"></div>
 
@@ -277,8 +244,7 @@ let accessToken = localStorage.getItem('access_token');
 let currentUser = null;
 let currentGame = null;
 let currentRole = null;
-let allEngines = [];
-let myCustomEngines = [];
+let myCategories = [];
 
 async function apiReq(method, path, body) {
   const opts = { method, headers: { 'Content-Type': 'application/json' } };
@@ -333,13 +299,11 @@ async function init() {
   document.getElementById('profile-username').value = me.username || '';
   document.getElementById('profile-email-info').textContent = 'Email: ' + (me.email || '');
 
-  const [games, engines, custom] = await Promise.all([
+  const [games, categories] = await Promise.all([
     apiJson('GET', '/api/games'),
-    apiJson('GET', '/api/engines'),
-    apiJson('GET', '/api/engines/custom'),
+    apiJson('GET', '/api/categories'),
   ]);
-  allEngines = engines || [];
-  myCustomEngines = custom || [];
+  myCategories = categories || [];
   renderGames(games || []);
 }
 
@@ -472,8 +436,7 @@ async function loadEngines(gameId, isAdmin) {
 
   if (isAdmin) {
     document.getElementById('available-engines-section').style.display = '';
-    renderAvailableEngines(recs || [], gameId);
-    renderAvailableCustomEngines(recs || [], gameId);
+    renderAvailableCategories(recs || [], gameId);
   } else {
     document.getElementById('available-engines-section').style.display = 'none';
   }
@@ -505,47 +468,34 @@ function renderActiveEngines(recs, gameId, isAdmin) {
     </div>`;
   }).join('');
   if (isAdmin) {
-    el.innerHTML += '<div style="margin-top:8px"><a href="/my-engines" style="color:var(--gold);font-size:.82rem">Настроить движки в Мои движки &rarr;</a></div>';
+    el.innerHTML += '<div style="margin-top:8px"><a href="/my-engines" style="color:var(--gold);font-size:.82rem">Настроить категории &rarr;</a></div>';
   }
 }
 
-function renderAvailableEngines(active, gameId) {
-  const activeIds = new Set(active.filter(r => r.engine_id).map(r => r.engine_id));
-  const el = document.getElementById('available-engines-list');
-  const notAdded = allEngines.filter(e => !activeIds.has(e.engine_id));
-  if (!notAdded.length) { el.innerHTML = '<div class="empty">Все системные движки уже подключены</div>'; return; }
+function renderAvailableCategories(active, gameId) {
+  const activeCatIds = new Set(active.filter(r => r.engine_category_id).map(r => r.engine_category_id));
+  const el = document.getElementById('available-categories-list');
+  if (!myCategories.length) { el.innerHTML = '<div class="empty">Нет категорий</div>'; return; }
+  const notAdded = myCategories.filter(c => !activeCatIds.has(c.id));
+  if (!notAdded.length) { el.innerHTML = '<div class="empty">Все категории уже подключены</div>'; return; }
 
-  el.innerHTML = notAdded.map(e => `
+  el.innerHTML = notAdded.map(c => `
     <div class="avail-engine">
       <div class="avail-info">
-        <h4>${esc(e.name)}</h4>
-        <p>${esc(e.description)}</p>
+        <h4>${esc(c.icon || '')} ${esc(c.name)} <span style="font-size:.75rem;color:var(--muted)">${c.is_public ? '🌐' : '🔒'}</span></h4>
+        <p>${esc(c.description || '')}</p>
       </div>
-      <button class="btn btn-primary btn-sm" onclick="addEngine(${gameId},'${e.engine_id}',null)">+ Добавить</button>
+      <button class="btn btn-primary btn-sm" onclick="addEngine(${gameId},null,null,${c.id})">+ Добавить</button>
     </div>
   `).join('');
 }
 
-function renderAvailableCustomEngines(active, gameId) {
-  const activeCustomIds = new Set(active.filter(r => r.user_engine_id).map(r => r.user_engine_id));
-  const el = document.getElementById('available-custom-engines-list');
-  if (!myCustomEngines.length) { el.innerHTML = '<div class="empty">Нет пользовательских движков</div>'; return; }
-  const notAdded = myCustomEngines.filter(e => !activeCustomIds.has(e.id));
-  if (!notAdded.length) { el.innerHTML = '<div class="empty">Все ваши движки уже подключены</div>'; return; }
-
-  el.innerHTML = notAdded.map(e => `
-    <div class="avail-engine">
-      <div class="avail-info">
-        <h4>${esc(e.name)} <span style="font-size:.75rem;color:var(--muted)">${e.is_public ? '🌐' : '🔒'}</span></h4>
-        <p>${esc(e.description || '')}</p>
-      </div>
-      <button class="btn btn-primary btn-sm" onclick="addEngine(${gameId},null,${e.id})">+ Добавить</button>
-    </div>
-  `).join('');
-}
-
-async function addEngine(gameId, engineId, userEngineId) {
-  const body = engineId ? { engine_id: engineId } : { user_engine_id: userEngineId };
+async function addEngine(gameId, engineId, userEngineId, categoryId) {
+  let body;
+  if (engineId) body = { engine_id: engineId };
+  else if (userEngineId) body = { user_engine_id: userEngineId };
+  else if (categoryId) body = { engine_category_id: categoryId };
+  else return;
   const ok = await apiJson('POST', `/api/games/${gameId}/engines`, body);
   if (ok) { toast('Движок добавлен'); loadEngines(gameId, true); }
 }
@@ -614,62 +564,6 @@ async function saveProfile() {
   if (window.updateHeaderUser) updateHeaderUser(data.username || currentUser.email?.split('@')[0]);
   toast('Профиль обновлён');
   closeModal('modal-profile');
-}
-
-// ── Custom engines ─────────────────────────────────────────────────────────
-const PRIMITIVE_TYPES = [
-  { type: 'weighted_roll', label: 'Взвешенный бросок' },
-  { type: 'pick_list',     label: 'Случайный выбор из списка' },
-  { type: 'item_gen',      label: 'Генератор предметов' },
-  { type: 'inventory',     label: 'Инвентарь торговца' },
-  { type: 'loot_table',    label: 'Таблица лута' },
-];
-
-function addMechanic() {
-  const container = document.getElementById('new-eng-mechanics');
-  const idx = container.children.length;
-  const div = document.createElement('div');
-  div.style.cssText = 'border:1px solid var(--border);border-radius:6px;padding:10px;margin-bottom:8px;';
-  div.innerHTML = `
-    <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
-      <select style="flex:1;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:6px 10px;font-size:.85rem">
-        ${PRIMITIVE_TYPES.map(p => `<option value="${p.type}">${p.label}</option>`).join('')}
-      </select>
-      <input type="text" placeholder="Метка (напр. «Травы»)" style="flex:1;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:6px 10px;font-size:.85rem">
-      <button class="btn btn-danger btn-sm" onclick="this.closest('div[style]').remove()">✕</button>
-    </div>
-  `;
-  container.appendChild(div);
-}
-
-async function submitNewEngine() {
-  const name = document.getElementById('new-eng-name').value.trim();
-  if (!name) { toast('Введите название движка', true); return; }
-
-  const mechanics = [];
-  document.getElementById('new-eng-mechanics').querySelectorAll('div[style]').forEach(row => {
-    const [sel, labelInput] = row.querySelectorAll('select, input[type=text]');
-    mechanics.push({ type: sel.value, label: labelInput.value.trim() || sel.options[sel.selectedIndex].text });
-  });
-
-  const body = {
-    name,
-    description: document.getElementById('new-eng-desc').value.trim() || null,
-    is_public: document.getElementById('new-eng-public').checked,
-    mechanics,
-  };
-
-  const eng = await apiJson('POST', '/api/engines/custom', body);
-  if (!eng) return;
-  myCustomEngines.unshift(eng);
-  toast('Движок создан!');
-  closeModal('modal-new-engine');
-  // Reset form
-  document.getElementById('new-eng-name').value = '';
-  document.getElementById('new-eng-desc').value = '';
-  document.getElementById('new-eng-public').checked = false;
-  document.getElementById('new-eng-mechanics').innerHTML = '';
-  if (currentGame) renderAvailableCustomEngines([], currentGame.id);
 }
 
 // ── Utils ─────────────────────────────────────────────────────────────────

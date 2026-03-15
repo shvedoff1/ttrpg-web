@@ -7,11 +7,20 @@ import { makeWidget, makeActionButton, callAction } from './base.js';
 
 // Map primitive mechanic types to their renderer modules
 const RENDERERS = {
-    weighted_roll:    () => import('./profession_roll.js'),
-    pick_list:        () => import('./story_motivation.js'),
-    item_gen:         () => import('./item_generator.js'),
-    inventory:        () => import('./trader_inventory.js'),
-    loot_table:       () => import('./treasure.js'),
+    // Core primitives
+    weighted_roll:    () => import('./primitives/generic_roll.js'),
+    context_roll:     () => import('./primitives/context_roll.js'),
+    weighted_sample:  () => import('./primitives/sample.js'),
+    cascade_roll:     () => import('./primitives/generic_roll.js'),
+    filtered_roll:    () => import('./primitives/context_roll.js'),
+    loot_bundle:      () => import('./primitives/context_roll.js'),
+    pool_sample:      () => import('./primitives/generic_roll.js'),
+    item_generator:   () => import('./item_generator.js'),
+    // System engine renderers (for copy-mode engines)
+    profession_roll:  () => import('./profession_roll.js'),
+    story_motivation: () => import('./story_motivation.js'),
+    trader_inventory: () => import('./trader_inventory.js'),
+    treasure:         () => import('./treasure.js'),
 };
 
 export async function render(container, rec, gameId, postLog) {
@@ -33,8 +42,8 @@ export async function render(container, rec, gameId, postLog) {
         const loader   = RENDERERS[mechType];
         if (loader) {
             const mod = await loader();
-            // Patch rec so the renderer calls the right URL
-            await mod.render(container, rec, gameId, postLog);
+            const subRec = { ...rec, _mechanicIndex: 0 };
+            await mod.render(container, subRec, gameId, postLog);
             return;
         }
     }
@@ -66,6 +75,7 @@ export async function render(container, rec, gameId, postLog) {
             // Create a fake rec with only this mechanic for the renderer
             const subRec = {
                 ...rec,
+                _mechanicIndex: i,
                 meta: { ...rec.meta, mechanics: [m] },
             };
             const loader = RENDERERS[m.type];

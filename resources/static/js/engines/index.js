@@ -23,6 +23,18 @@ const ENGINE_RENDERERS = {
 export async function renderEngine(container, rec, gameId, postLog) {
     container.innerHTML = '';
 
+    // Category type — render via category.js
+    if (rec.meta?.type === 'category' || rec.engine_category_id) {
+        try {
+            const mod = await import('./category.js');
+            await mod.render(container, rec, gameId, postLog);
+        } catch (e) {
+            console.error('Category render error:', e);
+            container.innerHTML = `<div class="engine-loading">Ошибка загрузки категории: ${e.message}</div>`;
+        }
+        return;
+    }
+
     // Determine which renderer to use
     // Copy-mode user engines have base_engine_id in meta — use system renderer
     const engineId = rec.engine_id || rec.meta?.base_engine_id || 'composite';

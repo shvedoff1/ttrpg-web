@@ -1,7 +1,8 @@
 from datetime import datetime
 from typing import Optional
 from sqlalchemy import (
-    Integer, String, Text, DateTime, Boolean, ForeignKey, JSON, func, CheckConstraint
+    Integer, String, Text, DateTime, Boolean, Float, ForeignKey,
+    JSON, func, CheckConstraint, UniqueConstraint, Index
 )
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from core.database import Base
@@ -21,6 +22,10 @@ class User(Base):
     memberships: Mapped[list["GameMember"]] = relationship("GameMember", back_populates="user")
     user_engines: Mapped[list["UserEngine"]] = relationship("UserEngine", back_populates="owner")
     data_libraries: Mapped[list["DataLibrary"]] = relationship("DataLibrary", back_populates="owner")
+    engine_categories: Mapped[list["EngineCategory"]] = relationship("EngineCategory", back_populates="owner")
+    resource_items: Mapped[list["ResourceItem"]] = relationship(
+        "ResourceItem", foreign_keys="ResourceItem.owner_id", back_populates="owner"
+    )
 
 
 class Game(Base):
@@ -70,12 +75,56 @@ class UserEngine(Base):
     owner: Mapped["User"] = relationship("User", back_populates="user_engines")
 
 
+class EngineCategory(Base):
+    """User-created category that groups atomic engines together."""
+
+    __tablename__ = "engine_categories"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    name: Mapped[str] = mapped_column(String(255), nullable=False)
+    description: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    icon: Mapped[Optional[str]] = mapped_column(String(10), nullable=True)
+    owner_id: Mapped[int] = mapped_column(Integer, ForeignKey("users.id"), nullable=False)
+    is_public: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
+
+    owner: Mapped["User"] = relationship("User", back_populates="engine_categories")
+    engines: Mapped[list["CategoryEngine"]] = relationship(
+        "CategoryEngine", back_populates="category", cascade="all, delete-orphan",
+        order_by="CategoryEngine.order"
+    )
+
+
+class CategoryEngine(Base):
+    """Atomic engine inside a category. Each one wraps exactly one primitive or system engine."""
+
+    __tablename__ = "category_engines"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    category_id: Mapped[int] = mapped_column(
+        Integer, ForeignKey("engine_categories.id", ondelete="CASCADE"), nullable=False
+    )
+    name: Mapped[str] = mapped_column(String(255), nullable=False)
+    description: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    # "primitive" or "system"
+    engine_type: Mapped[str] = mapped_column(String(20), nullable=False)
+    # primitive_id (e.g. "weighted_roll") or system engine_id (e.g. "chest_game")
+    type_id: Mapped[str] = mapped_column(String(100), nullable=False)
+    config: Mapped[Optional[dict]] = mapped_column(JSON, nullable=True)
+    order: Mapped[int] = mapped_column(Integer, default=0)
+    created_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
+
+    category: Mapped["EngineCategory"] = relationship("EngineCategory", back_populates="engines")
+
+
 class GameEngine(Base):
     __tablename__ = "game_engines"
     __table_args__ = (
-        # Exactly one of engine_id / user_engine_id must be set
+        # Exactly one of engine_id / user_engine_id / engine_category_id must be set
         CheckConstraint(
-            "(engine_id IS NOT NULL) != (user_engine_id IS NOT NULL)",
+            "(CASE WHEN engine_id IS NOT NULL THEN 1 ELSE 0 END"
+            " + CASE WHEN user_engine_id IS NOT NULL THEN 1 ELSE 0 END"
+            " + CASE WHEN engine_category_id IS NOT NULL THEN 1 ELSE 0 END) = 1",
             name="ck_game_engines_one_source",
         ),
     )
@@ -86,10 +135,14 @@ class GameEngine(Base):
     user_engine_id: Mapped[Optional[int]] = mapped_column(
         Integer, ForeignKey("user_engines.id"), nullable=True
     )
+    engine_category_id: Mapped[Optional[int]] = mapped_column(
+        Integer, ForeignKey("engine_categories.id"), nullable=True
+    )
     order: Mapped[int] = mapped_column(Integer, default=0)
 
     game: Mapped["Game"] = relationship("Game", back_populates="engines")
     user_engine: Mapped[Optional["UserEngine"]] = relationship("UserEngine")
+    category: Mapped[Optional["EngineCategory"]] = relationship("EngineCategory")
 
 
 class GameMember(Base):
@@ -146,6 +199,72 @@ class DataLibrary(Base):
     updated_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now(), onupdate=func.now())
 
     owner: Mapped[Optional["User"]] = relationship("User", back_populates="data_libraries")
+
+
+class ResourceItem(Base):
+    """Единый ресурс (предмет, трава, руда, мотивация, часть генератора и т.д.).
+
+    Все предметы живут в одной таблице. Группировка — через теги.
+    owner_id=NULL → системный (read-only), иначе — пользовательский.
+    """
+
+    __tablename__ = "resource_items"
+    __table_args__ = (
+        UniqueConstraint("owner_id", "key", name="uq_resource_items_owner_key"),
+    )
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    key: Mapped[str] = mapped_column(String(200), nullable=False)
+    name: Mapped[str] = mapped_column(String(255), nullable=False)
+    price: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
+    weight: Mapped[float] = mapped_column(Float, nullable=False, default=0)
+    probability: Mapped[float] = mapped_column(Float, nullable=False, default=0)
+    meta: Mapped[Optional[dict]] = mapped_column(JSON, nullable=True)
+    tags: Mapped[Optional[list]] = mapped_column(JSON, nullable=True, default=list)
+    owner_id: Mapped[Optional[int]] = mapped_column(
+        Integer, ForeignKey("users.id"), nullable=True
+    )
+    source_item_id: Mapped[Optional[int]] = mapped_column(
+        Integer, ForeignKey("resource_items.id", ondelete="SET NULL"), nullable=True
+    )
+    created_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime, server_default=func.now(), onupdate=func.now()
+    )
+
+    owner: Mapped[Optional["User"]] = relationship(
+        "User", foreign_keys=[owner_id], back_populates="resource_items"
+    )
+    source_item: Mapped[Optional["ResourceItem"]] = relationship(
+        "ResourceItem", remote_side="ResourceItem.id"
+    )
+
+
+class EngineResourceBinding(Base):
+    """Привязка набора ресурсов (по тегам) к атомарному движку.
+
+    Движок загружает resource_items WHERE tags @> tag_filter,
+    затем применяет item_overrides поверх базовых значений.
+    """
+
+    __tablename__ = "engine_resource_bindings"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    engine_id: Mapped[int] = mapped_column(
+        Integer, ForeignKey("category_engines.id", ondelete="CASCADE"), nullable=False,
+        index=True
+    )
+    tag_filter: Mapped[Optional[list]] = mapped_column(JSON, nullable=True, default=list)
+    role: Mapped[str] = mapped_column(String(50), nullable=False, default="source")
+    priority: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    count: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
+    item_overrides: Mapped[Optional[dict]] = mapped_column(JSON, nullable=True)
+    label: Mapped[Optional[str]] = mapped_column(String(255), nullable=True)
+    icon: Mapped[Optional[str]] = mapped_column(String(10), nullable=True)
+    category_weight: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
+    order: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+
+    engine: Mapped["CategoryEngine"] = relationship("CategoryEngine", backref="resource_bindings")
 
 
 class GameLog(Base):

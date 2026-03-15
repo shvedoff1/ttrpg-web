@@ -1,4 +1,54 @@
 {
+    "categories": [
+        "items.food.food",
+        "items.food.alcohol",
+        "items.food.spices",
+        "items.food.fish",
+        "items.misc.tools",
+        "items.misc.hardware",
+        "items.misc.locks",
+        "items.hunt.traps",
+        "items.misc.wood",
+        "items.craft.metal",
+        "items.misc.cloth",
+        "items.misc.bags",
+        "items.misc.candles",
+        "items.craft.jewelry",
+        "items.alchemy.potions",
+        "items.misc.scrolls",
+        "items.alchemy.reagents",
+        "items.misc.books",
+        "items.misc.curiosities",
+        "items.misc.hlam",
+        "items.craft.weapons",
+        "items.craft.armor_parts",
+        "items.hunt.arrows",
+        "items.hunt.pelts",
+        "items.hunt.trophies",
+        "items.alchemy.herbs"
+    ],
+    "district_filter": {
+        "poor": {
+            "name": "Бедный район",
+            "filter": "exclude_rarest",
+            "percent": 60
+        },
+        "normal": {
+            "name": "Обычный район",
+            "filter": "exclude_rarest",
+            "percent": 15
+        },
+        "rich": {
+            "name": "Богатый район",
+            "filter": "exclude_common",
+            "percent": 25
+        },
+        "magic": {
+            "name": "Обитель магии",
+            "filter": "exclude_common",
+            "percent": 15
+        }
+    },
     "poor": {
         "name": "Схрон · Бедный район",
         "gold_min": 0,

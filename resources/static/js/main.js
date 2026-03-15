@@ -148,8 +148,9 @@ async function loadEngines(gameId) {
         const tab = document.createElement('button');
         tab.className = 'engine-tab' + (idx === 0 ? ' active' : '');
 
-        const eid = eng.engine_id || 'composite';
-        tab.innerHTML = `<span>${engineIcon(eid)}</span> ${eng.meta?.name || eid}`;
+        // Category → use meta.icon; system engine → engineIcon()
+        const icon = eng.meta?.icon || engineIcon(eng.engine_id || eng.meta?.base_engine_id || 'composite');
+        tab.innerHTML = `<span class="engine-tab-icon">${icon}</span><span class="engine-tab-name">${eng.meta?.name || eng.engine_id || 'Движок'}</span>`;
         tab.addEventListener('click', () => selectEngine(idx));
         engineTabsEl.appendChild(tab);
     });

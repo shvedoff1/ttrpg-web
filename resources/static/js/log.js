@@ -182,9 +182,10 @@ function _renderEntry(entry) {
     } else {
         const name  = entry.name  ? `<div class="log-entry-main">${_esc(entry.name)}</div>` : '';
         const price = entry.price != null ? `<div class="log-entry-sub">🪙 ${entry.price}</div>` : '';
+        const weight = entry.weight != null ? `<div class="log-entry-sub">⚖️ ${entry.weight}</div>` : '';
         const cat   = entry.category ? `<div class="log-entry-sub">${_esc(entry.category)}</div>` : '';
         const desc  = entry.description ? `<div class="log-entry-sub">${_esc(entry.description)}</div>` : '';
-        body = name + price + cat + desc;
+        body = name + price + weight + cat + desc;
     }
 
     div.innerHTML = meta + body;

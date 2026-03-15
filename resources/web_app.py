@@ -23,6 +23,9 @@ from routers.engines import router as engines_router
 from routers.user_engines import router as user_engines_router
 from routers.libraries import router as libraries_router
 from routers.log import router as log_router
+from routers.categories import router as categories_router
+from routers.resources import router as resources_router
+from routers.bindings import router as bindings_router
 from core.database import SessionLocal
 from core.models import DataLibrary
 from item_generator import generate_items
@@ -34,12 +37,14 @@ from engines.trader_inventory import TraderInventoryEngine
 from engines.story_motivation import StoryMotivationEngine
 from engines.treasure import TreasureEngine
 from engines.composite import CompositeEngine
+from engines.primitives import register_all_primitives
 
 RESOURCES_DIR = Path(__file__).parent / "jsons"
 STATIC_DIR = Path(__file__).parent / "static"
 CHANGELOG_FILE = Path(__file__).parent / "static" / "changelog.html"
 
-# Register all engines (до lifespan, чтобы seed мог на них опираться)
+# Register primitives first, then engines
+register_all_primitives()
 engine_registry.register(ProfessionRollEngine())
 engine_registry.register(ChestGameEngine())
 engine_registry.register(ItemGenEngine())
@@ -63,10 +68,12 @@ def _make_db_resolver() -> dict:
 async def lifespan(app: FastAPI):
     from core.seed import run_seed
     from core.seed_libraries import run_seed_libraries
+    from core.seed_resources import run_seed_resources
     from engines._helpers import set_db_resolver
 
     run_seed()
     run_seed_libraries()
+    run_seed_resources()
 
     # Кешируем системные библиотеки in-memory для быстрого доступа из движков
     _sys_cache = _make_db_resolver()
@@ -97,6 +104,9 @@ app.include_router(engines_router)
 app.include_router(user_engines_router)
 app.include_router(libraries_router)
 app.include_router(log_router)
+app.include_router(categories_router)
+app.include_router(resources_router)
+app.include_router(bindings_router)
 
 
 
@@ -623,7 +633,13 @@ async def my_engines_page():
 
 @app.get("/libraries")
 async def libraries_page():
-    return FileResponse(str(STATIC_DIR / "libraries.html"))
+    from starlette.responses import RedirectResponse
+    return RedirectResponse("/resources", status_code=301)
+
+
+@app.get("/resources")
+async def resources_page():
+    return FileResponse(str(STATIC_DIR / "resources.html"))
 
 
 @app.get("/login")

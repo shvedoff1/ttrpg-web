@@ -129,7 +129,6 @@ export class ConfigEditor {
       const valuePickers = row.querySelectorAll('select.kvm-value');
       if (field.value_schema && Array.isArray(field.value_schema)) {
         const vals = Array.from(valuePickers).map(s => s.value || null);
-        if (vals.some(v => !v)) return;  // skip incomplete rows
         result[key] = vals.length === 1 ? vals[0] : vals;
       } else {
         result[key] = valuePickers[0]?.value || null;
@@ -233,40 +232,56 @@ export class ConfigEditor {
     }
 
     const addRow = (key = '', values = []) => {
-      const row = el('div', { className: 'kvm-row', style: 'display:flex;gap:6px;align-items:center;margin-bottom:6px;flex-wrap:wrap' });
+      const row = el('div', {
+        className: 'kvm-row',
+        style: 'border:1px solid var(--border);border-radius:6px;padding:10px;margin-bottom:8px;background:var(--bg)'
+      });
+
+      // Header: key input + remove button
+      const header = el('div', { style: 'display:flex;gap:6px;align-items:center;margin-bottom:8px' });
       const keyInput = el('input', {
         type: 'text',
         className: 'kvm-key',
         value: key,
         placeholder: field.key_label || 'Key',
-        style: 'flex:0 0 140px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:5px 8px;font-size:.85rem'
+        style: 'flex:1;background:var(--bg2);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:5px 8px;font-size:.85rem;font-weight:600'
       });
-      row.appendChild(keyInput);
-
-      if (Array.isArray(field.value_schema)) {
-        field.value_schema.forEach((vs, i) => {
-          const select = el('select', {
-            className: 'kvm-value',
-            style: 'flex:1;min-width:140px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:5px 8px;font-size:.85rem'
-          });
-          select.innerHTML = '<option value="">(не выбрано)</option>';
-          const libs = libsBySchema[i] || [];
-          const currentSlug = Array.isArray(values) ? values[i] : values;
-          for (const lib of libs) {
-            const opt = el('option', { value: lib.slug, textContent: `${lib.name}` });
-            if (lib.slug === currentSlug) opt.selected = true;
-            select.appendChild(opt);
-          }
-          row.appendChild(select);
-        });
-      }
-
+      header.appendChild(keyInput);
       const rmBtn = el('button', {
         className: 'btn btn-danger btn-sm',
         textContent: '\u2715',
         onclick: () => row.remove()
       });
-      row.appendChild(rmBtn);
+      header.appendChild(rmBtn);
+      row.appendChild(header);
+
+      // Value fields with labels
+      if (Array.isArray(field.value_schema)) {
+        field.value_schema.forEach((vs, i) => {
+          const fieldWrap = el('div', { style: 'margin-bottom:6px' });
+          if (vs.label) {
+            fieldWrap.appendChild(el('div', {
+              textContent: vs.label,
+              style: 'font-size:.78rem;color:var(--muted);margin-bottom:2px'
+            }));
+          }
+          const select = el('select', {
+            className: 'kvm-value',
+            style: 'width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:5px 8px;font-size:.85rem'
+          });
+          select.innerHTML = '<option value="">(не выбрано)</option>';
+          const libs = libsBySchema[i] || [];
+          const currentSlug = Array.isArray(values) ? values[i] : values;
+          for (const lib of libs) {
+            const opt = el('option', { value: lib.slug, textContent: lib.name });
+            if (lib.slug === currentSlug) opt.selected = true;
+            select.appendChild(opt);
+          }
+          fieldWrap.appendChild(select);
+          row.appendChild(fieldWrap);
+        });
+      }
+
       container.insertBefore(row, addBtn);
     };
 

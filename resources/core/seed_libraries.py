@@ -1,8 +1,8 @@
 """
 core/seed_libraries.py — Сидирование системных DataLibrary из JSON-файлов.
 
-Загружает все 47 JSON-файлов в таблицу data_libraries при первом запуске.
-Идемпотентно: если slug уже существует — пропускает.
+Загружает все системные JSON-файлы в таблицу data_libraries при запуске.
+Идемпотентно: вставляет новые, обновляет данные существующих системных библиотек.
 """
 
 from pathlib import Path
@@ -96,18 +96,27 @@ def _load_file(rel_path: str) -> dict | list:
     return json.loads(full.read_text(encoding="utf-8"))
 
 
-def seed_libraries(db: Session) -> int:
-    """Вставляет системные библиотеки если отсутствуют. Возвращает количество добавленных."""
+def seed_libraries(db: Session) -> tuple[int, int]:
+    """Вставляет новые и обновляет существующие системные библиотеки.
+
+    Возвращает (added, updated).
+    """
     added = 0
+    updated = 0
     for slug, path, lib_type, engine_id, name, description in _LIBRARIES:
         exists = db.execute(
             select(DataLibrary).where(DataLibrary.slug == slug)
         ).scalar_one_or_none()
 
+        data = _load_file(path)
+
         if exists:
+            # Обновляем только системные (owner_id=NULL) если данные изменились
+            if exists.owner_id is None and data and data != exists.data:
+                exists.data = data
+                updated += 1
             continue
 
-        data = _load_file(path)
         db.add(DataLibrary(
             slug=slug,
             name=name,
@@ -121,19 +130,19 @@ def seed_libraries(db: Session) -> int:
         ))
         added += 1
 
-    if added:
+    if added or updated:
         db.commit()
 
-    return added
+    return added, updated
 
 
 def run_seed_libraries() -> None:
     """Точка входа: запускать при старте приложения."""
     db = SessionLocal()
     try:
-        added = seed_libraries(db)
-        if added:
-            print(f"[seed_libraries] Добавлено {added} системных библиотек")
+        added, updated = seed_libraries(db)
+        if added or updated:
+            print(f"[seed_libraries] Добавлено {added}, обновлено {updated} системных библиотек")
     except Exception as exc:
         print(f"[seed_libraries] Ошибка: {exc}")
         db.rollback()

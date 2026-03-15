@@ -129,6 +129,12 @@ export function formatResult(container, data) {
             price.textContent = `🪙 ${data.price}`;
             container.appendChild(price);
         }
+        if (data.weight != null) {
+            const weight = document.createElement('div');
+            weight.className = 'result-sub';
+            weight.textContent = `⚖️ ${data.weight}`;
+            container.appendChild(weight);
+        }
     }
 }
 
@@ -139,13 +145,41 @@ export function showPopup(popup, data) {
     setTimeout(() => popup.classList.remove('show'), 5000);
 }
 
+export async function callCategoryAction(gameId, gameEngineId, catEngineId, action, payload = {}) {
+    const token = (await import('../auth.js')).getToken();
+    const headers = { 'Content-Type': 'application/json' };
+    if (token) headers['Authorization'] = `Bearer ${token}`;
+
+    const url = `/api/games/${gameId}/categories/${gameEngineId}/engines/${catEngineId}/action`;
+
+    const res = await fetch(url, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({ action, payload }),
+    });
+    if (!res.ok) {
+        const err = await res.json().catch(() => ({ detail: res.statusText }));
+        throw new Error(err.detail || `HTTP ${res.status}`);
+    }
+    return res.json();
+}
+
 export async function callAction(gameId, engineRecord, action, payload = {}) {
     const token = (await import('../auth.js')).getToken();
     const headers = { 'Content-Type': 'application/json' };
     if (token) headers['Authorization'] = `Bearer ${token}`;
 
+    // For composite user engines, prefix mechanic index to action
+    if (engineRecord._mechanicIndex !== undefined && engineRecord.user_engine_id) {
+        action = `${engineRecord._mechanicIndex}:${action}`;
+    }
+
     let url;
-    if (engineRecord.user_engine_id) {
+    if (engineRecord._categoryRoute) {
+        // Category engine — route through category endpoint
+        const { gameEngineId, catEngineId } = engineRecord._categoryRoute;
+        url = `/api/games/${gameId}/categories/${gameEngineId}/engines/${catEngineId}/action`;
+    } else if (engineRecord.user_engine_id) {
         url = `/api/games/${gameId}/user-engines/${engineRecord.id}/action`;
     } else {
         url = `/api/games/${gameId}/engines/${engineRecord.engine_id}/action`;

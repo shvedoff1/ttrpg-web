@@ -23,10 +23,10 @@ from sqlalchemy.orm import Session
 
 from core.database import get_db
 from core.auth import AuthUser, get_current_user
-from core.models import GameEngine, UserEngine
+from core.models import GameEngine, UserEngine, EngineCategory, CategoryEngine
 from core.permissions import require_role, get_membership
 from engines import registry
-from engines.composite import PRIMITIVE_MECHANICS
+from engines.primitives.registry import list_primitives, get_primitive
 
 router = APIRouter(prefix="/api", tags=["engines"])
 
@@ -36,6 +36,7 @@ router = APIRouter(prefix="/api", tags=["engines"])
 class AddEngineRequest(BaseModel):
     engine_id: Optional[str] = None
     user_engine_id: Optional[int] = None
+    engine_category_id: Optional[int] = None
     order: int = 0
 
 
@@ -60,6 +61,7 @@ def _record_dict(rec: GameEngine) -> dict:
         "game_id": rec.game_id,
         "engine_id": rec.engine_id,
         "user_engine_id": rec.user_engine_id,
+        "engine_category_id": rec.engine_category_id,
         "order": rec.order,
     }
 
@@ -118,7 +120,7 @@ async def list_all_engines(_: AuthUser = Depends(get_current_user)):
 @router.get("/engines/primitives")
 async def list_primitive_mechanics(_: AuthUser = Depends(get_current_user)):
     """List available primitive mechanic types for building custom engines."""
-    return PRIMITIVE_MECHANICS
+    return list_primitives()
 
 
 @router.post("/engines/{engine_id}/copy", status_code=201)
@@ -242,6 +244,46 @@ async def list_game_engines(
             else:
                 d["meta"] = None
                 d["effective_config"] = {}
+        elif rec.engine_category_id:
+            cat = db.get(EngineCategory, rec.engine_category_id)
+            if cat:
+                cat_engines = []
+                for ce in cat.engines:
+                    ce_dict = {
+                        "id": ce.id,
+                        "name": ce.name,
+                        "description": ce.description,
+                        "engine_type": ce.engine_type,
+                        "type_id": ce.type_id,
+                        "config": ce.config,
+                        "order": ce.order,
+                    }
+                    # Add meta so frontend knows how to render
+                    if ce.engine_type == "primitive":
+                        prim = get_primitive(ce.type_id)
+                        if prim:
+                            ce_dict["meta"] = prim.get_meta()
+                            ce_dict["effective_config"] = ce.config or {}
+                    elif ce.engine_type == "system":
+                        engine = registry.get_engine(ce.type_id)
+                        if engine:
+                            sys_meta = engine.get_meta()
+                            ce_dict["meta"] = sys_meta
+                            merged = engine.get_default_config()
+                            merged.update(ce.config or {})
+                            ce_dict["effective_config"] = merged
+                    cat_engines.append(ce_dict)
+
+                d["meta"] = {
+                    "engine_id": f"category:{rec.engine_category_id}",
+                    "name": cat.name,
+                    "description": cat.description or "",
+                    "icon": cat.icon,
+                    "type": "category",
+                    "engines": cat_engines,
+                }
+            else:
+                d["meta"] = None
         result.append(d)
     return result
 
@@ -253,8 +295,13 @@ async def add_engine_to_game(
     _actor=Depends(require_role("admin")),
     db: Session = Depends(get_db),
 ):
-    if bool(body.engine_id) == bool(body.user_engine_id):
-        raise HTTPException(400, "Provide exactly one of engine_id or user_engine_id")
+    sources = sum([
+        bool(body.engine_id),
+        bool(body.user_engine_id),
+        bool(body.engine_category_id),
+    ])
+    if sources != 1:
+        raise HTTPException(400, "Provide exactly one of engine_id, user_engine_id, or engine_category_id")
 
     if body.engine_id:
         if not registry.get_engine(body.engine_id):
@@ -270,7 +317,7 @@ async def add_engine_to_game(
             engine_id=body.engine_id,
             order=body.order,
         )
-    else:
+    elif body.user_engine_id:
         user_eng = db.get(UserEngine, body.user_engine_id)
         if not user_eng:
             raise HTTPException(404, f"User engine {body.user_engine_id} not found")
@@ -285,6 +332,23 @@ async def add_engine_to_game(
         rec = GameEngine(
             game_id=game_id,
             user_engine_id=body.user_engine_id,
+            order=body.order,
+        )
+    else:
+        cat = db.get(EngineCategory, body.engine_category_id)
+        if not cat:
+            raise HTTPException(404, f"Category {body.engine_category_id} not found")
+        if not cat.is_public and cat.owner_id != _actor.user_id:
+            raise HTTPException(403, "Cannot add a private category you don't own")
+        existing = db.query(GameEngine).filter(
+            GameEngine.game_id == game_id,
+            GameEngine.engine_category_id == body.engine_category_id,
+        ).first()
+        if existing:
+            raise HTTPException(409, "This category is already in the game")
+        rec = GameEngine(
+            game_id=game_id,
+            engine_category_id=body.engine_category_id,
             order=body.order,
         )
 
@@ -384,3 +448,56 @@ async def execute_user_engine_action(
 
     engine, config = _resolve_engine_and_config(rec, db)
     return engine.handle_action(body.action, body.payload, config)
+
+
+@router.post("/games/{game_id}/categories/{game_engine_id}/engines/{cat_engine_id}/action")
+async def execute_category_engine_action(
+    game_id: int,
+    game_engine_id: int,
+    cat_engine_id: int,
+    body: EngineActionRequest,
+    user: AuthUser = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """Execute an action on an engine within a category bound to this game."""
+    get_membership(game_id, user, db)
+
+    rec = db.query(GameEngine).filter(
+        GameEngine.id == game_engine_id,
+        GameEngine.game_id == game_id,
+        GameEngine.engine_category_id.isnot(None),
+    ).first()
+    if not rec:
+        raise HTTPException(404, "Category engine record not found in this game")
+
+    eng = db.query(CategoryEngine).filter(
+        CategoryEngine.id == cat_engine_id,
+        CategoryEngine.category_id == rec.engine_category_id,
+    ).first()
+    if not eng:
+        raise HTTPException(404, "Engine not found in this category")
+
+    config = eng.config or {}
+
+    if eng.engine_type == "primitive":
+        primitive = get_primitive(eng.type_id)
+        if not primitive:
+            raise HTTPException(500, f"Primitive '{eng.type_id}' not in registry")
+
+        # Загружаем привязки ресурсов и передаём в config
+        from engines._helpers import resolve_bindings
+        bindings = resolve_bindings(eng.id)
+        if bindings:
+            config = {**config, "_bindings": bindings}
+
+        return primitive.execute(body.action, body.payload, config)
+
+    elif eng.engine_type == "system":
+        engine = registry.get_engine(eng.type_id)
+        if not engine:
+            raise HTTPException(500, f"System engine '{eng.type_id}' not in registry")
+        merged_config = engine.get_default_config()
+        merged_config.update(config)
+        return engine.handle_action(body.action, body.payload, merged_config)
+
+    raise HTTPException(400, f"Unknown engine_type: '{eng.engine_type}'")

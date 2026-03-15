@@ -3,36 +3,17 @@ engines/story_motivation.py — Random story motivations for characters.
 
 Actions:
   get_motivations → roll N motivations (payload: {count?})
+
+Delegates to WeightedSamplePrimitive.
 """
 
-import random
 from fastapi import HTTPException
 from engines.base import BaseEngine
-from engines._helpers import load_json
+from engines.primitives.weighted_sample import WeightedSamplePrimitive
 
 _MOTIVATIONS_FILE = "config.motivation.default"
 
-
-def _roll_motivations(data: dict, count: int = 3) -> list[str]:
-    entries = [
-        (m["name"], m.get("weight", 1))
-        for m in data["motivations"]
-        if (m.get("weight") or 0) > 0
-    ]
-    result: list[str] = []
-    available = list(entries)
-    for _ in range(min(count, len(available))):
-        total = sum(w for _, w in available)
-        r = random.random() * total
-        chosen_idx = len(available) - 1
-        for i, (_, w) in enumerate(available):
-            r -= w
-            if r <= 0:
-                chosen_idx = i
-                break
-        result.append(available[chosen_idx][0])
-        available.pop(chosen_idx)
-    return result
+_sample = WeightedSamplePrimitive()
 
 
 class StoryMotivationEngine(BaseEngine):
@@ -68,9 +49,10 @@ class StoryMotivationEngine(BaseEngine):
 
     def handle_action(self, action: str, payload: dict, config: dict) -> dict:
         if action == "get_motivations":
-            cfg_file = config.get("motivations_file", _MOTIVATIONS_FILE)
             count = min(int(payload.get("count", 3)), 20)
-            data = load_json(cfg_file)
-            return {"motivations": _roll_motivations(data, count)}
-
+            return _sample.execute("sample", {"count": count}, {
+                "data_source": config.get("motivations_file", _MOTIVATIONS_FILE),
+                "items_key": "motivations",
+                "default_count": 3,
+            })
         raise HTTPException(400, f"Unknown action: {action}")

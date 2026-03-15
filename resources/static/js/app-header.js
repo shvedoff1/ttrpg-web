@@ -4,7 +4,7 @@
  * Usage: <script src="/js/app-header.js" data-page="games"></script>
  * Place a <header id="app-header"></header> where the header should go.
  *
- * data-page values: games | my-engines | libraries | engine-config | changelog
+ * data-page values: games | my-engines | resources | engine-config | changelog
  */
 
 (function () {
@@ -37,8 +37,8 @@
     const NAV_LINKS = [
         { href: '/play',       label: '▶ Игра',        page: 'play'          },
         { href: '/games',      label: 'Мои игры',       page: 'games'         },
-        { href: '/my-engines', label: 'Мои движки',     page: 'my-engines'    },
-        { href: '/libraries',  label: 'Библиотеки',     page: 'libraries'     },
+        { href: '/my-engines', label: 'Категории',       page: 'my-engines'    },
+        { href: '/resources',  label: 'Ресурсы',         page: 'resources'     },
         { href: '/changelog',  label: 'Что нового',     page: 'changelog'     },
     ];
 

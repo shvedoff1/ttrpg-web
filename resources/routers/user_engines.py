@@ -19,7 +19,8 @@ from core.database import get_db
 from core.auth import AuthUser, get_current_user
 from core.models import UserEngine, GameEngine
 from engines import registry
-from engines.composite import _PRIMITIVE_MAP
+from engines.primitives.registry import get_primitive
+from engines._helpers import validate_config_warnings
 
 router = APIRouter(prefix="/api/engines/custom", tags=["user-engines"])
 
@@ -73,6 +74,13 @@ def _engine_dict(eng: UserEngine) -> dict:
     }
 
 
+def _collect_mechanic_warnings(mechanics: list[dict]) -> list[str]:
+    warnings = []
+    for m in mechanics:
+        warnings.extend(validate_config_warnings(m.get("type", ""), m.get("config")))
+    return warnings
+
+
 def _get_owned(engine_id: int, user: AuthUser, db: Session) -> UserEngine:
     eng = db.get(UserEngine, engine_id)
     if not eng:
@@ -110,17 +118,22 @@ async def create_user_engine(
     if not body.name.strip():
         raise HTTPException(400, "Engine name is required")
 
+    mechanics_raw = [m.model_dump() for m in body.mechanics]
     eng = UserEngine(
         name=body.name.strip(),
         description=body.description,
         owner_id=user.id,
         is_public=body.is_public,
-        mechanics=[m.model_dump() for m in body.mechanics],
+        mechanics=mechanics_raw,
     )
     db.add(eng)
     db.commit()
     db.refresh(eng)
-    return _engine_dict(eng)
+    result = _engine_dict(eng)
+    warnings = _collect_mechanic_warnings(mechanics_raw)
+    if warnings:
+        result["warnings"] = warnings
+    return result
 
 
 @router.get("/{engine_id}")
@@ -164,7 +177,12 @@ async def update_user_engine(
 
     db.commit()
     db.refresh(eng)
-    return _engine_dict(eng)
+    result = _engine_dict(eng)
+    if body.mechanics is not None:
+        warnings = _collect_mechanic_warnings(eng.mechanics or [])
+        if warnings:
+            result["warnings"] = warnings
+    return result
 
 
 @router.delete("/{engine_id}", status_code=204)
@@ -217,14 +235,10 @@ async def simulate_user_engine(
             raise HTTPException(400, f"mechanic_index out of range (0..{len(mechanics)-1})")
 
         mechanic = mechanics[body.mechanic_index]
-        primitive = _PRIMITIVE_MAP.get(mechanic.get("type"))
+        primitive = get_primitive(mechanic.get("type"))
         if not primitive:
             raise HTTPException(400, f"Unknown mechanic type: {mechanic.get('type')}")
 
-        underlying = registry.get_engine(primitive["engine_id"])
-        if not underlying:
-            raise HTTPException(500, f"Underlying engine '{primitive['engine_id']}' not registered")
-
-        action = body.action or primitive["default_action"]
+        action = body.action or mechanic.get("action") or "roll"
         config = mechanic.get("config") or {}
-        return underlying.handle_action(action, body.payload, config)
+        return primitive.execute(action, body.payload, config)
