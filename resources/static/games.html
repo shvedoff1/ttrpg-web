@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="/favicon.png" type="image/png">
+<title>Мои игры</title>
+<script>document.documentElement.dataset.theme = localStorage.theme || 'dark'</script>
+<script src="/js/app-header.js" data-page="games"></script>
+<style>
+  :root, :root[data-theme="dark"] {
+    --bg: #1a1a2e;
+    --bg2: #16213e;
+    --bg3: #0f3460;
+    --gold: #c9a84c;
+    --gold2: #e8c96a;
+    --text: #e0e0e0;
+    --muted: #888;
+    --danger: #e06c75;
+    --success: #98c379;
+    --border: #2a2a4a;
+  }
+  :root[data-theme="light"] {
+    --bg: #f5f0e8;
+    --bg2: #ede7d9;
+    --bg3: #d4c9a8;
+    --gold: #7a5c18;
+    --gold2: #5c4010;
+    --text: #1a1a1a;
+    --muted: #666;
+    --danger: #c0392b;
+    --success: #27ae60;
+    --border: #c8b87a;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; line-height: 1.5; }
+
+  header { background: var(--bg2); border-bottom: 1px solid var(--border); padding: 12px 24px; display: flex; align-items: center; gap: 16px; }
+  header h1 { font-size: 1.1rem; color: var(--gold); flex: 1; }
+  header a { color: var(--muted); text-decoration: none; font-size: 0.9rem; }
+  header a:hover { color: var(--text); }
+  #auth-info { font-size: 0.85rem; color: var(--muted); display: flex; align-items: center; gap: 10px; }
+  #auth-info span { color: var(--gold); }
+
+  .container { max-width: 960px; margin: 0 auto; padding: 24px 20px; }
+
+  .section-title { font-size: 1rem; color: var(--gold); margin-bottom: 12px; font-weight: 600; }
+
+  /* Games grid */
+  .games-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; margin-bottom: 24px; }
+  .game-card {
+    background: var(--bg2); border: 1px solid var(--border); border-radius: 8px;
+    padding: 16px; cursor: pointer; transition: border-color .2s;
+  }
+  .game-card:hover { border-color: var(--gold); }
+  .game-card.active { border-color: var(--gold); }
+  .game-card h3 { font-size: 1rem; margin-bottom: 4px; }
+  .game-card .role { font-size: 0.78rem; color: var(--gold); text-transform: uppercase; letter-spacing: .05em; }
+  .game-card .slug { font-size: 0.78rem; color: var(--muted); margin-top: 4px; }
+
+  .new-game-card {
+    background: transparent; border: 1px dashed var(--border); border-radius: 8px;
+    padding: 16px; cursor: pointer; text-align: center; color: var(--muted);
+    transition: border-color .2s, color .2s;
+  }
+  .new-game-card:hover { border-color: var(--gold); color: var(--gold); }
+  .new-game-card .plus { font-size: 1.8rem; line-height: 1; margin-bottom: 6px; }
+
+  /* Game detail */
+  #game-detail { display: none; background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 20px; }
+  #game-detail h2 { color: var(--gold); margin-bottom: 4px; }
+  #game-detail .subtitle { color: var(--muted); font-size: 0.85rem; margin-bottom: 16px; }
+
+  .tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--border); margin-bottom: 16px; }
+  .tab { padding: 8px 16px; cursor: pointer; font-size: 0.9rem; color: var(--muted); border-bottom: 2px solid transparent; transition: color .2s; }
+  .tab.active { color: var(--gold); border-bottom-color: var(--gold); }
+
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* Members */
+  .member-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--border); }
+  .member-row:last-child { border-bottom: none; }
+  .member-name { flex: 1; }
+  .role-badge { font-size: 0.75rem; padding: 2px 8px; border-radius: 12px; font-weight: 600; text-transform: uppercase; }
+  .role-owner    { background: #3d2a00; color: #ffa94d; }
+  .role-admin    { background: #1a2d1a; color: #98c379; }
+  .role-moderator { background: #1a2040; color: #61afef; }
+  .role-player   { background: #2a2a2a; color: #888; }
+
+  /* Engines */
+  .engine-row { display: flex; align-items: flex-start; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--border); }
+  .engine-row:last-child { border-bottom: none; }
+  .engine-info { flex: 1; }
+  .engine-info h4 { font-size: 0.95rem; margin-bottom: 2px; }
+  .engine-info p { font-size: 0.82rem; color: var(--muted); }
+
+  .engines-available { margin-top: 20px; }
+  .avail-engine { display: flex; align-items: center; gap: 10px; padding: 10px; border: 1px solid var(--border); border-radius: 6px; margin-bottom: 8px; }
+  .avail-engine .avail-info { flex: 1; }
+  .avail-engine h4 { font-size: 0.9rem; margin-bottom: 2px; }
+  .avail-engine p { font-size: 0.8rem; color: var(--muted); }
+
+  /* Invite */
+  .invite-row { padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 0.85rem; }
+  .invite-row:last-child { border-bottom: none; }
+  .invite-token { font-family: monospace; background: var(--bg3); padding: 2px 8px; border-radius: 4px; word-break: break-all; }
+  .invite-link { font-family: monospace; font-size: 0.78rem; color: var(--gold); cursor: pointer; }
+  .invite-link:hover { text-decoration: underline; }
+
+  /* Buttons */
+  .btn { padding: 7px 16px; border-radius: 6px; border: none; cursor: pointer; font-size: 0.875rem; font-weight: 500; transition: opacity .2s; }
+  .btn:hover { opacity: .85; }
+  .btn-primary { background: var(--gold); color: #1a1a2e; }
+  .btn-danger  { background: var(--danger); color: #fff; }
+  .btn-ghost   { background: transparent; border: 1px solid var(--border); color: var(--text); }
+  .btn-sm { padding: 4px 10px; font-size: 0.8rem; }
+
+  /* Forms */
+  .field { margin-bottom: 14px; }
+  .field label { display: block; font-size: 0.85rem; color: var(--muted); margin-bottom: 5px; }
+  .field input, .field select, .field textarea {
+    width: 100%; background: var(--bg); border: 1px solid var(--border); border-radius: 6px;
+    color: var(--text); padding: 8px 12px; font-size: 0.9rem; font-family: inherit;
+  }
+  .field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: var(--gold); }
+  .field textarea { resize: vertical; min-height: 80px; font-family: monospace; }
+
+  /* Modal */
+  .modal-backdrop { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.6); z-index: 100; align-items: center; justify-content: center; }
+  .modal-backdrop.open { display: flex; }
+  .modal { background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; padding: 24px; min-width: 340px; max-width: 500px; width: 90%; }
+  .modal h3 { color: var(--gold); margin-bottom: 16px; }
+  .modal-footer { display: flex; gap: 8px; justify-content: flex-end; margin-top: 16px; }
+
+  /* Toast */
+  #toast { position: fixed; bottom: 24px; right: 24px; background: var(--bg3); color: var(--text); padding: 10px 18px; border-radius: 8px; font-size: 0.875rem; opacity: 0; transition: opacity .3s; pointer-events: none; z-index: 200; }
+  #toast.show { opacity: 1; }
+
+  .empty { color: var(--muted); font-size: 0.9rem; padding: 12px 0; }
+  .flex-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .ml-auto { margin-left: auto; }
+</style>
+</head>
+<body>
+
+<header id="app-header"></header>
+
+<div class="container">
+  <div class="section-title">Ваши игры</div>
+  <div class="games-grid" id="games-grid">
+    <div class="empty">Загрузка…</div>
+  </div>
+
+  <div id="game-detail">
+    <div class="flex-row" style="margin-bottom:6px">
+      <h2 id="gd-name">—</h2>
+      <div class="ml-auto" id="gd-owner-actions" style="display:none">
+        <button class="btn btn-danger btn-sm" onclick="deleteGame()">Удалить игру</button>
+      </div>
+    </div>
+    <div class="subtitle" id="gd-slug"></div>
+
+    <div class="tabs">
+      <div class="tab active" data-tab="members">Участники</div>
+      <div class="tab" data-tab="engines">Конфиги</div>
+      <div class="tab" data-tab="invites">Инвайты</div>
+    </div>
+
+    <!-- Members -->
+    <div class="tab-content active" id="tab-members">
+      <div id="members-list"><div class="empty">Загрузка…</div></div>
+    </div>
+
+    <!-- Engines -->
+    <div class="tab-content" id="tab-engines">
+      <div class="section-title" style="font-size:.85rem">Подключённые движки</div>
+      <div id="active-engines-list"><div class="empty">Нет подключённых движков</div></div>
+
+      <div class="engines-available" id="available-engines-section" style="display:none">
+        <div class="section-title" style="font-size:.85rem; margin-top:16px">Доступные категории</div>
+        <div id="available-categories-list"></div>
+        <div style="margin-top:8px"><a href="/my-engines" style="color:var(--gold);font-size:.82rem">Настроить категории &rarr;</a></div>
+      </div>
+
+    </div>
+
+    <!-- Invites -->
+    <div class="tab-content" id="tab-invites">
+      <div id="invites-list"><div class="empty">Загрузка…</div></div>
+      <div id="create-invite-section" style="display:none; margin-top:16px">
+        <div class="section-title" style="font-size:.85rem">Создать инвайт</div>
+        <div class="flex-row">
+          <select id="invite-role" class="field" style="width:140px;margin:0">
+            <option value="player">player</option>
+            <option value="moderator">moderator</option>
+            <option value="admin">admin</option>
+          </select>
+          <input type="number" id="invite-hours" placeholder="Часов (пусто = ∞)" style="width:160px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 12px;font-size:.9rem">
+          <button class="btn btn-primary btn-sm" onclick="createInvite()">Создать</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: New game -->
+<div class="modal-backdrop" id="modal-new-game">
+  <div class="modal">
+    <h3>Создать игру</h3>
+    <div class="field">
+      <label>Название</label>
+      <input type="text" id="new-game-name" placeholder="Готика: Новый Лагерь" maxlength="255">
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-new-game')">Отмена</button>
+      <button class="btn btn-primary" onclick="submitNewGame()">Создать</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Profile settings -->
+<div class="modal-backdrop" id="modal-profile">
+  <div class="modal">
+    <h3>Настройки профиля</h3>
+    <div class="field">
+      <label>Никнейм (2–60 символов)</label>
+      <input type="text" id="profile-username" minlength="2" maxlength="60" placeholder="Оставьте пустым для сброса">
+    </div>
+    <div id="profile-email-info" style="font-size:.8rem;color:var(--muted);margin-bottom:12px"></div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-profile')">Отмена</button>
+      <button class="btn btn-primary" onclick="saveProfile()">Сохранить</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast"></div>
+
+<script>
+// ── Auth ──────────────────────────────────────────────────────────────────
+let accessToken = localStorage.getItem('access_token');
+let currentUser = null;
+let currentGame = null;
+let currentRole = null;
+let myCategories = [];
+
+async function apiReq(method, path, body) {
+  const opts = { method, headers: { 'Content-Type': 'application/json' } };
+  if (accessToken) opts.headers['Authorization'] = 'Bearer ' + accessToken;
+  if (body !== undefined) opts.body = JSON.stringify(body);
+  let res = await fetch(path, opts);
+  if (res.status === 401) {
+    // Try refresh
+    const rr = await fetch('/auth/refresh', { method: 'POST', credentials: 'include' });
+    if (rr.ok) {
+      const rd = await rr.json();
+      accessToken = rd.access_token;
+      localStorage.setItem('access_token', accessToken);
+      opts.headers['Authorization'] = 'Bearer ' + accessToken;
+      res = await fetch(path, opts);
+    } else {
+      window.location.href = '/login';
+      return null;
+    }
+  }
+  return res;
+}
+
+async function apiJson(method, path, body) {
+  const res = await apiReq(method, path, body);
+  if (!res) return null;
+  if (!res.ok) {
+    let msg = 'Ошибка ' + res.status;
+    try { msg = (await res.json()).detail || msg; } catch {}
+    toast(msg, true);
+    return null;
+  }
+  if (res.status === 204) return true;
+  return res.json();
+}
+
+function toast(msg, err = false) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.style.background = err ? 'var(--danger)' : 'var(--bg3)';
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 3000);
+}
+
+// ── Init ──────────────────────────────────────────────────────────────────
+async function init() {
+  if (!accessToken) { window.location.href = '/login'; return; }
+  const me = await apiJson('GET', '/auth/me');
+  if (!me) return;
+  currentUser = me;
+  if (window.updateHeaderUser) updateHeaderUser(me.username || me.email?.split('@')[0]);
+  document.getElementById('profile-username').value = me.username || '';
+  document.getElementById('profile-email-info').textContent = 'Email: ' + (me.email || '');
+
+  const [games, categories] = await Promise.all([
+    apiJson('GET', '/api/games'),
+    apiJson('GET', '/api/categories'),
+  ]);
+  myCategories = categories || [];
+  renderGames(games || []);
+}
+
+// ── Games ─────────────────────────────────────────────────────────────────
+function renderGames(games) {
+  const grid = document.getElementById('games-grid');
+  grid.innerHTML = '';
+  games.forEach(g => {
+    const card = document.createElement('div');
+    card.className = 'game-card';
+    card.innerHTML = `<h3>${esc(g.name)}</h3><div class="role">${esc(g.role || '')}</div><div class="slug">${esc(g.slug)}</div>`;
+    card.onclick = () => openGame(g);
+    grid.appendChild(card);
+  });
+  const add = document.createElement('div');
+  add.className = 'new-game-card';
+  add.innerHTML = '<div class="plus">+</div><div>Создать игру</div>';
+  add.onclick = () => openModal('modal-new-game');
+  grid.appendChild(add);
+}
+
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+async function submitNewGame() {
+  const name = document.getElementById('new-game-name').value.trim();
+  if (!name) { toast('Введите название', true); return; }
+  const g = await apiJson('POST', '/api/games', { name });
+  if (!g) return;
+  closeModal('modal-new-game');
+  document.getElementById('new-game-name').value = '';
+  toast('Игра создана!');
+  init();
+  openGame(g);
+}
+
+// ── Game detail ───────────────────────────────────────────────────────────
+async function openGame(g) {
+  currentGame = g;
+  currentRole = g.role;
+
+  // Mark active card
+  document.querySelectorAll('.game-card').forEach(c => c.classList.remove('active'));
+  document.querySelectorAll('.game-card').forEach(c => {
+    if (c.querySelector('h3')?.textContent === g.name) c.classList.add('active');
+  });
+
+  const detail = document.getElementById('game-detail');
+  detail.style.display = 'block';
+  document.getElementById('gd-name').textContent = g.name;
+  document.getElementById('gd-slug').textContent = '/' + g.slug;
+
+  const isOwner = g.role === 'owner';
+  const isAdmin = ['owner','admin'].includes(g.role);
+  document.getElementById('gd-owner-actions').style.display = isOwner ? '' : 'none';
+
+  // Reset tabs
+  switchTab('members');
+
+  loadMembers(g.id, isAdmin);
+  loadEngines(g.id, isAdmin);
+  loadInvites(g.id, isAdmin);
+}
+
+// Tabs
+document.querySelectorAll('.tab').forEach(t => {
+  t.addEventListener('click', () => switchTab(t.dataset.tab));
+});
+function switchTab(name) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.tab === name));
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.toggle('active', c.id === 'tab-' + name));
+}
+
+async function deleteGame() {
+  if (!confirm(`Удалить игру "${currentGame.name}"? Это действие необратимо.`)) return;
+  const ok = await apiJson('DELETE', `/api/games/${currentGame.id}`);
+  if (ok) {
+    document.getElementById('game-detail').style.display = 'none';
+    toast('Игра удалена');
+    currentGame = null;
+    init();
+  }
+}
+
+// ── Members ───────────────────────────────────────────────────────────────
+function roleLevel(r) { return {player:1,moderator:2,admin:3,owner:4}[r]||0; }
+
+async function loadMembers(gameId, isAdmin) {
+  const members = await apiJson('GET', `/api/games/${gameId}/members`);
+  const el = document.getElementById('members-list');
+  if (!members) { el.innerHTML = '<div class="empty">Ошибка загрузки</div>'; return; }
+
+  el.innerHTML = members.map(m => {
+    const canChange = isAdmin && m.role !== 'owner' && roleLevel(currentRole) > roleLevel(m.role) && m.user_id !== currentUser.id;
+    const roleSelect = canChange
+      ? `<select onchange="changeRole(${gameId},${m.user_id},this.value)" style="background:var(--bg);border:1px solid var(--border);border-radius:4px;color:var(--text);padding:3px 6px;font-size:.8rem">
+          ${['player','moderator','admin'].filter(r => roleLevel(r) < roleLevel(currentRole)).map(r =>
+            `<option value="${r}"${r===m.role?' selected':''}>${r}</option>`
+          ).join('')}
+        </select>`
+      : `<span class="role-badge role-${m.role}">${m.role}</span>`;
+
+    const canKick = isAdmin && m.user_id !== currentUser.id && roleLevel(currentRole) > roleLevel(m.role);
+    const kickBtn = canKick
+      ? `<button class="btn btn-danger btn-sm" onclick="kickMember(${gameId},${m.user_id})">Кик</button>` : '';
+
+    return `<div class="member-row">
+      <div class="member-name">${esc(m.username || m.user_id)}</div>
+      ${roleSelect}
+      ${kickBtn}
+    </div>`;
+  }).join('');
+}
+
+async function changeRole(gameId, userId, role) {
+  const ok = await apiJson('PATCH', `/api/games/${gameId}/members/${userId}`, { role });
+  if (ok) { toast('Роль обновлена'); loadMembers(gameId, true); }
+}
+
+async function kickMember(gameId, userId) {
+  if (!confirm('Удалить участника?')) return;
+  const ok = await apiJson('DELETE', `/api/games/${gameId}/members/${userId}`);
+  if (ok) { toast('Участник удалён'); loadMembers(gameId, true); }
+}
+
+// ── Engines ───────────────────────────────────────────────────────────────
+async function loadEngines(gameId, isAdmin) {
+  const recs = await apiJson('GET', `/api/games/${gameId}/engines`);
+  renderActiveEngines(recs || [], gameId, isAdmin);
+
+  if (isAdmin) {
+    document.getElementById('available-engines-section').style.display = '';
+    renderAvailableCategories(recs || [], gameId);
+  } else {
+    document.getElementById('available-engines-section').style.display = 'none';
+  }
+
+}
+
+// Cache of active engine records for config editing
+let _activeEngineRecs = {};
+
+function renderActiveEngines(recs, gameId, isAdmin) {
+  const el = document.getElementById('active-engines-list');
+  if (!recs.length) { el.innerHTML = '<div class="empty">Нет подключённых движков</div>'; return; }
+
+  // Store records by id for safe access from onclick
+  _activeEngineRecs = {};
+  recs.forEach(r => { _activeEngineRecs[r.id] = r; });
+
+  el.innerHTML = recs.map(r => {
+    const m = r.meta || {};
+    const adminBtns = isAdmin
+      ? `<button class="btn btn-danger btn-sm" onclick="removeEngine(${gameId},${r.id})">Убрать</button>`
+      : '';
+    return `<div class="engine-row">
+      <div class="engine-info">
+        <h4>${esc(m.name || r.engine_id)}</h4>
+        <p>${esc(m.description || '')}</p>
+      </div>
+      <div style="display:flex;gap:6px;flex-shrink:0">${adminBtns}</div>
+    </div>`;
+  }).join('');
+  if (isAdmin) {
+    el.innerHTML += '<div style="margin-top:8px"><a href="/my-engines" style="color:var(--gold);font-size:.82rem">Настроить категории &rarr;</a></div>';
+  }
+}
+
+function renderAvailableCategories(active, gameId) {
+  const activeCatIds = new Set(active.filter(r => r.engine_category_id).map(r => r.engine_category_id));
+  const el = document.getElementById('available-categories-list');
+  if (!myCategories.length) { el.innerHTML = '<div class="empty">Нет категорий</div>'; return; }
+  const notAdded = myCategories.filter(c => !activeCatIds.has(c.id));
+  if (!notAdded.length) { el.innerHTML = '<div class="empty">Все категории уже подключены</div>'; return; }
+
+  el.innerHTML = notAdded.map(c => `
+    <div class="avail-engine">
+      <div class="avail-info">
+        <h4>${esc(c.icon || '')} ${esc(c.name)} <span style="font-size:.75rem;color:var(--muted)">${c.is_public ? '🌐' : '🔒'}</span></h4>
+        <p>${esc(c.description || '')}</p>
+      </div>
+      <button class="btn btn-primary btn-sm" onclick="addEngine(${gameId},null,null,${c.id})">+ Добавить</button>
+    </div>
+  `).join('');
+}
+
+async function addEngine(gameId, engineId, userEngineId, categoryId) {
+  let body;
+  if (engineId) body = { engine_id: engineId };
+  else if (userEngineId) body = { user_engine_id: userEngineId };
+  else if (categoryId) body = { engine_category_id: categoryId };
+  else return;
+  const ok = await apiJson('POST', `/api/games/${gameId}/engines`, body);
+  if (ok) { toast('Движок добавлен'); loadEngines(gameId, true); }
+}
+
+async function removeEngine(gameId, recordId) {
+  if (!confirm('Убрать движок из игры?')) return;
+  const ok = await apiJson('DELETE', `/api/games/${gameId}/engines/${recordId}`);
+  if (ok) { toast('Движок убран'); loadEngines(gameId, true); }
+}
+
+// ── Invites ───────────────────────────────────────────────────────────────
+async function loadInvites(gameId, isAdmin) {
+  document.getElementById('create-invite-section').style.display = isAdmin ? '' : 'none';
+  if (!isAdmin) {
+    document.getElementById('invites-list').innerHTML = '<div class="empty">Только admin и выше могут управлять инвайтами</div>';
+    return;
+  }
+  const invites = await apiJson('GET', `/api/games/${gameId}/invites`);
+  renderInvites(invites || [], gameId);
+}
+
+function renderInvites(invites, gameId) {
+  const el = document.getElementById('invites-list');
+  const active = invites.filter(i => !i.used_at);
+  if (!active.length) { el.innerHTML = '<div class="empty">Нет активных инвайтов</div>'; return; }
+
+  el.innerHTML = active.map(i => {
+    const link = `${location.origin}/invite/${i.token}`;
+    const exp = i.expires_at ? new Date(i.expires_at).toLocaleString('ru') : '∞';
+    return `<div class="invite-row">
+      <div><b>${i.role}</b> · истекает: ${exp}</div>
+      <div class="invite-link" onclick="copyLink('${link}')" title="Нажмите чтобы скопировать">${link}</div>
+      <button class="btn btn-danger btn-sm" style="margin-top:4px" onclick="revokeInvite(${gameId},${i.id})">Отозвать</button>
+    </div>`;
+  }).join('');
+}
+
+async function createInvite() {
+  const role = document.getElementById('invite-role').value;
+  const h = document.getElementById('invite-hours').value;
+  const body = { role };
+  if (h) body.expires_in_hours = parseInt(h);
+  const inv = await apiJson('POST', `/api/games/${currentGame.id}/invites`, body);
+  if (inv) { toast('Инвайт создан'); loadInvites(currentGame.id, true); }
+}
+
+async function revokeInvite(gameId, invId) {
+  const ok = await apiJson('DELETE', `/api/games/${gameId}/invites/${invId}`);
+  if (ok) { toast('Инвайт отозван'); loadInvites(gameId, true); }
+}
+
+function copyLink(link) {
+  navigator.clipboard.writeText(link).then(() => toast('Ссылка скопирована'));
+}
+
+// ── Profile ───────────────────────────────────────────────────────────────
+async function saveProfile() {
+  const username = document.getElementById('profile-username').value.trim() || null;
+  const data = await apiJson('PATCH', '/auth/me', { username });
+  if (!data) return;
+  if (data.access_token) {
+    accessToken = data.access_token;
+    localStorage.setItem('access_token', accessToken);
+  }
+  currentUser = { ...currentUser, username: data.username };
+  if (window.updateHeaderUser) updateHeaderUser(data.username || currentUser.email?.split('@')[0]);
+  toast('Профиль обновлён');
+  closeModal('modal-profile');
+}
+
+// ── Utils ─────────────────────────────────────────────────────────────────
+function esc(s) {
+  return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+init();
+</script>
+</body>
+</html>

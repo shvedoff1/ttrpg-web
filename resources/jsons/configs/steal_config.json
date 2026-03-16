@@ -1,37 +1,41 @@
 {
     "item_count": 1,
     "categories": [
-        "resources/провизия/food.json",
-        "resources/провизия/alcohol.json",
-        "resources/провизия/spices.json",
-        "resources/прочее/tools.json",
-        "resources/прочее/hardware.json",
-        "resources/прочее/locks.json",
-        "resources/прочее/cloth.json",
-        "resources/прочее/bags.json",
-        "resources/прочее/candles.json",
-        "resources/ремесло/jewelry.json",
-        "resources/алхимия/potions.json",
-        "resources/прочее/scrolls.json",
-        "resources/алхимия/reagents.json",
-        "resources/прочее/books.json",
-        "resources/прочее/curiosities.json",
-        "resources/прочее/hlam.json"
+        "items.food.food",
+        "items.food.alcohol",
+        "items.food.spices",
+        "items.misc.tools",
+        "items.misc.hardware",
+        "items.misc.locks",
+        "items.misc.cloth",
+        "items.misc.bags",
+        "items.misc.candles",
+        "items.craft.jewelry",
+        "items.alchemy.potions",
+        "items.misc.scrolls",
+        "items.alchemy.reagents",
+        "items.misc.books",
+        "items.misc.curiosities",
+        "items.misc.hlam"
     ],
     "district_filter": {
         "poor": {
+            "name": "Бедный район",
             "filter": "exclude_rarest",
             "percent": 75
         },
         "normal": {
+            "name": "Обычный район",
             "filter": "exclude_rarest",
             "percent": 20
         },
         "rich": {
+            "name": "Богатый район",
             "filter": "exclude_common",
             "percent": 20
         },
         "magic": {
+            "name": "Обитель магии",
             "filter": "exclude_common",
             "percent": 20
         }

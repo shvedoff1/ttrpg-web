@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="/favicon.png" type="image/png">
+<title>Ресурсы</title>
+<script>document.documentElement.dataset.theme = localStorage.theme || 'dark'</script>
+<script src="/js/app-header.js" data-page="resources"></script>
+<style>
+  :root, :root[data-theme="dark"] {
+    --bg: #1a1a2e; --bg2: #16213e; --bg3: #0f3460;
+    --gold: #c9a84c; --gold2: #e8c96a;
+    --text: #e0e0e0; --muted: #888;
+    --danger: #e06c75; --success: #98c379; --border: #2a2a4a;
+  }
+  :root[data-theme="light"] {
+    --bg: #f5f0e8; --bg2: #ede7d9; --bg3: #d4c9a8;
+    --gold: #7a5c18; --gold2: #5c4010;
+    --text: #1a1a1a; --muted: #666;
+    --danger: #c0392b; --success: #27ae60; --border: #c8b87a;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; line-height: 1.5; }
+
+  .container { max-width: 1100px; margin: 0 auto; padding: 24px 20px; }
+
+  /* Two-column layout */
+  .resources-layout { display: grid; grid-template-columns: 240px 1fr; gap: 20px; }
+  @media (max-width: 700px) { .resources-layout { grid-template-columns: 1fr; } }
+
+  /* Tag sidebar */
+  .tag-sidebar { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 12px; position: sticky; top: 16px; max-height: calc(100vh - 100px); overflow-y: auto; }
+  .tag-sidebar-title { font-size: 0.85rem; color: var(--gold); font-weight: 600; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+  .tag-sidebar-title .ml-auto { margin-left: auto; }
+  .tag-list { display: flex; flex-direction: column; gap: 2px; }
+  .tag-item { display: flex; align-items: center; gap: 8px; padding: 5px 8px; border-radius: 6px; cursor: pointer; font-size: 0.82rem; color: var(--muted); transition: all .15s; user-select: none; }
+  .tag-item:hover { background: var(--bg3); color: var(--text); }
+  .tag-item.active { background: var(--bg3); color: var(--gold); font-weight: 500; }
+  .tag-item input[type="checkbox"] { width: auto; accent-color: var(--gold); pointer-events: none; }
+  .tag-create-btn { width: 100%; margin-top: 8px; padding: 5px 8px; border-radius: 6px; border: 1px dashed var(--border); background: transparent; color: var(--muted); font-size: 0.8rem; cursor: pointer; text-align: left; }
+  .tag-create-btn:hover { border-color: var(--gold); color: var(--gold); }
+
+  /* Filter bar */
+  .filter-bar { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 16px; }
+  .pill-group { display: flex; gap: 4px; flex-wrap: wrap; }
+  .pill { padding: 5px 14px; border-radius: 16px; border: 1px solid var(--border); background: transparent; color: var(--muted); font-size: 0.82rem; cursor: pointer; transition: all .15s; white-space: nowrap; }
+  .pill.active { background: var(--bg3); color: var(--gold); border-color: var(--gold); }
+  .pill:hover:not(.active) { color: var(--text); }
+  .filter-bar .spacer { flex: 1; min-width: 10px; }
+  .filter-search { background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; color: var(--text); padding: 5px 14px; font-size: 0.82rem; min-width: 140px; }
+  .filter-search:focus { outline: none; border-color: var(--gold); }
+  .count-badge { font-size: 0.78rem; color: var(--muted); padding: 4px 10px; white-space: nowrap; }
+
+  /* Resource grid */
+  .res-grid { display: grid; gap: 10px; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); }
+  .lib-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; position: relative; transition: border-color .15s; }
+  .lib-card:hover { border-color: var(--gold); }
+  .lib-card .info { flex: 1; min-width: 0; }
+  .lib-card .name { font-size: 0.95rem; font-weight: 600; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .lib-card .slug { font-size: 0.75rem; color: var(--muted); font-family: monospace; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .lib-card .meta-row { font-size: 0.8rem; color: var(--muted); display: flex; gap: 12px; flex-wrap: wrap; }
+  .lib-card .meta-row span { white-space: nowrap; }
+  .lib-card .badges { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 4px; }
+  .badge { font-size: 0.72rem; padding: 2px 8px; border-radius: 10px; background: var(--bg3); color: var(--gold); }
+  .badge.system { color: var(--muted); }
+  .badge.tag { color: var(--text); background: var(--bg3); }
+  .lib-card .card-actions { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 4px; }
+
+  /* Hover tooltip */
+  .preview-tooltip {
+    position: fixed; z-index: 500; background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 8px; padding: 10px 14px; max-width: 300px; pointer-events: none;
+    box-shadow: 0 4px 20px rgba(0,0,0,.4); font-size: 0.8rem; display: none;
+  }
+  .preview-tooltip.show { display: block; }
+  .preview-tooltip .pt-row { display: flex; justify-content: space-between; gap: 12px; margin-bottom: 3px; }
+  .preview-tooltip .pt-label { color: var(--muted); }
+  .preview-tooltip .pt-val { color: var(--text); }
+
+  .btn { padding: 6px 14px; border-radius: 6px; border: none; cursor: pointer; font-size: 0.8rem; font-weight: 500; transition: opacity .2s; white-space: nowrap; }
+  .btn:hover { opacity: .85; }
+  .btn-primary { background: var(--gold); color: #1a1a2e; }
+  .btn-danger  { background: var(--danger); color: #fff; }
+  .btn-ghost   { background: transparent; border: 1px solid var(--border); color: var(--text); }
+  .btn-sm { padding: 4px 10px; font-size: 0.75rem; }
+
+  .empty { color: var(--muted); text-align: center; padding: 40px 0; }
+  .loading { color: var(--muted); padding: 40px 0; text-align: center; }
+
+  /* Modal */
+  .modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,.6); display: flex; align-items: center; justify-content: center; z-index: 100; }
+  .modal { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 24px; width: 100%; max-width: 600px; max-height: 92vh; overflow-y: auto; }
+  .modal h2 { color: var(--gold); margin-bottom: 18px; font-size: 1.05rem; }
+  .field { margin-bottom: 14px; }
+  .field label { display: block; font-size: 0.85rem; color: var(--muted); margin-bottom: 5px; }
+  .field input, .field select, .field textarea {
+    width: 100%; background: var(--bg); border: 1px solid var(--border); border-radius: 6px;
+    color: var(--text); padding: 8px 12px; font-size: 0.875rem; font-family: inherit;
+  }
+  .field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: var(--gold); }
+  .modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 18px; }
+  .modal-error { color: var(--danger); font-size: 0.85rem; margin-top: 8px; min-height: 1.2em; }
+
+  /* Tag input */
+  .tag-input-wrap { display: flex; flex-wrap: wrap; gap: 6px; padding: 6px 10px; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; min-height: 38px; align-items: center; cursor: text; }
+  .tag-input-wrap:focus-within { border-color: var(--gold); }
+  .tag-chip { display: inline-flex; align-items: center; gap: 4px; background: var(--bg3); color: var(--gold); padding: 2px 8px; border-radius: 10px; font-size: 0.78rem; }
+  .tag-chip button { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 0.9rem; line-height: 1; padding: 0 2px; }
+  .tag-chip button:hover { color: var(--danger); }
+  .tag-input-field { border: none; background: none; color: var(--text); font-size: 0.82rem; outline: none; flex: 1; min-width: 80px; }
+  .tag-suggestions { position: absolute; top: 100%; left: 0; right: 0; background: var(--bg2); border: 1px solid var(--border); border-radius: 6px; max-height: 160px; overflow-y: auto; z-index: 10; display: none; }
+  .tag-suggestions.show { display: block; }
+  .tag-suggestion { padding: 6px 12px; font-size: 0.82rem; cursor: pointer; color: var(--text); }
+  .tag-suggestion:hover, .tag-suggestion.active { background: var(--bg3); color: var(--gold); }
+
+  /* Meta editor */
+  .meta-editor { display: flex; flex-direction: column; gap: 6px; }
+  .meta-row-edit { display: flex; gap: 6px; align-items: center; }
+  .meta-row-edit input { flex: 1; }
+  .meta-row-edit input:first-child { max-width: 140px; }
+  .meta-row-edit button { background: none; border: none; color: var(--danger); cursor: pointer; font-size: 1rem; padding: 2px 6px; }
+  .meta-add-btn { display: inline-flex; align-items: center; gap: 6px; margin-top: 4px; font-size: 0.82rem; color: var(--gold); cursor: pointer; background: none; border: 1px dashed var(--border); border-radius: 6px; padding: 4px 12px; }
+  .meta-add-btn:hover { border-color: var(--gold); }
+
+  #toast { position: fixed; bottom: 24px; right: 24px; background: var(--bg3); color: var(--text); padding: 10px 18px; border-radius: 8px; font-size: 0.875rem; opacity: 0; transition: opacity .3s; pointer-events: none; z-index: 200; }
+  #toast.show { opacity: 1; }
+
+  @media (max-width: 600px) {
+    .res-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header id="app-header"></header>
+
+<div class="container">
+  <div id="loading" class="loading">Загрузка...</div>
+  <div id="main" style="display:none">
+    <div class="resources-layout">
+
+      <!-- Left: Tag sidebar -->
+      <div class="tag-sidebar">
+        <div class="tag-sidebar-title">
+          Теги
+          <span class="ml-auto"><span class="count-badge" id="count-badge"></span></span>
+        </div>
+        <div class="pill-group" id="owner-pills" style="margin-bottom:8px">
+          <button class="pill active" onclick="setOwnerFilter('all')">Все</button>
+          <button class="pill" onclick="setOwnerFilter('system')">Системные</button>
+          <button class="pill" onclick="setOwnerFilter('mine')">Мои</button>
+        </div>
+        <div class="tag-list" id="tag-list"></div>
+      </div>
+
+      <!-- Right: Filters + resource grid -->
+      <div>
+        <div class="filter-bar" style="margin-bottom:8px">
+          <button class="btn btn-primary" onclick="openCreate()">+ Создать ресурс</button>
+          <button class="btn btn-ghost" onclick="createTag()">+ Создать тег</button>
+          <span class="spacer"></span>
+          <input type="search" class="filter-search" id="search-input" placeholder="Поиск по имени..." oninput="applyFilters()">
+          <button class="btn btn-ghost" id="bulk-copy-btn" style="display:none" onclick="bulkCopy()">Копировать набор</button>
+        </div>
+
+        <div class="res-grid" id="res-list"></div>
+        <div class="empty" id="empty-msg" style="display:none">Ничего не найдено</div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Hover tooltip -->
+<div class="preview-tooltip" id="preview-tooltip"></div>
+
+<!-- Modal: create / edit -->
+<div class="modal-backdrop" id="modal-edit" style="display:none" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <h2 id="modal-title">Создать ресурс</h2>
+    <div class="field" id="field-key">
+      <label>Key *</label>
+      <input id="m-key" type="text" placeholder="herb_chamomile" style="font-family:monospace">
+    </div>
+    <div class="field">
+      <label>Название *</label>
+      <input id="m-name" type="text" placeholder="Ромашка">
+    </div>
+    <div class="field">
+      <label>Цена</label>
+      <input id="m-price" type="number" min="0" step="0.01" placeholder="0">
+    </div>
+    <div class="field">
+      <label>Вес (кг)</label>
+      <input id="m-weight" type="number" min="0" step="0.01" placeholder="0">
+    </div>
+    <div class="field">
+      <label>Вероятность выпадения</label>
+      <input id="m-probability" type="number" min="0" step="0.01" placeholder="0">
+    </div>
+    <div class="field" style="position:relative">
+      <label>Теги</label>
+      <div class="tag-input-wrap" id="tag-input-wrap" onclick="document.getElementById('tag-input').focus()">
+        <input type="text" class="tag-input-field" id="tag-input" placeholder="Введите тег..." autocomplete="off">
+      </div>
+      <div class="tag-suggestions" id="tag-suggestions"></div>
+    </div>
+    <div class="field">
+      <label>Meta (дополнительные поля)</label>
+      <div class="meta-editor" id="meta-editor"></div>
+      <button class="meta-add-btn" onclick="addMetaRow()">+ Добавить поле</button>
+    </div>
+    <div class="modal-error" id="modal-err"></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal()">Отмена</button>
+      <button class="btn btn-primary" onclick="saveResource()">Сохранить</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script src="/js/resources.js"></script>
+</body>
+</html>

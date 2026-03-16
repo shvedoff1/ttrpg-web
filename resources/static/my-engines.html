@@ -1,0 +1,1160 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="/favicon.png" type="image/png">
+<title>Категории</title>
+<script>document.documentElement.dataset.theme = localStorage.theme || 'dark'</script>
+<script src="/js/app-header.js" data-page="my-engines"></script>
+<style>
+  :root, :root[data-theme="dark"] {
+    --bg: #1a1a2e; --bg2: #16213e; --bg3: #0f3460;
+    --gold: #c9a84c; --gold2: #e8c96a;
+    --text: #e0e0e0; --muted: #888;
+    --danger: #e06c75; --success: #98c379; --border: #2a2a4a;
+  }
+  :root[data-theme="light"] {
+    --bg: #f5f0e8; --bg2: #ede7d9; --bg3: #d4c9a8;
+    --gold: #7a5c18; --gold2: #5c4010;
+    --text: #1a1a1a; --muted: #666;
+    --danger: #c0392b; --success: #27ae60; --border: #c8b87a;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; line-height: 1.5; }
+
+  header { background: var(--bg2); border-bottom: 1px solid var(--border); padding: 12px 24px; display: flex; align-items: center; gap: 16px; }
+  header h1 { font-size: 1.1rem; color: var(--gold); flex: 1; }
+  header a { color: var(--muted); text-decoration: none; font-size: 0.9rem; }
+  header a:hover { color: var(--text); }
+
+  .layout { display: grid; grid-template-columns: 340px 1fr; gap: 20px; max-width: 1200px; margin: 0 auto; padding: 24px 20px; }
+  @media (max-width: 800px) { .layout { grid-template-columns: 1fr; } }
+
+  .panel { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 16px; }
+  .panel-title { font-size: 0.95rem; color: var(--gold); font-weight: 600; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+
+  .engine-item { border: 1px solid var(--border); border-radius: 6px; padding: 12px; margin-bottom: 8px; cursor: pointer; transition: border-color .2s; }
+  .engine-item:hover { border-color: var(--gold); }
+  .engine-item.active { border-color: var(--gold); background: var(--bg3); }
+  .engine-item h4 { font-size: 0.9rem; margin-bottom: 2px; }
+  .engine-item .meta { font-size: 0.78rem; color: var(--muted); display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .badge { font-size: 0.7rem; padding: 1px 6px; border-radius: 10px; background: var(--bg3); }
+  .badge-public { color: var(--success); }
+  .badge-private { color: var(--muted); }
+  .badge-copy { color: var(--gold); }
+  .engine-item .actions { display: flex; gap: 6px; margin-top: 8px; }
+
+  .field { margin-bottom: 12px; }
+  .field label { display: block; font-size: 0.85rem; color: var(--muted); margin-bottom: 4px; }
+  .field input, .field select, .field textarea {
+    width: 100%; background: var(--bg); border: 1px solid var(--border); border-radius: 6px;
+    color: var(--text); padding: 7px 10px; font-size: 0.875rem; font-family: inherit;
+  }
+  .field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: var(--gold); }
+  .field textarea { resize: vertical; font-family: monospace; }
+  .field .checkbox-row { display: flex; align-items: center; gap: 8px; }
+  .field .checkbox-row input { width: auto; }
+
+  .mechanic-row { border: 1px solid var(--border); border-radius: 6px; padding: 10px; margin-bottom: 8px; }
+  .mechanic-row .mech-top { display: flex; gap: 8px; align-items: center; }
+  .mechanic-row select.mech-type, .mechanic-row input.mech-label {
+    flex: 1; background: var(--bg); border: 1px solid var(--border); border-radius: 6px;
+    color: var(--text); padding: 5px 8px; font-size: .85rem;
+  }
+  .mechanic-config { margin-top: 8px; padding: 10px; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; }
+
+  .section-subtitle { font-size: 0.82rem; color: var(--gold); font-weight: 600; margin: 14px 0 8px; }
+
+  .action-toggle { display: flex; align-items: center; gap: 8px; padding: 6px 0; border-bottom: 1px solid var(--border); }
+  .action-toggle:last-child { border-bottom: none; }
+  .action-toggle input { width: auto; }
+  .action-toggle label { font-size: .85rem; cursor: pointer; flex: 1; }
+  .action-toggle .hint { font-size: .75rem; color: var(--muted); }
+
+  .sim-result { background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 12px; font-family: monospace; font-size: .82rem; white-space: pre-wrap; min-height: 60px; color: var(--text); margin-top: 8px; }
+
+  .btn { padding: 6px 14px; border-radius: 6px; border: none; cursor: pointer; font-size: 0.875rem; font-weight: 500; transition: opacity .2s; }
+  .btn:hover { opacity: .85; }
+  .btn-primary { background: var(--gold); color: #1a1a2e; }
+  .btn-danger  { background: var(--danger); color: #fff; }
+  .btn-ghost   { background: transparent; border: 1px solid var(--border); color: var(--text); }
+  .btn-sm { padding: 3px 8px; font-size: 0.78rem; }
+  .btn-success { background: var(--success); color: #1a1a2e; }
+
+  #toast { position: fixed; bottom: 24px; right: 24px; background: var(--bg3); color: var(--text); padding: 10px 18px; border-radius: 8px; font-size: 0.875rem; opacity: 0; transition: opacity .3s; pointer-events: none; z-index: 200; }
+  #toast.show { opacity: 1; }
+
+  .empty { color: var(--muted); font-size: 0.85rem; padding: 12px 0; }
+  .flex-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .ml-auto { margin-left: auto; }
+  .right-col { display: flex; flex-direction: column; gap: 20px; }
+  .err { color: var(--danger); font-size: .82rem; margin-top: 4px; display: none; }
+
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 100; }
+  .modal-overlay.show { display: flex; align-items: center; justify-content: center; }
+  .modal { background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; padding: 20px; max-width: 500px; width: 90%; max-height: 80vh; overflow-y: auto; }
+  .modal h3 { color: var(--gold); font-size: 1rem; margin-bottom: 12px; }
+  .sys-engine-card { border: 1px solid var(--border); border-radius: 6px; padding: 10px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
+  .sys-engine-card .info h4 { font-size: .9rem; margin-bottom: 2px; }
+  .sys-engine-card .info p { font-size: .78rem; color: var(--muted); margin: 0; }
+
+  /* Tabs */
+  .tabs { display: flex; gap: 0; margin-bottom: 12px; border-bottom: 1px solid var(--border); }
+  .tab { padding: 6px 16px; cursor: pointer; font-size: 0.85rem; color: var(--muted); border-bottom: 2px solid transparent; transition: color .2s, border-color .2s; }
+  .tab:hover { color: var(--text); }
+  .tab.active { color: var(--gold); border-bottom-color: var(--gold); }
+
+  /* Category engines list */
+  .cat-engine-item { border: 1px solid var(--border); border-radius: 6px; padding: 10px; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
+  .cat-engine-item .cat-eng-info { flex: 1; }
+  .cat-engine-item .cat-eng-info h5 { font-size: .85rem; margin: 0; }
+  .cat-engine-item .cat-eng-info .cat-eng-meta { font-size: .75rem; color: var(--muted); }
+</style>
+</head>
+<body>
+
+<header id="app-header"></header>
+
+<div class="layout">
+  <!-- Left: list -->
+  <div>
+    <div class="panel">
+      <!-- Categories list -->
+      <div id="categories-tab">
+        <div class="panel-title">
+          Категории
+          <div class="ml-auto">
+            <button class="btn btn-primary btn-sm" onclick="window._newCategory()">+ Создать</button>
+          </div>
+        </div>
+        <div id="categories-list"><div class="empty">Загрузка...</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right: category editors -->
+  <div class="right-col">
+    <!-- Category editor -->
+    <div class="panel" id="cat-editor-panel" style="display:none">
+      <div class="panel-title" id="cat-editor-title">Новая категория</div>
+
+      <div class="field">
+        <label>Название</label>
+        <input type="text" id="cat-name" maxlength="255" placeholder="Профессии">
+      </div>
+      <div class="field">
+        <label>Описание <span style="color:var(--muted)">(необязательно)</span></label>
+        <input type="text" id="cat-desc" maxlength="500">
+      </div>
+      <div class="field">
+        <label>Иконка <span style="color:var(--muted)">(emoji)</span></label>
+        <input type="text" id="cat-icon" maxlength="10" placeholder="⚔" style="width:60px">
+      </div>
+      <div class="field">
+        <div class="checkbox-row">
+          <input type="checkbox" id="cat-public">
+          <label style="margin:0;cursor:pointer" for="cat-public">Публичная (видна другим)</label>
+        </div>
+      </div>
+
+      <div class="section-subtitle">Движки в категории</div>
+      <div id="cat-engines-list"></div>
+      <button class="btn btn-ghost btn-sm" style="margin-bottom:12px" onclick="window._addCatEngine()">+ Добавить движок</button>
+
+      <div class="err" id="cat-editor-err"></div>
+      <div class="flex-row" style="margin-top:12px">
+        <button class="btn btn-primary" onclick="window._saveCategory()">Сохранить</button>
+        <button class="btn btn-ghost" onclick="window._cancelCatEdit()">Отмена</button>
+        <button class="btn btn-danger ml-auto" id="cat-delete-btn" onclick="window._deleteCategory()" style="display:none">Удалить</button>
+      </div>
+    </div>
+
+    <!-- Category engine editor (individual engine within category) -->
+    <div class="panel" id="cat-eng-editor-panel" style="display:none">
+      <div class="panel-title" id="cat-eng-editor-title">Движок категории</div>
+      <div class="field">
+        <label>Название</label>
+        <input type="text" id="ce-name" maxlength="255">
+      </div>
+      <div class="field">
+        <label>Описание <span style="color:var(--muted)">(необязательно)</span></label>
+        <input type="text" id="ce-desc" maxlength="500">
+      </div>
+      <div class="field">
+        <label>Тип</label>
+        <select id="ce-engine-type" onchange="window._onCeTypeChange()">
+          <option value="primitive">Примитив</option>
+          <option value="system">Системный движок</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Движок / Примитив</label>
+        <select id="ce-type-id" onchange="window._onCeTypeIdChange()"></select>
+      </div>
+      <div class="section-subtitle">Конфигурация</div>
+      <div id="ce-config-container"></div>
+
+      <div class="section-subtitle" style="margin-top:16px">Привязки ресурсов</div>
+      <div id="ce-bindings-container"></div>
+
+      <div class="err" id="ce-editor-err"></div>
+      <div class="flex-row" style="margin-top:12px">
+        <button class="btn btn-primary" onclick="window._saveCatEngine()">Сохранить</button>
+        <button class="btn btn-ghost" onclick="window._cancelCeEdit()">Отмена</button>
+        <button class="btn btn-danger ml-auto" id="ce-delete-btn" onclick="window._deleteCatEngine()" style="display:none">Удалить</button>
+      </div>
+
+      <div class="section-subtitle" style="margin-top:16px">Симулятор</div>
+      <div class="field">
+        <label>Action</label>
+        <select id="ce-sim-action"></select>
+      </div>
+      <div class="field">
+        <label>Payload (JSON)</label>
+        <textarea id="ce-sim-payload" rows="3" placeholder="{}"></textarea>
+      </div>
+      <button class="btn btn-success" onclick="window._runCeSimulate()">&#9654; Запустить</button>
+      <div id="ce-sim-result-label" style="font-size:.82rem;color:var(--muted);margin-top:10px;display:none">Результат:</div>
+      <div class="sim-result" id="ce-sim-result" style="display:none"></div>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script type="module">
+import { ConfigEditor } from '/js/config-editor.js';
+import { BindingsEditor } from '/js/engines/bindings-editor.js';
+import { formatResult } from '/js/engines/base.js';
+
+// ── State ─────────────────────────────────────────────────────────────────
+const S = {
+  accessToken: localStorage.getItem('access_token'),
+  currentUser: null,
+  allEngines: [],
+  primitives: [],       // from /api/engines/primitives — includes config_schema
+  systemEngines: [],     // from /api/engines
+
+  editingId: null,
+  editingEngine: null,
+  editorMode: 'composite',  // 'composite' | 'copy'
+
+  mechanicEditors: [],   // [{element, configEditor}]
+  copyConfigEditor: null,
+
+  simEngineId: null,
+
+  // Categories
+  activeTab: 'engines',
+  allCategories: [],
+  editingCatId: null,
+  editingCategory: null,
+  editingCeId: null,       // editing category engine id
+  editingCeCatId: null,    // parent category id for engine editing
+  ceConfigEditor: null,
+  ceBindingsEditor: null,
+};
+
+// ── API ───────────────────────────────────────────────────────────────────
+async function apiReq(method, path, body) {
+  const opts = { method, headers: { 'Content-Type': 'application/json' } };
+  if (S.accessToken) opts.headers['Authorization'] = 'Bearer ' + S.accessToken;
+  if (body !== undefined) opts.body = JSON.stringify(body);
+  let res = await fetch(path, opts);
+  if (res.status === 401) {
+    const rr = await fetch('/auth/refresh', { method: 'POST', credentials: 'include' });
+    if (rr.ok) {
+      const rd = await rr.json();
+      S.accessToken = rd.access_token;
+      localStorage.setItem('access_token', S.accessToken);
+      opts.headers['Authorization'] = 'Bearer ' + S.accessToken;
+      res = await fetch(path, opts);
+    } else {
+      window.location.href = '/login';
+      return null;
+    }
+  }
+  return res;
+}
+
+async function apiJson(method, path, body) {
+  const res = await apiReq(method, path, body);
+  if (!res) return null;
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    return { _error: err.detail || `Error ${res.status}` };
+  }
+  if (res.status === 204) return {};
+  return res.json();
+}
+
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+function toastWarnings(warnings) {
+  if (!warnings?.length) return;
+  const t = document.getElementById('toast');
+  t.textContent = '⚠️ ' + warnings.join(' ');
+  t.style.background = '#a86800';
+  t.classList.add('show');
+  setTimeout(() => { t.classList.remove('show'); t.style.background = ''; }, 6000);
+}
+
+function esc(s) {
+  return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ── Engine list ───────────────────────────────────────────────────────────
+function renderList() {
+  const el = document.getElementById('engines-list');
+  const mine = S.allEngines.filter(e => e.owner_id === S.currentUser.id);
+  if (!mine.length) {
+    el.innerHTML = '<div class="empty">Нет движков. Создайте или скопируйте системный!</div>';
+    return;
+  }
+  el.innerHTML = mine.map(e => {
+    const isCopy = !!e.base_engine_id;
+    const typeBadge = isCopy
+      ? `<span class="badge badge-copy">${esc(e.base_engine_id)}</span>`
+      : `<span>${(e.mechanics || []).length} механик</span>`;
+    return `
+<div class="engine-item${S.editingId === e.id ? ' active' : ''}" id="ei-${e.id}">
+  <h4>${esc(e.name)}</h4>
+  <div class="meta">
+    ${typeBadge}
+    <span class="badge ${e.is_public ? 'badge-public' : 'badge-private'}">${e.is_public ? 'публичный' : 'приватный'}</span>
+    ${e.description ? `<span style="color:var(--muted)">${esc(e.description)}</span>` : ''}
+  </div>
+  <div class="actions">
+    <button class="btn btn-ghost btn-sm" onclick="window._editEngine(${e.id})">Редактировать</button>
+    <button class="btn btn-ghost btn-sm" onclick="window._selectSimulate(${e.id})">&#9654; Симулятор</button>
+  </div>
+</div>`;
+  }).join('');
+}
+
+// ── Copy modal ───────────────────────────────────────────────────────────
+window._openCopyModal = function() {
+  const list = document.getElementById('sys-engines-list');
+  list.innerHTML = S.systemEngines.map(e => `
+<div class="sys-engine-card">
+  <div class="info">
+    <h4>${esc(e.name)}</h4>
+    <p>${esc(e.description)}</p>
+  </div>
+  <button class="btn btn-primary btn-sm" onclick="window._copySystemEngine('${esc(e.engine_id)}')">Копировать</button>
+</div>`).join('');
+  document.getElementById('copy-modal').classList.add('show');
+};
+
+window._closeCopyModal = function() {
+  document.getElementById('copy-modal').classList.remove('show');
+};
+
+window._copySystemEngine = async function(engineId) {
+  const data = await apiJson('POST', `/api/engines/${engineId}/copy`, {});
+  if (!data || data._error) { toast(data?._error || 'Ошибка'); return; }
+  S.allEngines.unshift(data);
+  toast('Движок скопирован!');
+  renderList();
+  window._closeCopyModal();
+  window._editEngine(data.id);
+};
+
+// ── Editor helpers ────────────────────────────────────────────────────────
+
+function showEditorMode(mode) {
+  S.editorMode = mode;
+  document.getElementById('composite-section').style.display = mode === 'composite' ? '' : 'none';
+  document.getElementById('copy-section').style.display = mode === 'copy' ? '' : 'none';
+}
+
+function getPrimitiveSchema(type) {
+  const prim = S.primitives.find(p => p.type === type);
+  return prim?.config_schema || { fields: [] };
+}
+
+// ── Mechanics (Composite mode) ───────────────────────────────────────────
+
+window._addMechanic = function(type, label, config) {
+  const container = document.getElementById('eng-mechanics');
+  const div = document.createElement('div');
+  div.className = 'mechanic-row';
+
+  const selectedType = type || (S.primitives[0]?.type || '');
+
+  // Top row: type + label + remove
+  const top = document.createElement('div');
+  top.className = 'mech-top';
+
+  const typeSelect = document.createElement('select');
+  typeSelect.className = 'mech-type';
+  typeSelect.innerHTML = S.primitives.map(p =>
+    `<option value="${esc(p.type)}"${p.type === selectedType ? ' selected' : ''}>${esc(p.name)}</option>`
+  ).join('');
+  top.appendChild(typeSelect);
+
+  const labelInput = document.createElement('input');
+  labelInput.type = 'text';
+  labelInput.className = 'mech-label';
+  labelInput.placeholder = 'Метка (напр. «Травы»)';
+  labelInput.value = label || '';
+  top.appendChild(labelInput);
+
+  const removeBtn = document.createElement('button');
+  removeBtn.className = 'btn btn-danger btn-sm';
+  removeBtn.textContent = '\u2715';
+  removeBtn.onclick = () => {
+    const idx = S.mechanicEditors.findIndex(e => e.element === div);
+    if (idx !== -1) S.mechanicEditors.splice(idx, 1);
+    div.remove();
+  };
+  top.appendChild(removeBtn);
+  div.appendChild(top);
+
+  // Config editor area
+  const configArea = document.createElement('div');
+  configArea.className = 'mechanic-config';
+  div.appendChild(configArea);
+
+  container.appendChild(div);
+
+  // Create ConfigEditor for current type
+  const schema = getPrimitiveSchema(selectedType);
+  let configEditor = null;
+  if (schema.fields && schema.fields.length > 0) {
+    configEditor = new ConfigEditor(configArea, schema, config || {}, { apiFetch: apiJson });
+    configEditor.render();
+  } else {
+    configArea.innerHTML = '<div style="color:var(--muted);font-size:.82rem">Нет настраиваемых полей</div>';
+  }
+
+  const entry = { element: div, configEditor };
+  S.mechanicEditors.push(entry);
+
+  // On type change — rebuild config editor
+  typeSelect.addEventListener('change', () => {
+    const newType = typeSelect.value;
+    const newSchema = getPrimitiveSchema(newType);
+    configArea.innerHTML = '';
+    if (newSchema.fields && newSchema.fields.length > 0) {
+      entry.configEditor = new ConfigEditor(configArea, newSchema, {}, { apiFetch: apiJson });
+      entry.configEditor.render();
+    } else {
+      entry.configEditor = null;
+      configArea.innerHTML = '<div style="color:var(--muted);font-size:.82rem">Нет настраиваемых полей</div>';
+    }
+  });
+};
+
+function collectMechanics() {
+  return S.mechanicEditors.map(entry => {
+    const typeSelect = entry.element.querySelector('.mech-type');
+    const labelInput = entry.element.querySelector('.mech-label');
+    const config = entry.configEditor ? entry.configEditor.collect() : {};
+    return {
+      type: typeSelect.value,
+      label: labelInput.value.trim() || typeSelect.options[typeSelect.selectedIndex].text,
+      config,
+    };
+  });
+}
+
+// ── Copy mode: action toggles ────────────────────────────────────────────
+
+function renderActionsToggles(actions, disabled) {
+  const container = document.getElementById('actions-toggles');
+  if (!actions.length) {
+    container.innerHTML = '<div class="empty">Нет доступных действий</div>';
+    return;
+  }
+  container.innerHTML = actions.map(a => `
+<div class="action-toggle">
+  <input type="checkbox" id="act-${esc(a.id)}" data-action-id="${esc(a.id)}" ${disabled.includes(a.id) ? '' : 'checked'}>
+  <label for="act-${esc(a.id)}">${esc(a.label)}</label>
+  <span class="hint">${esc(a.id)}</span>
+</div>`).join('');
+}
+
+function collectDisabledActions() {
+  const toggles = document.querySelectorAll('#actions-toggles input[type=checkbox]');
+  const disabled = [];
+  toggles.forEach(cb => {
+    if (!cb.checked) disabled.push(cb.dataset.actionId);
+  });
+  return disabled;
+}
+
+// ── Editor: new / edit / save / delete ───────────────────────────────────
+
+window._newEngine = function() {
+  S.editingId = null;
+  S.editingEngine = null;
+  S.mechanicEditors = [];
+  S.copyConfigEditor = null;
+  document.getElementById('editor-title').textContent = 'Новый движок';
+  document.getElementById('eng-name').value = '';
+  document.getElementById('eng-desc').value = '';
+  document.getElementById('eng-public').checked = false;
+  document.getElementById('eng-mechanics').innerHTML = '';
+  document.getElementById('editor-err').style.display = 'none';
+  document.getElementById('delete-btn').style.display = 'none';
+  document.getElementById('config-editor-container').innerHTML = '';
+  document.getElementById('actions-toggles').innerHTML = '';
+  showEditorMode('composite');
+  renderList();
+  document.getElementById('eng-name').focus();
+};
+
+window._editEngine = async function(id) {
+  const eng = S.allEngines.find(e => e.id === id);
+  if (!eng) return;
+  S.editingId = id;
+  S.editingEngine = eng;
+  S.mechanicEditors = [];
+  S.copyConfigEditor = null;
+
+  document.getElementById('editor-title').textContent = 'Редактирование движка';
+  document.getElementById('eng-name').value = eng.name;
+  document.getElementById('eng-desc').value = eng.description || '';
+  document.getElementById('eng-public').checked = eng.is_public;
+  document.getElementById('editor-err').style.display = 'none';
+  document.getElementById('delete-btn').style.display = '';
+
+  if (eng.base_engine_id) {
+    // Copy mode
+    showEditorMode('copy');
+    document.getElementById('eng-mechanics').innerHTML = '';
+
+    // Load config schema and render visual editor
+    const schema = await apiJson('GET', `/api/engines/${eng.base_engine_id}/config-schema`);
+    const container = document.getElementById('config-editor-container');
+    container.innerHTML = '';
+    S.copyConfigEditor = new ConfigEditor(container, schema, eng.custom_config || {}, { apiFetch: apiJson });
+    await S.copyConfigEditor.render();
+
+    // Render actions toggles
+    const sysEng = S.systemEngines.find(s => s.engine_id === eng.base_engine_id);
+    const actions = sysEng?.actions || [];
+    renderActionsToggles(actions, eng.disabled_actions || []);
+  } else {
+    // Composite mode
+    showEditorMode('composite');
+    S.copyConfigEditor = null;
+    const mc = document.getElementById('eng-mechanics');
+    mc.innerHTML = '';
+    (eng.mechanics || []).forEach(m => window._addMechanic(m.type, m.label, m.config || {}));
+  }
+
+  renderList();
+  document.getElementById('eng-name').focus();
+};
+
+window._cancelEdit = function() { window._newEngine(); };
+
+window._saveEngine = async function() {
+  const errEl = document.getElementById('editor-err');
+  errEl.style.display = 'none';
+  const name = document.getElementById('eng-name').value.trim();
+  if (!name) { errEl.textContent = 'Введите название'; errEl.style.display = ''; return; }
+
+  const body = {
+    name,
+    description: document.getElementById('eng-desc').value.trim() || null,
+    is_public: document.getElementById('eng-public').checked,
+  };
+
+  if (S.editingEngine && S.editingEngine.base_engine_id) {
+    // Copy mode
+    body.custom_config = S.copyConfigEditor ? S.copyConfigEditor.collect() : (S.editingEngine.custom_config || {});
+    body.disabled_actions = collectDisabledActions();
+  } else {
+    // Composite mode
+    body.mechanics = collectMechanics();
+  }
+
+  let data;
+  if (S.editingId) {
+    data = await apiJson('PATCH', `/api/engines/custom/${S.editingId}`, body);
+  } else {
+    data = await apiJson('POST', '/api/engines/custom', body);
+  }
+
+  if (!data || data._error) { errEl.textContent = data?._error || 'Ошибка'; errEl.style.display = ''; return; }
+
+  if (S.editingId) {
+    S.allEngines = S.allEngines.map(e => e.id === S.editingId ? data : e);
+    S.editingEngine = data;
+    toast('Движок обновлён');
+  } else {
+    S.allEngines.unshift(data);
+    S.editingEngine = data;
+    toast('Движок создан!');
+  }
+  toastWarnings(data.warnings);
+  S.editingId = data.id;
+  document.getElementById('editor-title').textContent = 'Редактирование движка';
+  document.getElementById('delete-btn').style.display = '';
+  renderList();
+};
+
+window._deleteEngine = async function() {
+  if (!S.editingId) return;
+  if (!confirm('Удалить движок? Это невозможно отменить.')) return;
+  const data = await apiJson('DELETE', `/api/engines/custom/${S.editingId}`);
+  if (data && data._error) { toast(data._error); return; }
+  S.allEngines = S.allEngines.filter(e => e.id !== S.editingId);
+  toast('Движок удалён');
+  window._newEngine();
+};
+
+// ── Simulator ─────────────────────────────────────────────────────────────
+
+window._selectSimulate = function(id) {
+  S.simEngineId = id;
+  const eng = S.allEngines.find(e => e.id === id);
+  if (!eng) return;
+
+  document.getElementById('sim-no-engine').style.display = 'none';
+  document.getElementById('sim-form').style.display = '';
+
+  if (eng.base_engine_id) {
+    // Copy mode: show actions from system engine
+    document.getElementById('sim-mechanic-field').style.display = 'none';
+    const sysEng = S.systemEngines.find(s => s.engine_id === eng.base_engine_id);
+    const actions = sysEng?.actions || [];
+    const disabled = eng.disabled_actions || [];
+    const enabled = actions.filter(a => !disabled.includes(a.id));
+    const actSel = document.getElementById('sim-action');
+    actSel.innerHTML = enabled.map(a => `<option value="${esc(a.id)}">${esc(a.label)} (${esc(a.id)})</option>`).join('');
+  } else {
+    // Composite mode
+    document.getElementById('sim-mechanic-field').style.display = '';
+    if (!(eng.mechanics || []).length) {
+      document.getElementById('sim-no-engine').textContent = 'У этого движка нет механик.';
+      document.getElementById('sim-no-engine').style.display = '';
+      document.getElementById('sim-form').style.display = 'none';
+      return;
+    }
+    const mechSel = document.getElementById('sim-mechanic');
+    mechSel.innerHTML = eng.mechanics.map((m, i) =>
+      `<option value="${i}">${esc(m.label || m.type)} (${esc(m.type)})</option>`
+    ).join('');
+    window._onSimMechanicChange();
+  }
+
+  document.getElementById('sim-result').style.display = 'none';
+  document.getElementById('sim-result-label').style.display = 'none';
+  document.getElementById('sim-err').style.display = 'none';
+};
+
+window._onSimMechanicChange = function() {
+  const eng = S.allEngines.find(e => e.id === S.simEngineId);
+  if (!eng) return;
+  const idx = parseInt(document.getElementById('sim-mechanic').value);
+  const m = (eng.mechanics || [])[idx];
+  if (!m) return;
+  const prim = S.primitives.find(p => p.type === m.type);
+  const actions = (prim?.actions || [{id: 'roll', label: 'Бросок'}]);
+  const actSel = document.getElementById('sim-action');
+  actSel.innerHTML = actions.map(a => `<option value="${esc(a.id)}">${esc(a.label)} (${esc(a.id)})</option>`).join('');
+};
+
+window._runSimulate = async function() {
+  const errEl = document.getElementById('sim-err');
+  errEl.style.display = 'none';
+  const action = document.getElementById('sim-action').value;
+  const rawPayload = document.getElementById('sim-payload').value.trim();
+  let payload = {};
+  if (rawPayload) {
+    try { payload = JSON.parse(rawPayload); } catch {
+      errEl.textContent = 'Невалидный JSON в payload';
+      errEl.style.display = '';
+      return;
+    }
+  }
+
+  const eng = S.allEngines.find(e => e.id === S.simEngineId);
+  const body = { action, payload };
+  if (eng && !eng.base_engine_id) {
+    body.mechanic_index = parseInt(document.getElementById('sim-mechanic').value);
+  }
+
+  const data = await apiJson('POST', `/api/engines/custom/${S.simEngineId}/simulate`, body);
+  const resultEl = document.getElementById('sim-result');
+  const labelEl = document.getElementById('sim-result-label');
+  if (!data || data._error) {
+    resultEl.textContent = data?._error || 'Ошибка';
+    resultEl.style.color = 'var(--danger)';
+  } else {
+    formatResult(resultEl, data);
+    resultEl.style.color = 'var(--text)';
+  }
+  resultEl.style.display = '';
+  labelEl.style.display = '';
+};
+
+// ── Tab switching ─────────────────────────────────────────────────────────
+window._switchTab = function(tab) {
+  S.activeTab = 'categories';
+  document.getElementById('categories-tab').style.display = '';
+  document.getElementById('cat-editor-panel').style.display = '';
+  document.getElementById('cat-eng-editor-panel').style.display = 'none';
+};
+
+// ── Categories ───────────────────────────────────────────────────────────
+
+function renderCategoriesList() {
+  const el = document.getElementById('categories-list');
+  const mine = S.allCategories.filter(c => c.owner_id === S.currentUser.id);
+  if (!mine.length) {
+    el.innerHTML = '<div class="empty">Нет категорий. Создайте первую!</div>';
+    return;
+  }
+  el.innerHTML = mine.map(c => `
+<div class="engine-item${S.editingCatId === c.id ? ' active' : ''}" onclick="window._editCategory(${c.id})">
+  <h4>${c.icon ? esc(c.icon) + ' ' : ''}${esc(c.name)}</h4>
+  <div class="meta">
+    <span>${(c.engines || []).length} движков</span>
+    <span class="badge ${c.is_public ? 'badge-public' : 'badge-private'}">${c.is_public ? 'публичная' : 'приватная'}</span>
+  </div>
+</div>`).join('');
+}
+
+window._newCategory = function() {
+  S.editingCatId = null;
+  S.editingCategory = null;
+  document.getElementById('cat-editor-panel').style.display = '';
+  document.getElementById('cat-eng-editor-panel').style.display = 'none';
+  document.getElementById('cat-editor-title').textContent = 'Новая категория';
+  document.getElementById('cat-name').value = '';
+  document.getElementById('cat-desc').value = '';
+  document.getElementById('cat-icon').value = '';
+  document.getElementById('cat-public').checked = false;
+  document.getElementById('cat-engines-list').innerHTML = '';
+  document.getElementById('cat-editor-err').style.display = 'none';
+  document.getElementById('cat-delete-btn').style.display = 'none';
+  renderCategoriesList();
+};
+
+window._editCategory = function(id) {
+  const cat = S.allCategories.find(c => c.id === id);
+  if (!cat) return;
+  S.editingCatId = id;
+  S.editingCategory = cat;
+
+  document.getElementById('cat-editor-panel').style.display = '';
+  document.getElementById('cat-eng-editor-panel').style.display = 'none';
+  document.getElementById('cat-editor-title').textContent = 'Редактирование категории';
+  document.getElementById('cat-name').value = cat.name;
+  document.getElementById('cat-desc').value = cat.description || '';
+  document.getElementById('cat-icon').value = cat.icon || '';
+  document.getElementById('cat-public').checked = cat.is_public;
+  document.getElementById('cat-editor-err').style.display = 'none';
+  document.getElementById('cat-delete-btn').style.display = '';
+
+  renderCatEnginesList(cat);
+  renderCategoriesList();
+};
+
+function renderCatEnginesList(cat) {
+  const el = document.getElementById('cat-engines-list');
+  const engines = cat.engines || [];
+  if (!engines.length) {
+    el.innerHTML = '<div class="empty">Нет движков в категории</div>';
+    return;
+  }
+  el.innerHTML = engines.map(e => `
+<div class="cat-engine-item">
+  <div class="cat-eng-info">
+    <h5>${esc(e.name)}</h5>
+    <div class="cat-eng-meta">${esc(e.engine_type)}: ${esc(e.type_id)}</div>
+  </div>
+  <button class="btn btn-ghost btn-sm" onclick="window._editCatEngine(${cat.id}, ${e.id})">Ред.</button>
+  <button class="btn btn-danger btn-sm" onclick="window._quickDeleteCatEngine(${cat.id}, ${e.id})">✕</button>
+</div>`).join('');
+}
+
+window._cancelCatEdit = function() {
+  S.editingCatId = null;
+  S.editingCategory = null;
+  document.getElementById('cat-editor-panel').style.display = '';
+  document.getElementById('cat-eng-editor-panel').style.display = 'none';
+  document.getElementById('cat-editor-title').textContent = 'Новая категория';
+  document.getElementById('cat-name').value = '';
+  document.getElementById('cat-desc').value = '';
+  document.getElementById('cat-icon').value = '';
+  document.getElementById('cat-public').checked = false;
+  document.getElementById('cat-engines-list').innerHTML = '';
+  document.getElementById('cat-delete-btn').style.display = 'none';
+  renderCategoriesList();
+};
+
+window._saveCategory = async function() {
+  const errEl = document.getElementById('cat-editor-err');
+  errEl.style.display = 'none';
+  const name = document.getElementById('cat-name').value.trim();
+  if (!name) { errEl.textContent = 'Введите название'; errEl.style.display = ''; return; }
+
+  const body = {
+    name,
+    description: document.getElementById('cat-desc').value.trim() || null,
+    icon: document.getElementById('cat-icon').value.trim() || null,
+    is_public: document.getElementById('cat-public').checked,
+  };
+
+  let data;
+  if (S.editingCatId) {
+    data = await apiJson('PATCH', `/api/categories/${S.editingCatId}`, body);
+  } else {
+    data = await apiJson('POST', '/api/categories', body);
+  }
+
+  if (!data || data._error) { errEl.textContent = data?._error || 'Ошибка'; errEl.style.display = ''; return; }
+
+  if (S.editingCatId) {
+    S.allCategories = S.allCategories.map(c => c.id === S.editingCatId ? data : c);
+    S.editingCategory = data;
+    toast('Категория обновлена');
+  } else {
+    S.allCategories.unshift(data);
+    S.editingCatId = data.id;
+    S.editingCategory = data;
+    toast('Категория создана!');
+  }
+  document.getElementById('cat-editor-title').textContent = 'Редактирование категории';
+  document.getElementById('cat-delete-btn').style.display = '';
+  renderCatEnginesList(data);
+  renderCategoriesList();
+};
+
+window._deleteCategory = async function() {
+  if (!S.editingCatId) return;
+  if (!confirm('Удалить категорию и все её движки?')) return;
+  const data = await apiJson('DELETE', `/api/categories/${S.editingCatId}`);
+  if (data && data._error) { toast(data._error); return; }
+  S.allCategories = S.allCategories.filter(c => c.id !== S.editingCatId);
+  toast('Категория удалена');
+  window._cancelCatEdit();
+};
+
+// ── Category engine editor ───────────────────────────────────────────────
+
+window._addCatEngine = async function() {
+  if (!S.editingCatId) {
+    await window._saveCategory();
+    if (!S.editingCatId) return;
+  }
+  S.editingCeId = null;
+  S.editingCeCatId = S.editingCatId;
+  S.ceConfigEditor = null;
+
+  const cePanel = document.getElementById('cat-eng-editor-panel');
+  cePanel.style.display = '';
+  document.getElementById('cat-eng-editor-title').textContent = 'Новый движок';
+  document.getElementById('ce-name').value = '';
+  document.getElementById('ce-desc').value = '';
+  document.getElementById('ce-engine-type').value = 'primitive';
+  document.getElementById('ce-editor-err').style.display = 'none';
+  document.getElementById('ce-delete-btn').style.display = 'none';
+  document.getElementById('ce-sim-result').style.display = 'none';
+  document.getElementById('ce-sim-result-label').style.display = 'none';
+
+  _populateCeTypeIdOptions('primitive');
+  cePanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+};
+
+window._editCatEngine = function(catId, engId) {
+  const cat = S.allCategories.find(c => c.id === catId);
+  if (!cat) return;
+  const eng = (cat.engines || []).find(e => e.id === engId);
+  if (!eng) return;
+
+  S.editingCeId = engId;
+  S.editingCeCatId = catId;
+  S.ceConfigEditor = null;
+
+  const cePanel = document.getElementById('cat-eng-editor-panel');
+  cePanel.style.display = '';
+  document.getElementById('cat-eng-editor-title').textContent = 'Редактирование движка';
+  document.getElementById('ce-name').value = eng.name;
+  document.getElementById('ce-desc').value = eng.description || '';
+  document.getElementById('ce-engine-type').value = eng.engine_type;
+  document.getElementById('ce-editor-err').style.display = 'none';
+  document.getElementById('ce-delete-btn').style.display = '';
+  document.getElementById('ce-sim-result').style.display = 'none';
+  document.getElementById('ce-sim-result-label').style.display = 'none';
+
+  _populateCeTypeIdOptions(eng.engine_type, eng.type_id);
+  _renderCeConfig(eng.engine_type, eng.type_id, eng.config || {});
+  _populateCeSimActions(eng);
+  cePanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+};
+
+function _populateCeTypeIdOptions(engineType, selectedId) {
+  const sel = document.getElementById('ce-type-id');
+  if (engineType === 'primitive') {
+    sel.innerHTML = S.primitives.map(p =>
+      `<option value="${esc(p.type)}"${p.type === selectedId ? ' selected' : ''}>${esc(p.name)} (${esc(p.type)})</option>`
+    ).join('');
+  } else {
+    sel.innerHTML = S.systemEngines.map(e =>
+      `<option value="${esc(e.engine_id)}"${e.engine_id === selectedId ? ' selected' : ''}>${esc(e.name)} (${esc(e.engine_id)})</option>`
+    ).join('');
+  }
+  if (!selectedId) {
+    window._onCeTypeIdChange();
+  } else {
+    _renderCeConfig(engineType, selectedId);
+  }
+}
+
+function _renderCeConfig(engineType, typeId, existingConfig) {
+  const container = document.getElementById('ce-config-container');
+  container.innerHTML = '';
+  S.ceConfigEditor = null;
+
+  const bindingsContainer = document.getElementById('ce-bindings-container');
+  bindingsContainer.innerHTML = '';
+  S.ceBindingsEditor = null;
+
+  let schema = null;
+  if (engineType === 'primitive') {
+    const prim = S.primitives.find(p => p.type === typeId);
+    schema = prim?.config_schema;
+  } else {
+    // Will fetch from API
+  }
+
+  if (engineType === 'primitive' && schema && schema.fields && schema.fields.length > 0) {
+    S.ceConfigEditor = new ConfigEditor(container, schema, existingConfig || {}, { apiFetch: apiJson });
+    S.ceConfigEditor.render();
+  } else if (engineType === 'system') {
+    apiJson('GET', `/api/engines/${typeId}/config-schema`).then(schema => {
+      if (schema && !schema._error && schema.fields && schema.fields.length > 0) {
+        S.ceConfigEditor = new ConfigEditor(container, schema, existingConfig || {}, { apiFetch: apiJson });
+        S.ceConfigEditor.render();
+      } else {
+        container.innerHTML = '<div style="color:var(--muted);font-size:.82rem">Нет настраиваемых полей</div>';
+      }
+    });
+  } else {
+    container.innerHTML = '<div style="color:var(--muted);font-size:.82rem">Нет настраиваемых полей</div>';
+  }
+
+  // Render bindings editor for primitives (only if engine is saved)
+  if (engineType === 'primitive' && S.editingCeId) {
+    S.ceBindingsEditor = new BindingsEditor(bindingsContainer, S.editingCeId, typeId);
+    if (existingConfig) S.ceBindingsEditor.setConfig(existingConfig);
+    S.ceBindingsEditor.load();
+  } else if (engineType === 'primitive') {
+    bindingsContainer.innerHTML = '<div style="color:var(--muted);font-size:.82rem">Сохраните движок, чтобы настроить привязки ресурсов</div>';
+  }
+}
+
+function _populateCeSimActions(eng) {
+  const sel = document.getElementById('ce-sim-action');
+  let actions = [];
+  if (eng.engine_type === 'primitive') {
+    const prim = S.primitives.find(p => p.type === eng.type_id);
+    actions = prim?.actions || [{id: 'roll', label: 'Бросок'}];
+  } else {
+    const sys = S.systemEngines.find(s => s.engine_id === eng.type_id);
+    actions = sys?.actions || [];
+  }
+  sel.innerHTML = actions.map(a => `<option value="${esc(a.id)}">${esc(a.label)} (${esc(a.id)})</option>`).join('');
+}
+
+window._onCeTypeChange = function() {
+  const engineType = document.getElementById('ce-engine-type').value;
+  _populateCeTypeIdOptions(engineType);
+};
+
+window._onCeTypeIdChange = function() {
+  const engineType = document.getElementById('ce-engine-type').value;
+  const typeId = document.getElementById('ce-type-id').value;
+  _renderCeConfig(engineType, typeId);
+  // Update sim actions
+  _populateCeSimActions({ engine_type: engineType, type_id: typeId });
+};
+
+window._cancelCeEdit = function() {
+  S.editingCeId = null;
+  S.ceConfigEditor = null;
+  document.getElementById('cat-eng-editor-panel').style.display = 'none';
+};
+
+window._saveCatEngine = async function() {
+  const errEl = document.getElementById('ce-editor-err');
+  errEl.style.display = 'none';
+  const name = document.getElementById('ce-name').value.trim();
+  if (!name) { errEl.textContent = 'Введите название'; errEl.style.display = ''; return; }
+
+  // Merge engine config from config editor + bindings editor contexts
+  let config = S.ceConfigEditor ? S.ceConfigEditor.collect() : {};
+  if (S.ceBindingsEditor) {
+    const bindingsConfig = S.ceBindingsEditor.collectConfig();
+    config = { ...config, ...bindingsConfig };
+  }
+
+  const body = {
+    name,
+    description: document.getElementById('ce-desc').value.trim() || null,
+    engine_type: document.getElementById('ce-engine-type').value,
+    type_id: document.getElementById('ce-type-id').value,
+    config,
+  };
+
+  let data;
+  if (S.editingCeId) {
+    data = await apiJson('PATCH', `/api/categories/${S.editingCeCatId}/engines/${S.editingCeId}`, { name: body.name, description: body.description, config: body.config });
+  } else {
+    data = await apiJson('POST', `/api/categories/${S.editingCeCatId}/engines`, body);
+  }
+
+  if (!data || data._error) { errEl.textContent = data?._error || 'Ошибка'; errEl.style.display = ''; return; }
+
+  // Save bindings (tag_filter, item_overrides, etc.)
+  const engineId = data.id || S.editingCeId;
+  if (S.ceBindingsEditor && engineId) {
+    // Delete removed bindings
+    for (const delId of S.ceBindingsEditor.getDeletedBindingIds()) {
+      await apiJson('DELETE', `/api/bindings/${delId}`);
+    }
+    // Save current bindings
+    const bindings = S.ceBindingsEditor.save();
+    for (const b of bindings) {
+      const tagFilter = b.tag_filter ? b.tag_filter.split(',').filter(Boolean) : [];
+      const payload = {
+        tag_filter: tagFilter,
+        role: b.role || 'source',
+        priority: b.priority ?? 0,
+        count: b.count ?? null,
+        item_overrides: b.item_overrides || null,
+        label: b.label || null,
+        icon: b.icon || null,
+        category_weight: b.category_weight ?? null,
+      };
+      if (b.id) {
+        await apiJson('PATCH', `/api/bindings/${b.id}`, payload);
+      } else {
+        await apiJson('POST', `/api/engines/${engineId}/bindings`, payload);
+      }
+    }
+  }
+
+  // Refresh category
+  const catData = await apiJson('GET', `/api/categories/${S.editingCeCatId}`);
+  if (catData && !catData._error) {
+    S.allCategories = S.allCategories.map(c => c.id === S.editingCeCatId ? catData : c);
+    S.editingCategory = catData;
+    renderCatEnginesList(catData);
+  }
+
+  const wasNew = !S.editingCeId;
+  toast(wasNew ? 'Движок добавлен!' : 'Движок обновлён');
+  toastWarnings(data.warnings);
+  S.editingCeId = data.id;
+
+  // Initialize bindings editor after first save
+  if (wasNew && body.engine_type === 'primitive') {
+    const bindingsContainer = document.getElementById('ce-bindings-container');
+    bindingsContainer.innerHTML = '';
+    S.ceBindingsEditor = new BindingsEditor(bindingsContainer, data.id, body.type_id);
+    S.ceBindingsEditor.load();
+  }
+  document.getElementById('ce-delete-btn').style.display = '';
+  document.getElementById('cat-eng-editor-title').textContent = 'Редактирование движка';
+  renderCategoriesList();
+};
+
+window._deleteCatEngine = async function() {
+  if (!S.editingCeId || !S.editingCeCatId) return;
+  if (!confirm('Удалить движок из категории?')) return;
+  const data = await apiJson('DELETE', `/api/categories/${S.editingCeCatId}/engines/${S.editingCeId}`);
+  if (data && data._error) { toast(data._error); return; }
+
+  // Refresh category
+  const catData = await apiJson('GET', `/api/categories/${S.editingCeCatId}`);
+  if (catData && !catData._error) {
+    S.allCategories = S.allCategories.map(c => c.id === S.editingCeCatId ? catData : c);
+    S.editingCategory = catData;
+    renderCatEnginesList(catData);
+  }
+  toast('Движок удалён');
+  window._cancelCeEdit();
+  renderCategoriesList();
+};
+
+window._quickDeleteCatEngine = async function(catId, engId) {
+  if (!confirm('Удалить движок из категории?')) return;
+  const data = await apiJson('DELETE', `/api/categories/${catId}/engines/${engId}`);
+  if (data && data._error) { toast(data._error); return; }
+  const catData = await apiJson('GET', `/api/categories/${catId}`);
+  if (catData && !catData._error) {
+    S.allCategories = S.allCategories.map(c => c.id === catId ? catData : c);
+    if (S.editingCatId === catId) {
+      S.editingCategory = catData;
+      renderCatEnginesList(catData);
+    }
+  }
+  toast('Движок удалён');
+  renderCategoriesList();
+};
+
+window._runCeSimulate = async function() {
+  if (!S.editingCeId || !S.editingCeCatId) {
+    await window._saveCatEngine();
+    if (!S.editingCeId || !S.editingCeCatId) return;
+  }
+  const action = document.getElementById('ce-sim-action').value;
+  const rawPayload = document.getElementById('ce-sim-payload').value.trim();
+  let payload = {};
+  if (rawPayload) {
+    try { payload = JSON.parse(rawPayload); } catch {
+      toast('Невалидный JSON');
+      return;
+    }
+  }
+
+  const data = await apiJson('POST', `/api/categories/${S.editingCeCatId}/engines/${S.editingCeId}/simulate`, { action, payload });
+  const resultEl = document.getElementById('ce-sim-result');
+  const labelEl = document.getElementById('ce-sim-result-label');
+  if (!data || data._error) {
+    resultEl.textContent = data?._error || 'Ошибка';
+    resultEl.style.color = 'var(--danger)';
+  } else {
+    formatResult(resultEl, data);
+    resultEl.style.color = 'var(--text)';
+  }
+  resultEl.style.display = '';
+  labelEl.style.display = '';
+};
+
+// ── Init ──────────────────────────────────────────────────────────────────
+async function init() {
+  if (!S.accessToken) { window.location.href = '/login'; return; }
+  const [me, prims, sysEngs, cats] = await Promise.all([
+    fetch('/auth/me', { headers: { Authorization: 'Bearer ' + S.accessToken } }).then(r => r.ok ? r.json() : null),
+    apiJson('GET', '/api/engines/primitives'),
+    apiJson('GET', '/api/engines'),
+    apiJson('GET', '/api/categories'),
+  ]);
+  if (!me) { window.location.href = '/login'; return; }
+  S.currentUser = me;
+  S.primitives = Array.isArray(prims) ? prims : [];
+  S.systemEngines = Array.isArray(sysEngs) ? sysEngs : [];
+  S.allCategories = Array.isArray(cats) ? cats : [];
+  renderCategoriesList();
+  window._switchTab('categories');
+}
+
+init();
+</script>
+</body>
+</html>

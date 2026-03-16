@@ -1,62 +1,135 @@
 // ── Auth ────────────────────────────────────────────
 let currentUser = null;
+let currentGameId   = localStorage.getItem('selected_game_id');
+let currentGameName = localStorage.getItem('selected_game_name');
 
 async function initAuth() {
+    const token = localStorage.getItem('access_token');
+    if (token) {
+        const user = await _fetchMe(token);
+        if (user) { currentUser = user; _updateUserDisplay(); loadGames(); return; }
+    }
+    // No valid token — try silent refresh via httpOnly cookie
+    const newToken = await _tryRefresh();
+    if (newToken) {
+        const user = await _fetchMe(newToken);
+        if (user) { currentUser = user; _updateUserDisplay(); loadGames(); return; }
+    }
+    localStorage.removeItem('access_token');
+    currentUser = null;
+    _updateUserDisplay();
+    _updateGameTitle();
+}
+
+async function loadGames() {
+    const token = localStorage.getItem('access_token');
+    if (!token) return;
     try {
-        const r = await fetch('/auth/me');
-        if (r.ok) {
-            const { name } = await r.json();
-            currentUser = name;
-            _updateUserDisplay();
-            return;
-        }
+        const r = await fetch('/api/games', { headers: { 'Authorization': `Bearer ${token}` } });
+        if (!r.ok) return;
+        const games = await r.json();
+        _renderGameSelector(games);
     } catch {}
-    showLoginModal();
 }
 
-function showLoginModal() {
-    document.getElementById('authOverlay').classList.add('visible');
-    setTimeout(() => document.getElementById('authInput').focus(), 50);
+function _renderGameSelector(games) {
+    const select = document.getElementById('gameSelect');
+    if (!select || !games.length) { _updateGameTitle(); return; }
+
+    select.innerHTML = '';
+    games.forEach(g => {
+        const opt = document.createElement('option');
+        opt.value = g.id;
+        opt.textContent = g.name;
+        if (String(g.id) === currentGameId) opt.selected = true;
+        select.appendChild(opt);
+    });
+
+    // If no saved selection or not found — pick first
+    if (!currentGameId || !games.find(g => String(g.id) === currentGameId)) {
+        const first = games[0];
+        currentGameId   = String(first.id);
+        currentGameName = first.name;
+        localStorage.setItem('selected_game_id',   currentGameId);
+        localStorage.setItem('selected_game_name', currentGameName);
+        select.value = currentGameId;
+    }
+
+    select.style.display = games.length > 1 ? '' : 'none';
+    _updateGameTitle();
 }
 
-function hideLoginModal() {
-    document.getElementById('authOverlay').classList.remove('visible');
+function onGameChange(selectEl) {
+    const opt = selectEl.options[selectEl.selectedIndex];
+    currentGameId   = selectEl.value;
+    currentGameName = opt.textContent;
+    localStorage.setItem('selected_game_id',   currentGameId);
+    localStorage.setItem('selected_game_name', currentGameName);
+    _updateGameTitle();
 }
 
-async function submitLogin() {
-    const input = document.getElementById('authInput');
-    const name = input.value.trim();
-    if (!name) { input.focus(); return; }
-    const btn = document.getElementById('authSubmitBtn');
-    btn.disabled = true;
+function _updateGameTitle() {
+    const el = document.getElementById('headerGameTitle');
+    if (!el) return;
+    el.textContent = currentGameName ? `⚔ ${currentGameName}` : '⚔ TTRPG';
+}
+
+async function _fetchMe(token) {
     try {
-        const r = await fetch('/auth/login', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name }),
-        });
-        if (r.ok) {
-            const data = await r.json();
-            currentUser = data.name;
-            _updateUserDisplay();
-            hideLoginModal();
-        }
-    } catch {}
-    btn.disabled = false;
+        const r = await fetch('/auth/me', { headers: { 'Authorization': `Bearer ${token}` } });
+        if (!r.ok) return null;
+        const data = await r.json();
+        return data.username;
+    } catch { return null; }
+}
+
+async function _tryRefresh() {
+    try {
+        const r = await fetch('/auth/refresh', { method: 'POST', credentials: 'include' });
+        if (!r.ok) return null;
+        const data = await r.json();
+        localStorage.setItem('access_token', data.access_token);
+        return data.access_token;
+    } catch { return null; }
+}
+
+async function doLogout() {
+    try { await fetch('/auth/logout', { method: 'POST', credentials: 'include' }); } catch {}
+    localStorage.removeItem('access_token');
+    currentUser = null;
+    _updateUserDisplay();
 }
 
 function _updateUserDisplay() {
-    const el = document.getElementById('userName');
-    if (el) el.textContent = currentUser ? `👤 ${currentUser}` : '';
-    const area = document.getElementById('headerUserArea');
-    if (area) area.style.visibility = currentUser ? 'visible' : 'hidden';
+    const nameEl = document.getElementById('userName');
+    const loginBtn = document.getElementById('headerLoginBtn');
+    const logoutBtn = document.getElementById('headerLogoutBtn');
+    if (nameEl) nameEl.textContent = currentUser ? `👤 ${currentUser}` : '';
+    if (loginBtn) loginBtn.style.display = currentUser ? 'none' : '';
+    if (logoutBtn) logoutBtn.style.display = currentUser ? '' : 'none';
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('authInput').addEventListener('keydown', e => {
-        if (e.key === 'Enter') submitLogin();
+// ── Engine API helpers ─────────────────────────────
+function _useEngineApi() {
+    return !!(currentUser && currentGameId);
+}
+
+async function _engineAction(engineId, action, payload = {}) {
+    const token = localStorage.getItem('access_token');
+    const r = await fetch(`/api/games/${currentGameId}/engines/${engineId}/action`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
+        },
+        body: JSON.stringify({ action, payload }),
     });
-});
+    if (!r.ok) {
+        const err = await r.json().catch(() => ({}));
+        throw new Error(err.detail || `HTTP ${r.status}`);
+    }
+    return r.json();
+}
 
 // ── Category definitions ───────────────────────────
 const CATS = {
@@ -357,9 +430,15 @@ async function onSubClick(cardEl, item) {
         interactTitle.textContent = `${source.icon} ${item.name} — выбери место`;
         locGrid.innerHTML = '<span class="loc-loading">Загружаем...</span>';
         try {
-            const r = await fetch(`/api/play/profession/${encodeURIComponent(item.name)}/locations`);
-            if (!r.ok) throw new Error(`HTTP ${r.status}`);
-            const { locations } = await r.json();
+            let locations;
+            if (_useEngineApi()) {
+                const data = await _engineAction('profession_roll', 'get_locations', { profession: item.name });
+                locations = data.locations;
+            } else {
+                const r = await fetch(`/api/play/profession/${encodeURIComponent(item.name)}/locations`);
+                if (!r.ok) throw new Error(`HTTP ${r.status}`);
+                locations = (await r.json()).locations;
+            }
             locGrid.innerHTML = '';
             locations.forEach(loc => {
                 const btn = document.createElement('button');
@@ -420,9 +499,15 @@ async function selectTraderType(btn, opt) {
         });
     } else {
         try {
-            const r = await fetch('/api/play/traders/named');
-            if (!r.ok) throw new Error(`HTTP ${r.status}`);
-            const stores = await r.json();
+            let stores;
+            if (_useEngineApi()) {
+                const { traders } = await _engineAction('trader_inventory', 'list_traders', { subtype: 'named' });
+                stores = traders.filter(t => t.subtype === 'named').map(t => ({ key: t.key, name: t.name }));
+            } else {
+                const r = await fetch('/api/play/traders/named');
+                if (!r.ok) throw new Error(`HTTP ${r.status}`);
+                stores = await r.json();
+            }
             locGrid.innerHTML = '';
             stores.forEach(store => {
                 const sBtn = document.createElement('button');
@@ -458,9 +543,15 @@ async function showTraderInventory(subtype, key) {
     document.getElementById('interactArea').classList.add('trader-mode');
     activeLocation = { name: key, subtype, key };
     try {
-        const r = await fetch(`/api/play/traders/inventory/${subtype}/${encodeURIComponent(key)}`);
-        if (!r.ok) throw new Error(`HTTP ${r.status}`);
-        const { items } = await r.json();
+        let items;
+        if (_useEngineApi()) {
+            const data = await _engineAction('trader_inventory', 'get_inventory', { subtype, key });
+            items = data.items;
+        } else {
+            const r = await fetch(`/api/play/traders/inventory/${subtype}/${encodeURIComponent(key)}`);
+            if (!r.ok) throw new Error(`HTTP ${r.status}`);
+            items = (await r.json()).items;
+        }
         if (!items.length) {
             inv.innerHTML = '<span style="color:#3a3020;font-size:0.8rem;font-style:italic">Нет товаров</span>';
             return;
@@ -556,6 +647,9 @@ function showResultPopup(result) {
 
 // ── Search / roll ──────────────────────────────────
 async function _doRollRequest() {
+    if (_useEngineApi()) {
+        return _doRollRequestEngine();
+    }
     const mode = activeProfession.source.mode;
     let body;
     if (mode === 'treasure') {
@@ -581,6 +675,24 @@ async function _doRollRequest() {
     return r.json();
 }
 
+async function _doRollRequestEngine() {
+    const mode = activeProfession.source.mode;
+    if (mode === 'treasure') {
+        return _engineAction('treasure', 'roll', {});
+    }
+    if (mode === 'with_locations') {
+        return _engineAction('profession_roll', 'roll', {
+            profession: activeProfession.name,
+            location: activeLocation.locationKey,
+        });
+    }
+    if (mode === 'multi') {
+        const action = activeLocation.param1Key === 'steal' ? 'roll_steal' : 'roll_cache';
+        return _engineAction('profession_roll', action, { district: activeLocation.param2Key });
+    }
+    throw new Error(`Unknown mode: ${mode}`);
+}
+
 async function doStoryRoll(mode) {
     const btn = document.getElementById('searchBtn');
     btn.disabled = true;
@@ -591,9 +703,15 @@ async function doStoryRoll(mode) {
 
     try {
         if (mode === 'story_motivation') {
-            const r = await fetch('/api/play/story/motivation', { method: 'POST' });
-            if (!r.ok) throw new Error(`HTTP ${r.status}`);
-            const { motivations } = await r.json();
+            let motivations;
+            if (_useEngineApi()) {
+                const data = await _engineAction('story_motivation', 'get_motivations', {});
+                motivations = data.motivations;
+            } else {
+                const r = await fetch('/api/play/story/motivation', { method: 'POST' });
+                if (!r.ok) throw new Error(`HTTP ${r.status}`);
+                motivations = (await r.json()).motivations;
+            }
             const inv = document.getElementById('traderInventory');
             inv.innerHTML = motivations.map(m =>
                 `<div class="inv-row"><span class="inv-name">${_esc(m)}</span></div>`

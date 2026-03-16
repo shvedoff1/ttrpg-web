@@ -1,62 +1,1031 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" href="/favicon.png" type="image/png">
     <title>Changelog</title>
+    <script>document.documentElement.dataset.theme = localStorage.theme || 'dark'</script>
+    <script src="/js/app-header.js" data-page="changelog"></script>
     <style>
+        :root, :root[data-theme="dark"] {
+            --bg: #1a1a2e; --bg2: #16213e; --bg3: #0f3460;
+            --gold: #c9a84c; --text: #e0e0e0; --muted: #888;
+            --border: #2a2a4a;
+        }
+        :root[data-theme="light"] {
+            --bg: #f5f0e8; --bg2: #ede7d9; --bg3: #d4c9a8;
+            --gold: #7a5c18; --text: #1a1a1a; --muted: #666;
+            --border: #c8b87a;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
+            background: var(--bg);
+            color: var(--text);
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
             line-height: 1.6;
+        }
+        .changelog-content {
             max-width: 900px;
             margin: 0 auto;
             padding: 20px;
-            color: #333;
         }
         h1, h2, h3 {
             margin-top: 24px;
             margin-bottom: 16px;
             font-weight: 600;
         }
-        h1 {
-            border-bottom: 1px solid #eaecef;
-            padding-bottom: 0.3em;
-        }
-        h2 {
-            border-bottom: 1px solid #eaecef;
-            padding-bottom: 0.3em;
-        }
-        ul {
-            margin: 10px 0;
-            padding-left: 2em;
-        }
-        li {
-            margin: 5px 0;
-        }
+        h1, h2 { border-bottom: 1px solid var(--border); padding-bottom: 0.3em; }
+        ul { margin: 10px 0; padding-left: 2em; }
+        li { margin: 5px 0; }
         code {
-            background-color: #f6f8fa;
+            background-color: var(--bg2);
             padding: 0.2em 0.4em;
-            margin: 0;
             border-radius: 3px;
             font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
         }
         pre {
-            background-color: #f6f8fa;
+            background-color: var(--bg2);
             padding: 16px;
             overflow: auto;
             border-radius: 6px;
         }
         blockquote {
             padding: 0 15px;
-            color: #6a737d;
-            border-left: 4px solid #dfe2e5;
+            color: var(--muted);
+            border-left: 4px solid var(--border);
             margin: 0 0 16px 0;
         }
     </style>
 </head>
 <body>
+<header id="app-header"></header>
+<div class="changelog-content">
     <h1>Changelog</h1>
+
+    <h2>16 марта 2026 — 🏷 Фильтрация ресурсов по тегам</h2>
+    <h3>🔄 Изменено</h3>
+    <ul>
+        <li>🏷 <strong>Только пользовательские ресурсы:</strong> в редакторе привязок (bindings-editor) теперь отображаются только ресурсы пользователя. Системные ресурсы с такими же тегами игнорируются</li>
+        <li>🔢 <strong>Счётчик ресурсов:</strong> показывает количество только пользовательских ресурсов по выбранным тегам</li>
+        <li>🚫 <strong>Дедупликация:</strong> если при выборе тегов добавляются несколько одинаковых элементов (по key), остаётся только один. Показывается диалог со списком удалённых дубликатов</li>
+    </ul>
+    <h3>📁 Затронутые файлы</h3>
+    <ul>
+        <li><code>resources/routers/resources.py</code> — параметр <code>owner_only</code> в endpoint <code>/api/resources/count</code></li>
+        <li><code>resources/static/js/engines/bindings-editor.js</code> — фильтрация <code>owner_only=true</code>, дедупликация, диалог</li>
+    </ul>
+
+    <h2>16 марта 2026 — 🔧 Мелкие доработки UX</h2>
+    <h3>✅ Добавлено</h3>
+    <ul>
+        <li>🪙 <strong>Галка «Показывать цену»:</strong> добавлена в конфиг всех примитивов (weighted_roll, context_roll, cascade_roll, filtered_roll, loot_bundle, pool_sample, weighted_sample). Управляет отображением цены в popup и журнале</li>
+        <li>⚖️ <strong>Вес предмета:</strong> при броске одного предмета теперь отображается его вес рядом с ценой</li>
+        <li>📜 <strong>Подскролл к редактору:</strong> при нажатии «Ред.» или «Добавить движок» страница автоматически прокручивается к панели редактирования</li>
+    </ul>
+    <h3>🔄 Изменено</h3>
+    <ul>
+        <li>💾 <strong>Автосейв:</strong> вместо сообщения «Сначала сохраните категорию/движок» теперь автоматически сохраняется и продолжается действие</li>
+        <li>📦 <strong>context_roll, filtered_roll, cascade_roll:</strong> бэкенд теперь всегда возвращает price и weight для одиночных предметов</li>
+    </ul>
+    <h4>Затронутые файлы</h4>
+    <ul>
+        <li><code>engines/primitives/*.py</code> — show_price в config_schema, weight в результатах</li>
+        <li><code>static/js/engines/base.js</code> — отображение веса в formatResult</li>
+        <li><code>static/js/engines/primitives/context_roll.js</code> — show_price логика</li>
+        <li><code>static/js/engines/primitives/generic_roll.js</code> — show_price логика</li>
+        <li><code>static/my-engines.html</code> — автосейв, scrollIntoView</li>
+    </ul>
+
+    <h2>15 марта 2026 — 🎲 Переопределение вероятностей в фильтрах и пресетах</h2>
+    <ul>
+        <li>✅ <strong>filtered_roll:</strong> каждый фильтр теперь может содержать таблицу переопределения вероятностей предметов (как в context_roll)</li>
+        <li>✅ <strong>loot_bundle:</strong> каждый пресет теперь может содержать таблицу переопределения вероятностей предметов</li>
+        <li>🐛 Исправлен баг loot_bundle: пресеты сохранялись как массив, а бэкенд ожидал словарь — добавлена нормализация</li>
+        <li>🔄 Переименование <code>districts</code> → <code>presets</code> в loot_bundle (обратная совместимость сохранена)</li>
+    </ul>
+    <h4>Затронутые файлы</h4>
+    <ul>
+        <li><code>engines/primitives/loot_bundle.py</code> — overrides + нормализация list→dict + districts→presets</li>
+        <li><code>engines/primitives/filtered_roll.py</code> — overrides из фильтра</li>
+        <li><code>static/js/engines/bindings-editor.js</code> — UI: ItemOverridesTable в фильтрах и пресетах</li>
+    </ul>
+
+    <h2>15 марта 2026 — 🏗 Разделение weight / probability</h2>
+    <h3>🏗 Новое поле probability в ResourceItem</h3>
+    <ul>
+        <li>✅ Добавлена колонка <code>probability</code> (вероятность выпадения) — отдельно от <code>weight</code> (физический вес в кг)</li>
+        <li>🔄 Миграция: существующие значения weight (которые на самом деле были вероятностями) перенесены в probability</li>
+        <li>🔄 Сид обновлён: JSON <code>probability</code> → БД <code>probability</code>, JSON <code>weight</code> → БД <code>weight</code></li>
+        <li>🔄 Все движки (weighted_roll, cascade_roll, filtered_roll, loot_bundle, pool_sample, item_generator, context_roll) используют <code>probability</code> для бросков</li>
+        <li>🎨 UI ресурсов: отображаются и редактируются оба поля — «Вес (кг)» и «Вероятность выпадения»</li>
+        <li>🎨 bindings-editor: таблица вероятностей показывает <code>item.probability</code> как базовое значение</li>
+    </ul>
+
+    <h2>15 марта 2026 — 🎨 UI ресурсов + 🐛 сохранение контекстов</h2>
+    <h3>🎨 Страница ресурсов</h3>
+    <ul>
+        <li>🔄 Фильтры «Все / Мои / Системные» перемещены в сайдбар тегов</li>
+        <li>🔄 Теги без ресурсов автоматически скрываются при выбранном фильтре владельца</li>
+        <li>✅ Две кнопки сверху — «Создать ресурс» и «Создать тег» (вместо одной)</li>
+    </ul>
+    <h3>🎨 Редактор привязок (bindings-editor)</h3>
+    <ul>
+        <li>🔄 «Базовый вес» / «Свой вес» переименованы в «Базовая вероятность» / «Своя вероятность»</li>
+        <li>🔄 «Веса предметов» → «Вероятности выпадения»</li>
+        <li>✅ Выпадающий список тегов теперь показывается сразу при фокусе (без необходимости вводить текст)</li>
+        <li>✅ Множественное выделение в таблице вероятностей: чекбоксы, массовая очистка и установка значения</li>
+    </ul>
+    <h3>🐛 Исправление сохранения контекстов и привязок</h3>
+    <ul>
+        <li>🐛 Контексты теперь корректно загружаются при повторном редактировании движка (ранее пропадали после перезагрузки)</li>
+        <li>🐛 Привязки ресурсов (tag_filter, item_overrides и др.) теперь сохраняются через API при сохранении движка</li>
+        <li>✅ Отслеживание удалённых привязок — удаление корректно синхронизируется с сервером</li>
+    </ul>
+    <h3>🐛 Исправление работы контекстов (context_roll)</h3>
+    <ul>
+        <li>🐛 Переопределения вероятностей в контексте теперь реально применяются при броске (ранее <code>context.get("overrides", {})</code> всегда возвращал пустой объект)</li>
+        <li>🐛 Предметы без явно заданной вероятности теперь получают значение по умолчанию = 1 (ранее 0 — исключались из выдачи)</li>
+        <li>🐛 Ключи предметов в таблице вероятностей теперь используют <code>item.key</code> вместо <code>item.id</code> — соответствует бэкенду</li>
+        <li>🐛 Массовое редактирование значений теперь корректно обновляет поля ввода (исправлено несовпадение типов ключей)</li>
+    </ul>
+
+    <h2>15 марта 2026 — 🔧 Фиксы по новой механике с тегами</h2>
+    <h3>🐛 Фикс ошибки legacy-режима</h3>
+    <ul>
+        <li>🐛 Исправлена ошибка «items_source и contexts_source должны быть заданы» на странице play — теперь показывается дружелюбное сообщение вместо краша</li>
+        <li>🔄 Аналогичный фикс во всех примитивах: <code>weighted_roll</code>, <code>cascade_roll</code>, <code>weighted_sample</code>, <code>filtered_roll</code>, <code>loot_bundle</code>, <code>context_roll</code></li>
+    </ul>
+    <h3>🎨 Редизайн страницы ресурсов</h3>
+    <ul>
+        <li>🎨 Теги вынесены в левый столбец-сайдбар с чекбоксами, сортировка по алфавиту</li>
+        <li>✅ Добавлен флоу создания нового тега (кнопка «+ Создать тег» в сайдбаре)</li>
+        <li>🔄 Фильтры и поиск перенесены в правую колонку</li>
+    </ul>
+    <h3>🔄 Упрощение интерфейса</h3>
+    <ul>
+        <li>❌ Убраны движки со страницы «Мои движки» — теперь только Категории</li>
+        <li>❌ Убраны системные/пользовательские движки из настройки игры — теперь только добавление категорий</li>
+        <li>🔄 Навигация: «Мои движки» переименовано в «Категории»</li>
+        <li>🔄 Таб «Движки» в игре переименован в «Конфиги»</li>
+    </ul>
+    <h3>🔄 Теги в конфигах — только свои</h3>
+    <ul>
+        <li>🔄 В редакторе привязок ресурсов (bindings-editor) теперь отображаются только пользовательские теги</li>
+        <li>✅ Бэкенд: добавлен параметр <code>owner_only</code> к <code>/api/resources/tags</code></li>
+    </ul>
+    <h3>❌ Чистка легаси</h3>
+    <ul>
+        <li>❌ Убрана ссылка «Библиотеки» из навигации</li>
+        <li>🔄 <code>/libraries</code> теперь редиректит на <code>/resources</code></li>
+        <li>❌ Удалены файлы: <code>libraries.html</code>, <code>lib-browser.js</code></li>
+    </ul>
+
+    <h2>15 марта 2026 — 🏗 Рефакторинг архитектуры данных: ресурсы + привязки</h2>
+    <h3>🏗 Новая модель данных</h3>
+    <ul>
+        <li>✅ <strong>Таблица <code>resource_items</code></strong> — единое хранилище предметов с тегами вместо разрозненных JSON-библиотек
+            <ul>
+                <li>Поля: key, name, price, weight, meta (JSONB), tags (ARRAY + GIN-индекс)</li>
+                <li>Системные (owner_id=NULL) — сидятся при старте, read-only</li>
+                <li>Пользовательские — создаются или копируются из системных (source_item_id)</li>
+                <li>Теги заменяют папки и lib_type: <code>items.alchemy.herbs</code> → <code>["alchemy", "herb"]</code></li>
+            </ul>
+        </li>
+        <li>✅ <strong>Таблица <code>engine_resource_bindings</code></strong> — привязка ресурсов к движкам
+            <ul>
+                <li>tag_filter — какие теги выбирают ресурсы</li>
+                <li>role — роль для примитива (source, parts:base, props:positive и т.д.)</li>
+                <li>item_overrides (JSONB) — delta overlay переопределения по ключу предмета</li>
+                <li>Поддержка category_weight, label, icon для cascade_roll</li>
+                <li>priority + count для pool_sample</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h3>✅ Seed ресурсов</h3>
+    <ul>
+        <li>Новый <code>seed_resources.py</code> — извлекает ~800 предметов из JSON-файлов в resource_items</li>
+        <li>Автогенерация тегов из slug-путей файлов</li>
+        <li>Идемпотентно: вставляет новые, обновляет изменённые</li>
+    </ul>
+
+    <h3>✅ API ресурсов</h3>
+    <ul>
+        <li><code>GET /api/resources</code> — список с фильтрацией по тегам, owner, пагинация</li>
+        <li><code>GET /api/resources/tags</code> — все уникальные теги</li>
+        <li><code>GET /api/resources/count</code> — подсчёт по тегам (превью)</li>
+        <li><code>POST /api/resources</code> — создание, <code>POST /api/resources/{id}/copy</code> — копирование</li>
+        <li><code>POST /api/resources/bulk-copy</code> — массовое копирование по тегам</li>
+        <li><code>PATCH/DELETE /api/resources/{id}</code> — обновление/удаление (только владелец)</li>
+    </ul>
+
+    <h3>✅ API привязок</h3>
+    <ul>
+        <li><code>GET/POST /api/engines/{id}/bindings</code> — CRUD привязок</li>
+        <li><code>PATCH/DELETE /api/bindings/{id}</code> — обновление/удаление</li>
+        <li><code>POST /api/engines/{id}/bindings/reorder</code> — порядок привязок</li>
+    </ul>
+
+    <h3>🔄 Примитивы — dual-mode</h3>
+    <ul>
+        <li>Все 7 примитивов поддерживают новые <code>_bindings</code> параллельно с legacy slug-конфигами</li>
+        <li>Каждый реализует <code>get_binding_schema()</code> с описанием ролей</li>
+        <li><code>execute()</code> → проверка <code>_bindings</code> → <code>_execute_bindings()</code> или <code>_execute_legacy()</code></li>
+    </ul>
+
+    <h3>🎨 UI</h3>
+    <ul>
+        <li><strong>Страница «Ресурсы»</strong> (<code>/resources</code>) — просмотр, поиск, фильтрация по тегам, CRUD</li>
+        <li><strong>Редактор привязок</strong> (<code>bindings-editor.js</code>) — TagPicker, ItemOverridesTable, контексты/фильтры/пресеты</li>
+        <li>Интеграция редактора в <code>my-engines.html</code> — настройка привязок прямо из карточки движка</li>
+    </ul>
+
+    <h3>📂 Затронутые файлы</h3>
+    <ul>
+        <li><code>resources/core/models.py</code> — ResourceItem, EngineResourceBinding</li>
+        <li><code>alembic/versions/h7b8c9d0e1f2_*.py</code> — миграция новых таблиц</li>
+        <li><code>resources/core/seed_resources.py</code> — новый seed</li>
+        <li><code>resources/engines/_helpers.py</code> — resolve_bindings, get_effective_items</li>
+        <li><code>resources/engines/primitives/*.py</code> — все 7 примитивов</li>
+        <li><code>resources/routers/resources.py</code> — новый CRUD роутер</li>
+        <li><code>resources/routers/bindings.py</code> — новый CRUD роутер</li>
+        <li><code>resources/static/resources.html</code>, <code>js/resources.js</code> — UI ресурсов</li>
+        <li><code>resources/static/js/engines/bindings-editor.js</code> — редактор привязок</li>
+        <li><code>resources/static/my-engines.html</code> — интеграция редактора</li>
+        <li><code>resources/web_app.py</code> — подключение роутеров и seed</li>
+    </ul>
+    <hr>
+
+    <h2>15 марта 2026 — 🎨 Редактор привязок ресурсов (bindings-editor.js)</h2>
+    <h3>✅ Новый JS-модуль</h3>
+    <ul>
+        <li>Создан <code>resources/static/js/engines/bindings-editor.js</code> — переиспользуемый класс <code>BindingsEditor</code></li>
+        <li>Рендерит UI редактирования привязок для каждого типа примитива: weighted_roll, cascade_roll, context_roll, filtered_roll, loot_bundle, pool_sample, item_generator</li>
+        <li>Компонент <code>TagPicker</code> с автокомплитом из <code>/api/resources/tags</code>, удаляемыми пилюлями и счётчиком совпадений</li>
+        <li>Компонент <code>ItemOverridesTable</code> для тонкой настройки весов предметов</li>
+        <li>Сворачиваемые секции для контекстов, фильтров, пресетов</li>
+        <li>Методы <code>save()</code> и <code>collectConfig()</code> для сбора состояния</li>
+    </ul>
+    <h3>📂 Затронутые файлы</h3>
+    <ul>
+        <li><code>resources/static/js/engines/bindings-editor.js</code> — новый</li>
+    </ul>
+
+    <h2>15 марта 2026 — 🔄 Resource Bindings во всех примитивах</h2>
+    <h3>✅ Новая система привязки ресурсов</h3>
+    <ul>
+        <li>Все 7 примитивов теперь поддерживают <code>_bindings</code> наряду с legacy slug-based конфигами</li>
+        <li><code>weighted_sample</code> — выборка из привязанных ресурсов через <code>get_effective_items()</code></li>
+        <li><code>cascade_roll</code> — каскадный бросок по категориям из биндингов с <code>category_weight</code></li>
+        <li><code>context_roll</code> — контексты из <code>config["contexts"]</code>, предметы из биндингов</li>
+        <li><code>filtered_roll</code> — фильтры из <code>config["filters"]</code>, пул из нескольких биндингов</li>
+        <li><code>loot_bundle</code> — районы из <code>config["districts"]</code>, предметы из биндингов</li>
+        <li><code>pool_sample</code> — приоритетные группы по <code>binding.priority</code> и <code>binding.count</code></li>
+        <li><code>item_generator</code> — 4 роли (<code>parts:base</code>, <code>parts:material</code>, <code>props:positive</code>, <code>props:negative</code>), шаблоны из <code>config["templates"]</code></li>
+    </ul>
+    <h3>🔄 Изменения</h3>
+    <ul>
+        <li>Каждый примитив: <code>execute()</code> → проверка <code>_bindings</code> → <code>_execute_bindings()</code> или <code>_execute_legacy()</code></li>
+        <li>Каждый примитив реализует <code>get_binding_schema()</code> с описанием ролей</li>
+    </ul>
+    <p><b>Затронутые файлы:</b> <code>resources/engines/primitives/</code> — все 7 примитивов</p>
+    <hr>
+
+    <h2>15 марта 2026 — 🐛 Фиксы profession_roll + ⚠️ валидация конфигов</h2>
+    <h3>🐛 Исправления</h3>
+    <ul>
+        <li>Исправлен баг в <code>profession_roll</code>: при выборе районов для тайника в список попадал лишний ключ <code>district_filter</code></li>
+    </ul>
+    <h3>⚠️ Валидация совместимости примитив ↔ конфиг</h3>
+    <ul>
+        <li>При сохранении движка (композитного или в категории) проверяется совместимость типа примитива с <code>config_source</code></li>
+        <li>Если <code>filtered_roll</code> указывает на конфиг с <code>gold_min</code> — предупреждение «возможно, нужен <code>loot_bundle</code>»</li>
+        <li>Если <code>loot_bundle</code> указывает на конфиг без <code>gold_min</code> — предупреждение «возможно, нужен <code>filtered_roll</code>»</li>
+        <li>Затронуты: <code>engines/_helpers.py</code>, <code>routers/user_engines.py</code>, <code>routers/categories.py</code>, <code>my-engines.html</code></li>
+    </ul>
+
+    <h2>15 марта 2026 — 🎨 Редизайн кнопок движков + 🐛 config_source</h2>
+    <h3>🎨 UI: кнопки движков на Play</h3>
+    <ul>
+        <li>Верхняя панель движков переделана из горизонтальной полосы в сетку карточек-кнопок</li>
+        <li>Кнопки стали крупнее: большая иконка + название, декоративные углы</li>
+        <li>Категории теперь показывают свои эмодзи-иконки (из <code>meta.icon</code>) вместо дефолтного ⚙</li>
+        <li>Подсветка при наведении и активном состоянии с золотым свечением</li>
+    </ul>
+    <h3>🐛 Исправления</h3>
+    <ul>
+        <li><strong>loot_bundle / filtered_roll / context_roll</strong> — добавлена валидация <code>config_source</code>. Раньше при пустом конфиге примитив падал с KeyError (500), теперь возвращает понятное сообщение</li>
+        <li>Улучшено сообщение об ошибке «Нет доступных вариантов» — теперь указывает на <code>config_source</code></li>
+    </ul>
+    <h3>📂 Затронутые файлы</h3>
+    <ul>
+        <li><code>resources/static/play.css</code> — редизайн <code>.engine-tabs</code> / <code>.engine-tab</code></li>
+        <li><code>resources/static/js/main.js</code> — использование <code>meta.icon</code> для категорий</li>
+        <li><code>resources/engines/primitives/loot_bundle.py</code> — валидация config_source</li>
+        <li><code>resources/engines/primitives/filtered_roll.py</code> — валидация config_source</li>
+        <li><code>resources/engines/primitives/context_roll.py</code> — валидация items_source / contexts_source</li>
+        <li><code>resources/static/js/engines/primitives/context_roll.js</code> — улучшено сообщение об ошибке</li>
+    </ul>
+
+    <h2>15 марта 2026 — 🐛 Исправления категорий + 🎨 UI v2</h2>
+    <h3>🐛 Баги</h3>
+    <ul>
+        <li>🔄 <strong>seed_libraries</strong> — системные библиотеки теперь автоматически обновляются при старте, если JSON-файлы изменились. Раньше сид пропускал уже существующие записи, из-за чего БД хранила устаревшие данные (напр. без русских названий районов)</li>
+        <li><strong>Воровство</strong> — названия районов отображались на английском (<code>poor</code>, <code>rich</code>...) вместо русского. Причина: сид не обновлял <code>steal_config</code> в БД</li>
+        <li><strong>Следы / Тайник</strong> — ошибки загрузки контекстов проглатывались молча, кнопки локаций не появлялись. Теперь показываются сообщения об ошибках</li>
+        <li>Кнопка «Бросить» теперь заблокирована, пока не выбрана локация/район</li>
+    </ul>
+    <h3>🎨 UI игровой страницы</h3>
+    <ul>
+        <li>Карточки категорий — декоративные угловые рамки, тень, градиент заголовка</li>
+        <li>Кнопки выбора (локации, районы) — с декоративными углами, подсветкой при наведении и выборе</li>
+        <li>Добавлены подписи секций: «Локация», «Район» над кнопками выбора</li>
+        <li>Табы внутри категории — увеличены, с текстовой тенью для активного</li>
+        <li>Поле «Количество» для выборки (<code>weighted_sample</code>) стилизовано</li>
+        <li>Все примитивы логируют результаты в журнал с иконками</li>
+    </ul>
+    <h3>📂 Затронутые файлы</h3>
+    <ul>
+        <li><code>resources/core/seed_libraries.py</code> — обновление данных при старте</li>
+        <li><code>resources/static/js/engines/primitives/context_roll.js</code> — подписи, блокировка кнопки, логирование</li>
+        <li><code>resources/static/js/engines/primitives/generic_roll.js</code> — логирование</li>
+        <li><code>resources/static/js/engines/primitives/sample.js</code> — стили, логирование</li>
+        <li><code>resources/static/play.css</code> — декоративные стили карточек и кнопок</li>
+    </ul>
+
+    <h2>15 марта 2026 — 🏗 Категории: новая организация движков</h2>
+    <h3>✅ Новая архитектура</h3>
+    <ul>
+        <li>Категории — контейнеры для группировки атомарных движков</li>
+        <li>Каждый движок в категории = 1 примитив или 1 системный движок</li>
+        <li>В игру привязывается целая категория (отображается как табы)</li>
+        <li>Поддержка как примитивов, так и системных движков (напр. chest_game) внутри категории</li>
+    </ul>
+    <h3>✅ Бэкенд</h3>
+    <ul>
+        <li>Новые таблицы: <code>engine_categories</code>, <code>category_engines</code></li>
+        <li>Новый роутер <code>/api/categories</code> — полный CRUD + симулятор</li>
+        <li>Расширен <code>game_engines</code> — поддержка <code>engine_category_id</code></li>
+        <li>Новый эндпоинт выполнения: <code>/api/games/{id}/categories/{id}/engines/{id}/action</code></li>
+    </ul>
+    <h3>🎨 Фронтенд</h3>
+    <ul>
+        <li>Вкладки «Движки / Категории» на странице «Мои движки»</li>
+        <li>Редактор категорий с добавлением/удалением движков</li>
+        <li>Рендеринг категории в игре как табы с движками</li>
+        <li>Симулятор для движков внутри категории</li>
+    </ul>
+    <h3>📁 Затронутые файлы</h3>
+    <ul>
+        <li><code>resources/core/models.py</code> — модели EngineCategory, CategoryEngine</li>
+        <li><code>resources/routers/categories.py</code> — новый роутер</li>
+        <li><code>resources/routers/engines.py</code> — поддержка категорий</li>
+        <li><code>resources/static/my-engines.html</code> — UI категорий</li>
+        <li><code>resources/static/js/engines/category.js</code> — рендерер категорий</li>
+        <li><code>resources/static/js/engines/index.js</code> — диспетчер</li>
+        <li><code>resources/static/js/engines/base.js</code> — callCategoryAction</li>
+        <li><code>resources/engines/primitives/base.py</code> — добавлен get_meta()</li>
+        <li><code>alembic/versions/g6a7b8c9d0e1_engine_categories.py</code> — миграция</li>
+    </ul>
+    <hr>
+
+    <h2>15 марта 2026 — 🐛 Починен сквозной flow композитных движков</h2>
+    <h3>🐛 Исправления</h3>
+    <ul>
+        <li>🐛 <strong>CompositeEngine:</strong> переписана маршрутизация действий — формат <code>index:action</code> (напр. <code>0:roll</code>, <code>2:list_contexts</code>) вместо попытки сопоставить action с label механики</li>
+        <li>🐛 <strong>composite.js:</strong> рендерер теперь передаёт <code>_mechanicIndex</code> в каждый таб, чтобы <code>callAction</code> знал какую механику вызвать</li>
+        <li>🐛 <strong>base.js callAction:</strong> автоматически добавляет индекс механики для composite user-движков</li>
+        <li>✅ <strong>filtered_roll + loot_bundle:</strong> добавлено действие <code>list_contexts</code> — теперь context_roll.js рендерер корректно загружает список контекстов для всех трёх типов</li>
+    </ul>
+    <h3>✅ Улучшения</h3>
+    <ul>
+        <li>✅ <strong>Примитивы объявляют actions:</strong> каждый примитив теперь декларирует свои доступные действия (<code>actions</code> class variable), API <code>/api/engines/primitives</code> возвращает их</li>
+        <li>🔄 <strong>Убран хардкод ACTION_MAP:</strong> симулятор в «Мои движки» теперь читает actions из API вместо захардкоженного словаря</li>
+    </ul>
+    <h3>📁 Затронутые файлы</h3>
+    <ul>
+        <li>🔄 <code>engines/composite.py</code> — переписан <code>handle_action</code></li>
+        <li>🔄 <code>engines/primitives/base.py</code> — добавлен <code>actions</code> class var</li>
+        <li>🔄 <code>engines/primitives/registry.py</code> — <code>list_primitives()</code> включает actions</li>
+        <li>🔄 <code>engines/primitives/context_roll.py</code>, <code>filtered_roll.py</code>, <code>loot_bundle.py</code>, <code>weighted_sample.py</code>, <code>pool_sample.py</code>, <code>item_generator.py</code> — объявлены actions</li>
+        <li>🔄 <code>static/js/engines/base.js</code> — <code>callAction</code> поддерживает <code>_mechanicIndex</code></li>
+        <li>🔄 <code>static/js/engines/composite.js</code> — передаёт <code>_mechanicIndex</code></li>
+        <li>🔄 <code>static/my-engines.html</code> — убран ACTION_MAP, actions из API</li>
+    </ul>
+
+    <h2>15 марта 2026 — 🔧 Переписана страница «Мои движки»</h2>
+    <h3>🎨 UI</h3>
+    <ul>
+        <li>🔄 <strong>Полная переделка <code>my-engines.html</code>:</strong> страница переписана с нуля</li>
+        <li>✅ <strong>Composite mode — инлайн конфиг:</strong> каждая механика теперь имеет встроенный ConfigEditor с полями из <code>config_schema</code> примитива (slug_picker, number, boolean и т.д.)</li>
+        <li>🐛 <strong>Исправлен баг:</strong> ранее при создании composite-движка конфиг механик не сохранялся → движок падал при запуске</li>
+        <li>🔄 <strong>Copy mode:</strong> очищен код, ConfigEditor + action toggles работают корректно</li>
+        <li>🔄 <strong>State management:</strong> рефакторинг — единый объект состояния вместо разрозненных переменных</li>
+        <li>🐛 <strong>ConfigEditor key_value_map:</strong> каждое value-поле теперь отображается с лейблом (было: голые dropdown'ы без подписей)</li>
+        <li>🐛 <strong>ConfigEditor collect:</strong> строки с пустыми значениями больше не скипаются при сборе данных (ранее терялись записи)</li>
+    </ul>
+    <h3>📁 Затронутые файлы</h3>
+    <ul>
+        <li>🔄 <code>static/my-engines.html</code> — полная переделка</li>
+        <li>🔄 <code>static/js/config-editor.js</code> — улучшен UX key_value_map</li>
+    </ul>
+
+    <h2>14 марта 2026 — 🏗 Декомпозиция движков на атомарные примитивы</h2>
+    <h3>🔄 Архитектура</h3>
+    <ul>
+        <li>🏗 <strong>Новая система примитивов:</strong> 8 атомарных блоков (<code>weighted_roll</code>, <code>context_roll</code>, <code>weighted_sample</code>, <code>cascade_roll</code>, <code>filtered_roll</code>, <code>loot_bundle</code>, <code>pool_sample</code>, <code>item_generator</code>)</li>
+        <li>🔄 <strong>Системные движки:</strong> ProfessionRoll, Treasure, StoryMotivation, ItemGen, TraderInventory переписаны поверх примитивов</li>
+        <li>🏗 <strong>CompositeEngine:</strong> теперь использует реестр примитивов напрямую вместо делегации через engine registry</li>
+    </ul>
+    <h3>🎨 UI</h3>
+    <ul>
+        <li>✅ <strong>Конструктор движков:</strong> типы примитивов загружаются динамически из API</li>
+        <li>✅ <strong>Рендереры:</strong> 3 новых JS-рендерера для примитивов (generic_roll, context_roll, sample)</li>
+    </ul>
+    <h3>📁 Затронутые файлы</h3>
+    <ul>
+        <li>📁 <code>engines/primitives/</code> — новый подпакет (base, registry, 8 примитивов)</li>
+        <li>🔄 <code>engines/composite.py</code>, <code>engines/treasure.py</code>, <code>engines/story_motivation.py</code>, <code>engines/item_gen.py</code>, <code>engines/profession_roll.py</code>, <code>engines/trader_inventory.py</code></li>
+        <li>🔄 <code>routers/engines.py</code>, <code>routers/user_engines.py</code></li>
+        <li>🔄 <code>static/my-engines.html</code>, <code>static/js/engines/composite.js</code></li>
+        <li>✅ <code>static/js/engines/primitives/</code> — новые рендереры</li>
+    </ul>
+
+    <h2>14 марта 2026 — 🔄 Библиотеки: slug копируется из оригинала</h2>
+    <h3>🔄 Изменено</h3>
+    <ul>
+        <li>📚 <strong>Копирование библиотек:</strong> slug теперь берётся из оригинала, а не генерируется случайно</li>
+        <li>🔢 При коллизиях автоматически добавляется числовой постфикс (<code>-2</code>, <code>-3</code>, ...)</li>
+    </ul>
+    <h3>📁 Затронутые файлы</h3>
+    <ul>
+        <li><code>resources/routers/libraries.py</code> — новая функция <code>_unique_slug</code>, обновлён <code>copy_library</code></li>
+    </ul>
+
+    <h2>14 марта 2026 — 🐛 Журнал: комбинация сундука видна автору игры</h2>
+    <h3>🐛 Исправлено</h3>
+    <ul>
+        <li>🔒 <strong>Комбинация сундука не отображалась в журнале для GM:</strong> канал журнала по умолчанию был «public», admin-записи (включая комбинацию) фильтровались</li>
+        <li>📜 Для админов/владельцев журнал теперь по умолчанию открывается на вкладке «Все» (public + admin записи)</li>
+    </ul>
+    <h3>✅ Добавлено</h3>
+    <ul>
+        <li>🎨 <strong>Табы журнала:</strong> динамическое создание вкладок «Все» / «Общий» для администраторов игры</li>
+    </ul>
+    <h3>📁 Файлы</h3>
+    <ul>
+        <li><code>resources/static/js/log.js</code> — дефолтный канал «all» для админов, динамические табы</li>
+    </ul>
+
+    <h2>14 марта 2026 — ⚔ Профессии: настраиваемое воровство + исправление конфига</h2>
+    <h3>✅ Добавлено</h3>
+    <ul>
+        <li>⚔ <strong>Профессии — управление воровством:</strong> новые настройки <code>enable_steal</code> и <code>enable_cache</code> позволяют включать/выключать карманную кражу и поиск схрона независимо друг от друга</li>
+        <li>⚔ <strong>Профессии — авто-пропуск выбора режима:</strong> если включён только один из двух режимов (кража ИЛИ схрон), выбор режима пропускается — сразу показываются районы</li>
+    </ul>
+    <h3>🐛 Исправлено</h3>
+    <ul>
+        <li>🔧 <strong>Конфиг-редактор — пустые значения key_value_map:</strong> CSS-селектор <code>.kvm-value select</code> не находил элементы <code>&lt;select class="kvm-value"&gt;</code>, из-за чего все значения в карте профессий терялись при сохранении. Исправлен селектор на <code>select.kvm-value</code></li>
+        <li>⚔ <strong>Профессии — tuples→lists:</strong> <code>get_default_config()</code> теперь возвращает списки вместо кортежей, что предотвращает потерю данных при JSON-сериализации</li>
+    </ul>
+
+    <h2>14 марта 2026 — 🔧 Доработки движков</h2>
+    <h3>🐛 Исправлено</h3>
+    <ul>
+        <li>⚔ <strong>Профессии — кнопка выше района:</strong> в режиме «Воровство» кнопка «Бросить» рисовалась выше селектора района. Исправлен порядок элементов</li>
+        <li>⚔ <strong>Профессии — пустые источники:</strong> при добавлении профессии без выбора каталога/конфига сохранялся невалидный пустой массив. Добавлена валидация на фронте и бэке</li>
+        <li>🎮 <strong>Симулятор — пустой JSON:</strong> симулятор движков показывал сырой JSON вместо форматированного результата. Теперь используется тот же формат отображения, что и в игре</li>
+    </ul>
+    <h3>🔄 Изменено</h3>
+    <ul>
+        <li>🎮 <strong>Сундуки — комбинация в журнал:</strong> комбинация сундука теперь записывается в журнал для администратора сразу при старте игры, а не после открытия</li>
+    </ul>
+    <h3>❌ Удалено</h3>
+    <ul>
+        <li>🗂 <strong>Страница игры — дубль списка движков:</strong> убран лишний раздел «Все мои движки» на вкладке движков в игре (управление движками доступно на странице «Мои движки»)</li>
+    </ul>
+    <h3>📁 Файлы</h3>
+    <ul>
+        <li><code>resources/static/js/engines/profession_roll.js</code> — insertBefore вместо appendChild для param2Area</li>
+        <li><code>resources/static/js/config-editor.js</code> — пропуск строк с незаполненными slug-пикерами</li>
+        <li><code>resources/engines/profession_roll.py</code> — валидация sources</li>
+        <li><code>resources/engines/chest_game.py</code> — combination в ответе start</li>
+        <li><code>resources/static/js/engines/chest_game.js</code> — лог комбинации при старте</li>
+        <li><code>resources/static/js/engines/base.js</code> — вынесена formatResult из showPopup</li>
+        <li><code>resources/static/my-engines.html</code> — симулятор использует formatResult</li>
+        <li><code>resources/static/games.html</code> — удалён раздел «Все мои движки»</li>
+    </ul>
+
+    <h2>14 марта 2026 — 🎮 Сундуки: визуализация + 🏪 Торговцы: сброс кеша</h2>
+    <h3>🔄 Изменено</h3>
+    <ul>
+        <li>🎮 <strong>Сундуки — счётчик попыток:</strong> теперь считает только промахи (неверные нажатия), а не все клики</li>
+        <li>🎮 <strong>Сундуки — визуализация направлений:</strong> при выборе сундука отображаются пустые квадратики по количеству шагов; при правильном ответе квадратик заполняется иконкой направления</li>
+        <li>🎮 <strong>Сундуки — фидбэк ошибки:</strong> при неверном ответе кнопки кратковременно подсвечиваются красным с анимацией тряски</li>
+    </ul>
+    <h3>✅ Добавлено</h3>
+    <ul>
+        <li>🏪 <strong>Торговцы — кнопка «Обновить ассортимент»:</strong> сбрасывает кеш и перегенерирует инвентарь выбранного торговца</li>
+    </ul>
+    <h3>📁 Файлы</h3>
+    <ul>
+        <li><code>resources/engines/chest_game.py</code> — счётчик attempts только для промахов</li>
+        <li><code>resources/static/js/engines/chest_game.js</code> — визуализация квадратиков + shake-фидбэк</li>
+        <li><code>resources/static/js/engines/trader_inventory.js</code> — кнопка сброса кеша</li>
+        <li><code>resources/static/play.css</code> — стили .seq-progress, .seq-box, .wrong, @keyframes shake</li>
+    </ul>
+
+    <h2>14 марта 2026 — 🔧 Генератор предметов: slug-система + недостающие файлы</h2>
+    <h3>🐛 Исправлено</h3>
+    <ul>
+        <li>⚔ <strong>Торговец оружием / бронник — FileNotFoundError:</strong> ошибка <code>generator/armor/parts/bases.json not found</code> при генерации инвентаря. Созданы недостающие JSON-файлы для частей оружия и брони</li>
+    </ul>
+    <h3>🔄 Рефакторинг</h3>
+    <ul>
+        <li>🗂 <strong>item_generator.py:</strong> переведён на slug-систему (<code>_helpers.load_json</code>) вместо прямой загрузки файлов с диска. Убраны <code>json</code>, <code>Path</code> импорты</li>
+        <li>🗂 <strong>item_generator.json:</strong> все пути к файлам (<code>generator/weapon/parts/bases.json</code> и т.д.) заменены на slug-идентификаторы (<code>gen.weapon.parts.bases</code> и т.д.)</li>
+        <li>📦 <strong>seed_libraries.py:</strong> добавлены 4 новых записи для <code>generator_parts</code> — основы и материалы оружия/брони</li>
+    </ul>
+    <h3>✅ Новые файлы</h3>
+    <ul>
+        <li><code>generator/weapon/parts/bases.json</code> — 10 базовых типов оружия (меч, кинжал, топор, копьё...)</li>
+        <li><code>generator/weapon/parts/materials.json</code> — 8 материалов (железо, сталь, серебро, мифрил...)</li>
+        <li><code>generator/armor/parts/bases.json</code> — 8 базовых типов брони (кираса, кольчуга, латы...)</li>
+        <li><code>generator/armor/parts/materials.json</code> — 8 материалов (железо, сталь, кожа, мифрил...)</li>
+    </ul>
+
+    <h2>14 марта 2026 — 🐛 Исправление багов</h2>
+    <h3>🐛 Исправлено</h3>
+    <ul>
+        <li>📦 <strong>Сундуки — подсчёт попыток:</strong> теперь считаются все нажатия на кнопки (а не только неверные). Затронутый файл: <code>engines/chest_game.py</code></li>
+        <li>📦 <strong>Деревянный сундук — количество кнопок:</strong> теперь отображаются только доступные направления (2 для деревянного, 4 для остальных). Затронутый файл: <code>js/engines/chest_game.js</code></li>
+        <li>⚔ <strong>Схрон — журнал:</strong> теперь в журнал пишется полный результат (золото + предметы), а не только заголовок. Затронутый файл: <code>js/engines/profession_roll.js</code></li>
+        <li>📜 <strong>Мотивации — двойная кнопка:</strong> убрано дублирование UI (popup + список отображались одновременно). Затронутый файл: <code>js/engines/story_motivation.js</code></li>
+        <li>🏪 <strong>Торговцы (armorer):</strong> добавлено подробное логирование для диагностики Internal Server Error. Затронутый файл: <code>engines/trader_inventory.py</code></li>
+    </ul>
+    <h3>🔄 Изменено</h3>
+    <ul>
+        <li>⚔ <strong>Переименование:</strong> «Профессиональный ролл» → «Профессии». Затронутый файл: <code>engines/profession_roll.py</code></li>
+    </ul>
+
+    <h2>14 марта 2026 — ⚙️ Движки v2: копирование, визуальный конфиг, упрощение</h2>
+    <h3>✅ Добавлено</h3>
+    <ul>
+        <li>📋 <strong>Копирование системных движков:</strong> кнопка «Копировать системный» в <code>/my-engines</code> — выбираете один из 6 системных движков, получаете свою копию с дефолтным конфигом. Паттерн аналогичен копированию библиотек. Затронутые файлы: <code>routers/engines.py</code>, <code>my-engines.html</code></li>
+        <li>🎨 <strong>Визуальный редактор конфига:</strong> новый компонент <code>js/config-editor.js</code> — вместо сырого JSON теперь визуальные поля: выпадающие списки библиотек (<code>slug_picker</code>), текстовые поля, чекбоксы, числовые поля, динамические key-value карты. Каждый движок описывает свою схему через <code>get_config_schema()</code>. Есть fallback «Показать JSON» для продвинутых</li>
+        <li>🔀 <strong>Управление actions:</strong> в копии движка можно включать/выключать отдельные действия чекбоксами. Отключённые actions не отображаются в игре. Затронутые файлы: <code>routers/engines.py</code>, <code>my-engines.html</code>, <code>core/models.py</code></li>
+        <li>🔌 <strong>API: config-schema:</strong> новый эндпоинт <code>GET /api/engines/{id}/config-schema</code> возвращает схему полей конфига для визуального редактора</li>
+        <li>🔌 <strong>API: copy:</strong> новый эндпоинт <code>POST /api/engines/{id}/copy</code> создаёт пользовательскую копию системного движка</li>
+    </ul>
+    <h3>🔄 Изменено</h3>
+    <ul>
+        <li>⚙️ <strong>Два режима UserEngine:</strong> модель <code>UserEngine</code> теперь поддерживает два режима — <em>Composite</em> (сборка из механик, как раньше) и <em>Copy</em> (копия системного движка с кастомным конфигом). Новые колонки: <code>base_engine_id</code>, <code>custom_config</code>, <code>source_engine_id</code>, <code>disabled_actions</code>. Затронутый файл: <code>core/models.py</code></li>
+        <li>🗑️ <strong>Конфиг убран из GameEngine:</strong> колонка <code>config</code> удалена из <code>GameEngine</code>. Вся настройка движка теперь только в <code>/my-engines</code>, на экране игры — только добавление/удаление. Затронутые файлы: <code>core/models.py</code>, <code>routers/engines.py</code>, <code>games.html</code></li>
+        <li>📄 <strong>Упрощение games.html:</strong> из вкладки «Движки» убрана кнопка «Настроить» и модалка конфига. Добавлена ссылка «Настроить движки в Мои движки →». Затронутый файл: <code>games.html</code></li>
+        <li>🧹 <strong>Legacy cleanup:</strong> 88 русскоязычных путей к файлам (<code>resources/алхимия/...</code>) заменены на slug-ссылки (<code>items.alchemy.potions</code>) в конфигах: <code>treasure.json</code>, <code>steal_config.json</code>, <code>cache_config.json</code>, <code>standard_traders.json</code>, <code>stores.json</code></li>
+        <li>⚠️ <strong>Deprecation warning:</strong> <code>engines/_helpers.py</code> теперь логирует предупреждение при загрузке ресурса по file path вместо slug</li>
+        <li>🔄 <strong>Рендерер движков:</strong> <code>js/engines/index.js</code> — диспетчер теперь учитывает <code>base_engine_id</code> из мета копии движка для выбора правильного рендерера</li>
+    </ul>
+    <h3>❌ Удалено</h3>
+    <ul>
+        <li>🗑️ <strong>engine-config.html:</strong> страница удалена, роут <code>/engine-config</code> редиректит на <code>/my-engines</code>. Затронутый файл: <code>web_app.py</code></li>
+    </ul>
+
+    <h2>14 марта 2026 — 🐛 Мелкие баги и улучшения</h2>
+    <h3>🐛 Исправлено</h3>
+    <ul>
+        <li>🐛 <strong>Воровство — выбор района:</strong> исправлена сломанная цепочка выбора района при профессии «Воровство». Бэкенд теперь обрабатывает <code>get_locations</code> для «Воровство» (возвращает режимы, затем районы). Фронтенд корректно вызывает <code>roll_steal</code> или <code>roll_cache</code> в зависимости от выбранного режима. Затронутые файлы: <code>engines/profession_roll.py</code>, <code>js/engines/profession_roll.js</code></li>
+        <li>🐛 <strong>Генератор предметов — Бронник ISE:</strong> ошибка «Internal Server Error» при генерации брони исправлена. Добавлена явная проверка <code>category/subtype</code> перед вызовом генератора, <code>KeyError</code> теперь корректно обрабатывается. Затронутый файл: <code>engines/item_gen.py</code></li>
+    </ul>
+    <h3>✅ Добавлено</h3>
+    <ul>
+        <li>🔗 <strong>Прямая ссылка на игру:</strong> URL страницы <code>/play</code> теперь обновляется при смене игры (<code>?game=ID</code>). Можно скопировать и поделиться ссылкой — откроется именно эта игра. Затронутый файл: <code>js/main.js</code></li>
+        <li>🎨 <strong>Общий хидер:</strong> создан единый компонент навигации <code>js/app-header.js</code> для всех не-игровых страниц. Единый стиль, все ссылки, тема и кнопка выхода. Подключён к <code>games.html</code>, <code>my-engines.html</code>, <code>libraries.html</code>, <code>engine-config.html</code>, <code>changelog.html</code></li>
+    </ul>
+    <h3>🔄 Изменено</h3>
+    <ul>
+        <li>⚙️ <strong>Конфигурируемый показ цены в Следах:</strong> добавлен параметр <code>show_price</code> в конфиг движка «Профессиональный ролл» (по умолчанию <code>false</code>). Управляется через настройки движка в конкретной игре. Затронутые файлы: <code>engines/profession_roll.py</code>, <code>js/engines/profession_roll.js</code></li>
+        <li>⚙️ <strong>Текст кнопки из конфига:</strong> добавлен параметр <code>roll_label</code> в конфиг движка «Профессиональный ролл» (по умолчанию «Бросить»). Позволяет менять надпись на кнопке броска через конфиг игры</li>
+    </ul>
+
+    <h2>14 марта 2026 — 📚 Библиотеки: UX-доработки v2</h2>
+    <h3>🔄 Изменено</h3>
+    <ul>
+        <li>🔄 <strong>Slug-парадигма для сундуков:</strong> <code>chests_config.json</code> — все категории предметов переведены с файловых путей (<code>resources/провизия/food.json</code>) на slug (<code>items.food.food</code>). Alembic-миграция обновляет запись <code>config.chest_game.default</code> в БД</li>
+        <li>🔄 <strong>Общий модуль браузера библиотек:</strong> код модального окна вынесен в <code>js/lib-browser.js</code>. Используется на <code>engine-config.html</code> (модальное окно) и доступен на <code>libraries.html</code>. Единый стиль фильтров (pill-кнопки) на обеих страницах</li>
+    </ul>
+    <h3>✅ Добавлено</h3>
+    <ul>
+        <li>👁️ <strong>Hover-превью на карточках библиотек:</strong> при наведении на карточку в <code>libraries.html</code> появляется тултип с первыми 5 элементами содержимого (для каталогов — названия предметов, для конфигов — список типов, для свойств — ключи)</li>
+        <li>📊 <strong>Поле <code>preview</code> в API:</strong> <code>GET /api/libraries</code> теперь возвращает краткое превью для каждой библиотеки (без дополнительных запросов)</li>
+        <li>🎨 <strong>Визуальный редактор данных библиотеки:</strong> в модальном окне создания/редактирования появился переключатель «Визуальный / JSON»:
+            <ul>
+                <li><strong>item_catalog</strong> — редактируемая таблица: ID, Название, Вероятность, Цена. Строки добавляются и удаляются</li>
+                <li><strong>generator_props</strong> — список пар ключ–значение</li>
+                <li><strong>engine_config (chest_game)</strong> — карточки для каждого типа сундука с полями: name, gold min/max, items min/max, длина последовательности, направления, категории предметов (выпадающий список slugов)</li>
+                <li>Переключение Визуальный↔JSON синхронизирует данные в обе стороны</li>
+            </ul>
+        </li>
+        <li>💅 <strong>Фильтр pill-кнопками</strong> на <code>libraries.html</code> (вместо старого toolbar): единый стиль с браузером внутри модального окна конфига движка</li>
+    </ul>
+    <h3>📁 Файлы</h3>
+    <ul>
+        <li><code>resources/jsons/configs/chests_config.json</code> — slug-категории</li>
+        <li><code>alembic/versions/e4f5a6b7c8d9_chest_categories_to_slugs.py</code> — миграция БД</li>
+        <li><code>resources/routers/libraries.py</code> — поле <code>preview</code> в <code>LibraryOut</code></li>
+        <li><code>resources/static/libraries.html</code> — hover-тултип, визуальный редактор, новый фильтр-бар</li>
+        <li><code>resources/static/engine-config.html</code> — переход на общий lib-browser.js</li>
+        <li><code>resources/static/js/lib-browser.js</code> — новый модуль</li>
+    </ul>
+
+    <h2>14 марта 2026 — 🔧 Доработки библиотек</h2>
+    <h3>🐛 Баги</h3>
+    <ul>
+        <li>🐛 Исправлено копирование библиотек — скопированная библиотека теперь корректно отображается в табе "Мои" (<code>libraries.html</code>: ключ localStorage исправлен с <code>user</code> на <code>user_info</code>)</li>
+        <li>🐛 Исправлена ошибка при копировании одной библиотеки несколько раз — <code>_auto_slug</code> теперь добавляет уникальный hex-суффикс, исключая коллизии slug</li>
+    </ul>
+    <h3>✅ Добавлено</h3>
+    <ul>
+        <li>📚 На странице настройки движка (<code>engine-config.html</code>) появилась кнопка "Посмотреть доступные библиотеки" — открывает модальное окно со всеми библиотеками</li>
+        <li>🔘 В модальном окне браузера библиотек — фильтры-кнопки: Все / Системные / Мои / Публичные и по типу (Каталоги / Конфиги / Свойства)</li>
+        <li>📋 Кнопка "Скопировать slug" прямо в модальном окне браузера библиотек</li>
+        <li>🔗 Ссылка на страницу библиотек добавлена в навигацию <code>games.html</code></li>
+        <li>🔗 На странице конфига движка — кнопка перехода к редактору библиотек (в новой вкладке)</li>
+    </ul>
+    <h3>🎨 UI</h3>
+    <ul>
+        <li>🙈 В карточках "Мои библиотеки" slug больше не отображается — технический идентификатор скрыт</li>
+    </ul>
+
+    <h2>14 марта 2026 — 📒 Журнал: привязка к игре, хранение в БД</h2>
+    <h3>✅ Рефакторинг системы журнала</h3>
+    <ul>
+        <li>🗄️ <strong>Новая модель <code>GameLog</code>:</strong> журнал теперь хранится в БД. Поля: <code>game_id</code>, <code>user_id</code>, <code>user_name</code>, <code>visibility</code>, <code>data</code> (JSON), <code>created_at</code>. FK с <code>CASCADE</code> на games</li>
+        <li>❌ <strong>Удалён <code>log.json</code>:</strong> файловое хранилище заменено таблицей <code>game_logs</code>. Старые записи не мигрированы</li>
+        <li>🔄 <strong>Журнал привязан к игре:</strong> каждая запись содержит <code>game_id</code> — журналы разных игр полностью независимы</li>
+        <li>🔄 <strong>Пагинация по ID:</strong> <code>after_id</code> вместо count-based offset — стабильна при параллельных записях</li>
+    </ul>
+    <h3>✅ API журнала</h3>
+    <ul>
+        <li>✅ <strong><code>GET /api/games/{id}/log?after_id=N</code></strong> — получить новые записи (member+). Возвращает <code>{entries, last_id}</code></li>
+        <li>✅ <strong><code>POST /api/games/{id}/log</code></strong> — добавить запись (member+). Тело: <code>{data: {...}, visibility}</code></li>
+        <li>✅ <strong><code>DELETE /api/games/{id}/log</code></strong> — очистить журнал игры (admin+)</li>
+        <li>❌ <strong>Удалены старые endpoints</strong> <code>GET/POST/DELETE /api/log</code></li>
+    </ul>
+    <h3>🎨 Frontend</h3>
+    <ul>
+        <li>🔄 <strong><code>js/log.js</code>:</strong> URL обновлён на <code>/api/games/{gameId}/log</code>, пагинация переведена на <code>last_id</code></li>
+        <li>✅ <strong>Локальная очистка для пользователей:</strong> кнопка "Очистить" сохраняет <code>last_id</code> в cookie (<code>log_clear_{gameId}</code>) и скрывает старые записи на фронте. Данные на сервере не удаляются</li>
+        <li>✅ <strong>Серверная очистка для администратора:</strong> DELETE запрос удаляет все записи игры на сервере</li>
+    </ul>
+    <h3>🔧 Инфраструктура</h3>
+    <ul>
+        <li>🗄️ <strong>Alembic миграция <code>d3e4f5a6b7c8</code>:</strong> таблица <code>game_logs</code> + индексы по <code>game_id</code> и <code>created_at</code></li>
+        <li>🔧 <strong>Затронутые файлы:</strong> <code>core/models.py</code>, <code>core/log.py</code> (переписан), <code>routers/log.py</code> (новый), <code>web_app.py</code>, <code>static/js/log.js</code></li>
+    </ul>
+
+    <h2>14 марта 2026 — 📚 DataLibrary: система библиотек данных</h2>
+    <h3>✅ Архитектурный рефакторинг JSON-данных</h3>
+    <ul>
+        <li>🗄️ <strong>Новая модель <code>DataLibrary</code>:</strong> единое хранилище для всех данных — каталоги предметов, конфиги движков, свойства генератора. Поля: <code>slug</code>, <code>name</code>, <code>description</code>, <code>lib_type</code>, <code>engine_id</code>, <code>owner_id</code>, <code>is_public</code>, <code>data</code>, <code>source_slug</code></li>
+        <li>✅ <strong>47 системных библиотек</strong> сидированы из существующих JSON-файлов при старте приложения</li>
+        <li>🔄 <strong>Система slug'ов:</strong> <code>items.hunt.arrows</code>, <code>config.chest_game.default</code>, <code>gen.weapon.props.positive</code> — вместо путей к файлам типа <code>resources/охота/arrows.json</code></li>
+        <li>🔌 <strong><code>load_json()</code> поддерживает оба формата:</strong> старые пути к файлам продолжают работать (backward compat), новые slug'и разрешаются через БД с in-memory кешем</li>
+        <li>🔄 <strong>Все 6 движков</strong> обновлены — константы переведены на slug'и: <code>chest_game</code>, <code>profession_roll</code>, <code>trader_inventory</code>, <code>item_gen</code>, <code>story_motivation</code>, <code>treasure</code></li>
+    </ul>
+    <h3>✅ API библиотек</h3>
+    <ul>
+        <li>✅ <strong><code>GET /api/libraries</code></strong> — список (без data), фильтры: <code>type</code>, <code>engine_id</code>, <code>include_system</code>, <code>owner_only</code></li>
+        <li>✅ <strong><code>GET /api/libraries/{slug}</code></strong> — полные данные включая <code>data</code></li>
+        <li>✅ <strong><code>POST /api/libraries</code></strong> — создать пользовательскую библиотеку</li>
+        <li>✅ <strong><code>POST /api/libraries/{slug}/copy</code></strong> — скопировать библиотеку в свою</li>
+        <li>✅ <strong><code>PATCH /api/libraries/{slug}</code></strong> — обновить (только владелец; системные защищены)</li>
+        <li>✅ <strong><code>DELETE /api/libraries/{slug}</code></strong> — удалить свою библиотеку</li>
+    </ul>
+    <h3>🎨 Frontend</h3>
+    <ul>
+        <li>🎨 <strong>engine-config.html:</strong> добавлен library picker — для slug-полей конфига отображаются dropdown'ы с именами библиотек вместо сырых slug-строк; при изменении picker автоматически обновляет JSON textarea</li>
+        <li>🎨 <strong>Новая страница <code>/libraries</code>:</strong> просмотр системных/публичных библиотек, создание/редактирование/удаление своих, копирование системных в свои</li>
+    </ul>
+    <h3>🔧 Инфраструктура</h3>
+    <ul>
+        <li>🗄️ <strong>Alembic миграция <code>c2d3e4f5a6b7</code>:</strong> таблица <code>data_libraries</code> + индекс по slug</li>
+        <li>🔧 <strong><code>resources/core/seed_libraries.py</code>:</strong> идемпотентный сидер всех 47 системных библиотек</li>
+        <li>🔧 <strong><code>scripts/migrate_config_paths.py</code>:</strong> одноразовый скрипт для конвертации путей в <code>GameEngine.config</code> на slug'и</li>
+        <li>🔌 <strong>Затронутые файлы:</strong> <code>core/models.py</code>, <code>core/seed_libraries.py</code>, <code>engines/_helpers.py</code>, <code>engines/chest_game.py</code>, <code>engines/profession_roll.py</code>, <code>engines/trader_inventory.py</code>, <code>engines/item_gen.py</code>, <code>engines/story_motivation.py</code>, <code>engines/treasure.py</code>, <code>web_app.py</code>, <code>routers/libraries.py</code> (новый), <code>static/libraries.html</code> (новый), <code>static/engine-config.html</code></li>
+    </ul>
+
+    <h2>14 марта 2026 — ⚙️ Доработка механики движков</h2>
+    <h3>✅ Feature 1: Реальный конфиг в модалке + Reset</h3>
+    <ul>
+        <li>🔄 <strong>games.html — модалка «Настройка движка»:</strong> теперь показывает <em>effective config</em> (реальный конфиг со всеми значениями по умолчанию) вместо пустого поля</li>
+        <li>✅ <strong>Кнопка «Сбросить к defaults»:</strong> появляется только когда есть game-specific переопределения; выполняет <code>PATCH</code> с <code>config: null</code></li>
+        <li>🔄 <strong>Заголовок модалки:</strong> показывает название движка (<code>Конфиг: Название</code>)</li>
+        <li>🔌 <strong>Backend:</strong> добавлен метод <code>get_default_config()</code> в <code>BaseEngine</code>; переопределён в каждом движке (<code>profession_roll</code>, <code>chest_game</code>, <code>item_gen</code>, <code>trader_inventory</code>, <code>story_motivation</code>, <code>treasure</code>, <code>composite</code>)</li>
+        <li>🔌 <strong>API <code>GET /api/games/{id}/engines</code>:</strong> теперь возвращает <code>effective_config</code> и <code>has_overrides</code> для каждого движка</li>
+    </ul>
+    <h3>✅ Feature 2: Отдельная страница конфига движка (game-isolated)</h3>
+    <ul>
+        <li>🎨 <strong>Новая страница <code>/engine-config</code>:</strong> URL-параметры <code>game_id</code> и <code>record_id</code>; редактирует только <code>GameEngine.config</code>, не трогает базовый <code>UserEngine.mechanics</code></li>
+        <li>🎨 <strong>User engines:</strong> form-based редактор — каждая механика как отдельная секция с JSON textarea и подсказками по <code>config_schema</code></li>
+        <li>🎨 <strong>System engines:</strong> JSON textarea с effective_config</li>
+        <li>🔄 <strong>games.html:</strong> кнопка «⚙ Конфиг» → ссылка на <code>/engine-config?game_id=...&record_id=...</code></li>
+        <li>🔌 <strong>Затронутые файлы:</strong> <code>resources/static/engine-config.html</code> (новый), <code>resources/web_app.py</code></li>
+    </ul>
+    <h3>✅ Feature 3: Страница «Мои движки» + Симулятор</h3>
+    <ul>
+        <li>🎨 <strong>Новая страница <code>/my-engines</code>:</strong> двухколоночный layout — список слева, редактор + симулятор справа</li>
+        <li>✅ <strong>Inline-редактор движка:</strong> создание и редактирование <code>UserEngine</code> (название, описание, публичность, механики) без модалки</li>
+        <li>✅ <strong>Симулятор:</strong> выбор механики → выбор action → payload (JSON) → запуск → результат в виде JSON</li>
+        <li>🔌 <strong>API <code>POST /api/engines/custom/{id}/simulate</code>:</strong> тест-запуск механики без создания игры; работает для владельца или публичного движка</li>
+        <li>🔄 <strong>games.html:</strong> добавлена ссылка «Мои движки» в хедер</li>
+        <li>🔌 <strong>Затронутые файлы:</strong> <code>resources/static/my-engines.html</code> (новый), <code>resources/routers/user_engines.py</code>, <code>resources/web_app.py</code></li>
+    </ul>
+
+    <h2>13 марта 2026 — 🐛 Баги: движки, сундуки, торговцы</h2>
+    <h3>✅ Исправления</h3>
+    <ul>
+        <li>🐛 <strong>Баг 1 — Редактор конфига движка:</strong> в <code>games.html</code> добавлена кнопка «⚙ Конфиг» для каждого активного движка (только для admin). Открывает модал с JSON-редактором; сохраняет через <code>PATCH /api/games/{id}/engines/{record_id}</code></li>
+        <li>🐛 <strong>Баг 2 — Сундуки:</strong> в <code>js/engines/chest_game.js</code> исправлена проверка завершения игры — теперь проверяется <code>res.done</code> вместо несуществующего <code>res.status === 'won'</code>. После угадывания комбинации корректно отображается лут</li>
+        <li>🐛 <strong>Баг 3 — Торговцы:</strong> в <code>js/engines/trader_inventory.js</code> ключ торговца теперь передаётся в формате <code>subtype:key</code> (например <code>named:store_kantar</code>), что позволяет корректно разрешать тип торговца при запросе инвентаря</li>
+    </ul>
+
+    <h2>13 марта 2026 — v2: Рефакторинг платформы</h2>
+
+    <h3>🔐 Feature 1: Авторизация по email, никнейм отдельно</h3>
+    <ul>
+        <li>✅ <strong>Регистрация</strong>: теперь обязателен email, никнейм опционален (задаётся позже в профиле)</li>
+        <li>✅ <strong>Вход</strong>: только по email + пароль (убрано поле «имя пользователя»)</li>
+        <li>✅ <strong>Новый endpoint <code>PATCH /auth/me</code></strong>: изменение никнейма с автоматической генерацией нового JWT</li>
+        <li>🔄 <strong>Отображение имени</strong>: если никнейм не задан — показывается префикс email (<code>user@mail.com</code> → <code>user</code>)</li>
+        <li>🎨 <strong>login.html</strong>: email обязателен, никнейм опционален; форма входа — поле email</li>
+        <li>🎨 <strong>games.html</strong>: клик на имя в шапке → модалка «Настройки профиля» → смена никнейма</li>
+        <li>📝 <strong>Затронутые файлы:</strong> <code>resources/routers/auth.py</code>, <code>resources/core/auth.py</code>, <code>resources/core/models.py</code>, <code>static/login.html</code>, <code>static/games.html</code></li>
+    </ul>
+
+    <h3>🧩 Feature 2-3: Пользовательские движки из примитивных механик</h3>
+    <ul>
+        <li>✅ <strong>Новая таблица <code>user_engines</code></strong>: движок создаётся из набора примитивных механик</li>
+        <li>✅ <strong>Примитивные механики</strong>: <code>weighted_roll</code>, <code>pick_list</code>, <code>item_gen</code>, <code>inventory</code>, <code>loot_table</code></li>
+        <li>✅ <strong>Новый роутер <code>routers/user_engines.py</code></strong>: CRUD для пользовательских движков</li>
+        <li>✅ <strong><code>CompositeEngine</code></strong>: движок-обёртка, делегирует в примитивы</li>
+        <li>✅ <strong>API движков обновлён</strong>: <code>AddEngineRequest</code> принимает <code>engine_id</code> или <code>user_engine_id</code></li>
+        <li>🎨 <strong>games.html</strong>: создание своего движка, подключение к игре, список «Мои движки»</li>
+        <li>🌐 Движок можно сделать публичным — его видят другие пользователи</li>
+        <li>📝 <strong>Затронутые файлы:</strong> <code>resources/engines/composite.py</code>, <code>resources/routers/user_engines.py</code>, <code>resources/routers/engines.py</code>, <code>resources/core/models.py</code>, <code>static/games.html</code></li>
+    </ul>
+
+    <h3>👁 Feature 4: Видимость в журнале (каналы public/admin)</h3>
+    <ul>
+        <li>✅ <strong>Поле <code>visibility</code></strong> у каждой записи журнала: <code>"public"</code> или <code>"admin"</code></li>
+        <li>✅ <strong><code>GET /api/log</code></strong>: фильтрация по <code>game_id</code> и роли пользователя — игроки видят только публичные записи</li>
+        <li>✅ <strong><code>POST /api/log</code></strong>: принимает <code>visibility</code> (по умолчанию <code>"public"</code>)</li>
+        <li>✅ <strong>Миграция при старте</strong>: существующие записи без поля получают <code>visibility: "public"</code></li>
+        <li>✅ <strong>Новый модуль <code>core/log.py</code></strong>: <code>read_log()</code>, <code>write_log()</code>, <code>append_entry()</code>, <code>migrate_visibility()</code></li>
+        <li>🔒 Журнал сундука: комбинация пишется в канал <code>admin</code>, результат — в <code>public</code></li>
+        <li>📝 <strong>Затронутые файлы:</strong> <code>resources/core/log.py</code>, <code>resources/web_app.py</code>, <code>static/js/log.js</code></li>
+    </ul>
+
+    <h3>❌ Feature 5: Удаление устаревшей админки</h3>
+    <ul>
+        <li>❌ <strong>Удалена страница <code>/admin</code></strong> и файл <code>admin.html</code></li>
+        <li>❌ <strong>Удалены legacy API</strong>: <code>/api/files/*</code>, <code>/api/admin/reset-traders-cache</code></li>
+        <li>❌ <strong>Удалена ссылка «Редактор»</strong> из навигации</li>
+        <li>📝 <strong>Затронутые файлы:</strong> <code>resources/web_app.py</code>, <code>static/play.html</code>, <code>static/games.html</code></li>
+    </ul>
+
+    <h3>🎨 Feature 6: Полная переработка /play — динамический UI + темы</h3>
+    <ul>
+        <li>✅ <strong>play.html переписан с нуля</strong>: минимальный skeleton, layout в две колонки</li>
+        <li>✅ <strong>ES Modules</strong>: <code>static/js/main.js</code> + модули в <code>static/js/engines/</code></li>
+        <li>✅ <strong>Динамический рендер движков</strong>: только те движки, что добавлены в игру</li>
+        <li>🌙 <strong>Тёмная/светлая тема</strong>: CSS переменные, переключатель 🌙/☀️, сохранение в <code>localStorage</code></li>
+        <li>✅ <strong>Журнал с каналами</strong>: вкладки «Общий» / «Для мастера», 🔒 бейдж на приватных записях</li>
+        <li>✅ <strong>Выбор игры</strong> через dropdown в шапке, сохранение в <code>localStorage</code></li>
+        <li>📝 <strong>Новые файлы:</strong> <code>static/js/api.js</code>, <code>auth.js</code>, <code>theme.js</code>, <code>log.js</code>, <code>engines/*.js</code></li>
+        <li>🔄 <strong>Обновлены:</strong> <code>static/play.html</code>, <code>static/play.css</code>, <code>static/games.html</code>, <code>static/login.html</code></li>
+    </ul>
+
+    <h3>🗄️ Alembic миграция v2 (<code>a1b2c3d4e5f6</code>)</h3>
+    <ul>
+        <li>🔄 <code>users.email</code>: <code>nullable=False</code> (с backfill пустых значений)</li>
+        <li>🔄 <code>users.username</code>: <code>nullable=True</code></li>
+        <li>✅ Создана таблица <code>user_engines</code></li>
+        <li>🔄 <code>game_engines</code>: добавлен <code>user_engine_id</code>, <code>engine_id</code> теперь nullable</li>
+    </ul>
+
+    <hr>
+
+    <h2>13 марта 2026 — Этап 6: play.js → Engine API</h2>
+
+    <h3>🔌 Маршрутизация через движки игры</h3>
+    <ul>
+        <li>✅ <strong>play.js</strong>: добавлены хелперы <code>_useEngineApi()</code> и <code>_engineAction(engineId, action, payload)</code></li>
+        <li>🔄 Авторизован + выбрана игра → все вызовы через <code>POST /api/games/{id}/engines/{engine_id}/action</code></li>
+        <li>🔄 Не авторизован → fallback на прямые эндпоинты <code>/api/play/*</code> (backward compat)</li>
+        <li>🔄 <strong>chest_game.js</strong>: аналогичный fallback — engine API или <code>/api/play/chest-start</code> / <code>/api/play/chest-guess</code></li>
+    </ul>
+
+    <h3>💎 Новый движок: Сокровища</h3>
+    <ul>
+        <li>✅ <strong><code>engines/treasure.py</code></strong> — <code>TreasureEngine</code> с действием <code>roll</code></li>
+        <li>✅ Зарегистрирован в <code>web_app.py</code>, добавлен в игру «Готика» (order=6) через <code>core/seed.py</code></li>
+        <li>🔄 <code>routers/engines.py</code>: убрана проверка членства при выполнении action — достаточно авторизации</li>
+    </ul>
+
+    <p><strong>Затронутые файлы:</strong> <code>engines/treasure.py</code> (новый), <code>web_app.py</code>, <code>core/seed.py</code>, <code>routers/engines.py</code>, <code>static/play.js</code>, <code>static/chest_game.js</code></p>
+
+    <h2>13 марта 2026 — Этап 5: Миграция данных — игра «Готика» в БД</h2>
+
+    <h3>🗄️ Сидирование базовой игры</h3>
+    <ul>
+        <li>✅ <strong>Создан <code>resources/core/seed.py</code></strong> — идемпотентный сид при первом запуске:</li>
+        <ul>
+            <li>Создаёт системного пользователя <code>system@ttrpg.local</code> (авторизация невозможна — хэш пароля случайный)</li>
+            <li>Создаёт игру <strong>«Готика»</strong> (slug: <code>gothic</code>) с 5 движками на дефолтных конфигах</li>
+            <li>Движки: <code>profession_roll</code>, <code>chest_game</code>, <code>item_generator</code>, <code>trader_inventory</code>, <code>story_motivation</code></li>
+            <li>Если игра уже существует — ничего не делает (идемпотентно)</li>
+        </ul>
+        <li>✅ <strong><code>web_app.py</code></strong>: добавлен <code>lifespan</code> hook — <code>run_seed()</code> вызывается при каждом старте приложения</li>
+        <li>🔄 <strong>Старые API-эндпоинты сохранены</strong> — <code>/play</code> работает через прямые маршруты <code>/api/play/*</code> без изменений</li>
+        <li>✅ <strong>Игра «Готика» видна</strong> в <code>GET /api/games</code> и доступна через новый engine API (<code>POST /api/games/{id}/engines/{engine_id}/action</code>)</li>
+    </ul>
+
+    <p><strong>Затронутые файлы:</strong> <code>resources/core/seed.py</code> (новый), <code>resources/web_app.py</code>, <code>REFACTORING_PLAN.md</code></p>
+
+    <h2>13 марта 2026 — Этап 4: UI — мультигейм контекст</h2>
+
+    <h3>🎨 play.html / play.js — выбор игры</h3>
+    <ul>
+        <li>✅ <strong>Заголовок страницы</strong> теперь динамический: показывает название выбранной игры (<code>⚔ {gameName}</code>) вместо захардкоженного «Готика Debug»</li>
+        <li>✅ <strong>Добавлен селектор игры</strong> в шапку: если у пользователя больше одной игры — появляется dropdown для переключения</li>
+        <li>✅ <strong>Сохранение выбора</strong> в <code>localStorage</code> (<code>selected_game_id</code>, <code>selected_game_name</code>)</li>
+        <li>✅ <strong>Добавлена навигация</strong> в шапке: ссылки «Мои игры» (<code>/games</code>) и «Редактор» (<code>/admin</code>) заменяют старую одиночную ссылку</li>
+        <li>🔄 <code>play.js</code>: добавлены <code>loadGames()</code>, <code>_renderGameSelector()</code>, <code>onGameChange()</code>, <code>_updateGameTitle()</code></li>
+        <li>🎨 <code>play.css</code>: добавлены стили <code>.header-game-select</code> и <code>.header-nav</code></li>
+    </ul>
+
+    <h3>🎨 admin.html — навигация</h3>
+    <ul>
+        <li>✅ <strong>Добавлены ссылки</strong> в шапку редактора: «▶ Игра» → <code>/play</code> и «🎲 Мои игры» → <code>/games</code></li>
+    </ul>
+
+    <h3>🎨 games.html — навигация</h3>
+    <ul>
+        <li>🔄 Ссылка «Игра» обновлена до «▶ Игра» для визуальной консистентности</li>
+    </ul>
+
+    <p><strong>Затронутые файлы:</strong> <code>play.html</code>, <code>play.js</code>, <code>play.css</code>, <code>admin.html</code>, <code>games.html</code></p>
+
+    <h2>13 марта 2026 — Баг: деплой затирал базу пользователей</h2>
+    <ul>
+        <li>🐛 <strong>Исправлен деплой</strong>: <code>resources/ttrpg.db</code> теперь исключается из архива — сервер больше не теряет пользователей при каждом деплое</li>
+        <li>✅ <strong>Добавлен шаг <code>alembic upgrade head</code></strong> в <code>deploy_v2.sh</code> — миграции применяются автоматически после деплоя</li>
+        <li>🔄 Затронутые файлы: <code>deploy_v2.sh</code></li>
+    </ul>
+
+    <h2>13 марта 2026 — Баг: страница принятия инвайта</h2>
+    <ul>
+        <li>🐛 <strong>Исправлен 404</strong> при переходе по инвайт-ссылке <code>/invite/{token}</code></li>
+        <li>✅ <strong>Создана <code>static/invite.html</code></strong> — страница принятия приглашения: показывает название игры, роль, срок действия; кнопка «Принять»</li>
+        <li>✅ <strong>Добавлен маршрут <code>GET /invite/{token}</code></strong> в <code>web_app.py</code></li>
+        <li>🔄 Если пользователь не авторизован — редирект на <code>/login</code> с возвратом обратно после входа</li>
+    </ul>
+
+    <h2>13 марта 2026 — Этап 3: Движки (engines)</h2>
+
+    <h3>⚙️ Архитектура движков</h3>
+    <ul>
+        <li>✅ <strong><code>engines/base.py</code></strong> — абстрактный класс <code>BaseEngine</code>: <code>get_meta()</code>, <code>handle_action(action, payload, config)</code></li>
+        <li>✅ <strong><code>engines/registry.py</code></strong> — глобальный реестр: <code>register()</code>, <code>get_engine()</code>, <code>list_engines()</code></li>
+        <li>✅ <strong><code>engines/_helpers.py</code></strong> — общие утилиты загрузки JSON и взвешенных роллов</li>
+    </ul>
+
+    <h3>🎮 Встроенные движки</h3>
+    <ul>
+        <li>✅ <strong><code>profession_roll</code></strong> — роллы по профессии/локации + воровство/тайники</li>
+        <li>✅ <strong><code>chest_game</code></strong> — мини-игра с сундуками (угадай последовательность)</li>
+        <li>✅ <strong><code>item_generator</code></strong> — генерация оружия и брони из частей</li>
+        <li>✅ <strong><code>trader_inventory</code></strong> — инвентарь торговцев с кешированием</li>
+        <li>✅ <strong><code>story_motivation</code></strong> — случайные мотивации персонажей</li>
+    </ul>
+
+    <h3>🔌 API движков (<code>routers/engines.py</code>)</h3>
+    <ul>
+        <li><code>GET /api/engines</code> — список всех движков с метаданными</li>
+        <li><code>GET /api/games/{id}/engines</code> — движки игры</li>
+        <li><code>POST /api/games/{id}/engines</code> — добавить движок (admin+)</li>
+        <li><code>PATCH/DELETE /api/games/{id}/engines/{rec_id}</code> — обновить/убрать (admin+)</li>
+        <li><code>POST /api/games/{id}/engines/{engine_id}/action</code> — выполнить действие (player+)</li>
+    </ul>
+
+    <h3>🎨 UI — страница <code>/games</code> (games.html)</h3>
+    <ul>
+        <li>✅ Список игр, создание игры</li>
+        <li>✅ Управление участниками и ролями</li>
+        <li>✅ Подключение/отключение движков к игре</li>
+        <li>✅ Создание и отзыв инвайт-ссылок</li>
+        <li>🔄 <code>web_app.py</code>: регистрация 5 движков при старте, маршрут <code>GET /games</code></li>
+    </ul>
+
+    <h2>13 марта 2026 — Этап 2: Игры и ролевая модель</h2>
+
+    <h3>🎮 Управление играми</h3>
+    <ul>
+        <li>✅ <strong>Создан <code>resources/routers/games.py</code></strong> — полный CRUD для игр и управление доступом:</li>
+        <ul>
+            <li><code>POST /api/games</code> — создать игру (создатель становится owner)</li>
+            <li><code>GET /api/games</code> — мои игры (где я участник)</li>
+            <li><code>GET /api/games/{id}</code> — детали игры</li>
+            <li><code>PATCH /api/games/{id}</code> — переименовать/обновить настройки (admin+)</li>
+            <li><code>DELETE /api/games/{id}</code> — удалить игру (owner)</li>
+        </ul>
+        <li>✅ <strong>Управление участниками:</strong></li>
+        <ul>
+            <li><code>GET /api/games/{id}/members</code> — список участников</li>
+            <li><code>PATCH /api/games/{id}/members/{user_id}</code> — изменить роль (admin+)</li>
+            <li><code>DELETE /api/games/{id}/members/{user_id}</code> — кик / самовыход</li>
+        </ul>
+        <li>✅ <strong>Система инвайтов:</strong></li>
+        <ul>
+            <li><code>POST /api/games/{id}/invites</code> — создать инвайт-ссылку (moderator+)</li>
+            <li><code>GET /api/games/{id}/invites</code> — список инвайтов (admin+)</li>
+            <li><code>DELETE /api/games/{id}/invites/{inv_id}</code> — отозвать инвайт (admin+)</li>
+            <li><code>GET /api/invites/{token}</code> — инфо об инвайте (публично)</li>
+            <li><code>POST /api/invites/{token}/accept</code> — принять инвайт (требует авторизацию)</li>
+        </ul>
+    </ul>
+
+    <h3>🔒 Ролевая система</h3>
+    <ul>
+        <li>✅ <strong>Создан <code>resources/core/permissions.py</code></strong> — иерархия ролей и FastAPI-зависимости:</li>
+        <ul>
+            <li><code>player</code> (1) → <code>moderator</code> (2) → <code>admin</code> (3) → <code>owner</code> (4)</li>
+            <li><code>require_role(min_role)</code> — dependency-фабрика для защиты роутов</li>
+            <li><code>get_membership()</code> — проверка членства в игре</li>
+        </ul>
+        <li>🔄 <strong>Защита назначений ролей</strong>: нельзя назначить роль выше своей, нельзя убрать последнего owner</li>
+        <li>🔄 <code>web_app.py</code>: подключён <code>games_router</code></li>
+    </ul>
+
+    <h2>13 марта 2026 — UI авторизации: убрать старый модал, кнопки Войти/Выйти</h2>
+    <ul>
+        <li>❌ <strong>Удалён модал «Кто ты?»</strong> из play.html и вся его CSS</li>
+        <li>🎨 <strong>play.html / admin.html</strong>: добавлены кнопки <strong>Войти</strong> (→ /login) и <strong>Выйти</strong> в хидер</li>
+        <li>🔄 <strong>play.js</strong>: auth полностью переписан под JWT — автоматический тихий refresh через httpOnly cookie, хранение access_token в localStorage</li>
+        <li>🎨 <strong>play.css</strong>: заменены стили auth overlay на стили кнопок хидера</li>
+    </ul>
+
+    <h2>13 марта 2026 — Этап 1: Авторизация (JWT + Google OAuth)</h2>
+
+    <h3>🔐 Новая система аутентификации</h3>
+    <ul>
+        <li>✅ <strong>Заменена старая cookie-авторизация</strong> (имя без пароля) на полноценный JWT-стек</li>
+        <li>✅ <strong>Добавлен <code>resources/core/auth.py</code></strong>: утилиты JWT, хэширование bcrypt, FastAPI-зависимости <code>get_current_user</code> / <code>get_current_user_optional</code></li>
+        <li>✅ <strong>Создан <code>resources/routers/auth.py</code></strong> — новые эндпоинты:</li>
+        <ul>
+            <li><code>POST /auth/register</code> — регистрация (username, email?, password)</li>
+            <li><code>POST /auth/login</code> — вход, возвращает JWT access_token</li>
+            <li><code>GET /auth/google</code> + <code>GET /auth/google/callback</code> — Google OAuth2</li>
+            <li><code>POST /auth/refresh</code> — обновление access_token по refresh_token cookie</li>
+            <li><code>POST /auth/logout</code> — удаление refresh_token cookie</li>
+            <li><code>GET /auth/me</code> — текущий пользователь</li>
+        </ul>
+        <li>🎨 <strong>Добавлена страница <code>/login</code></strong> (<code>login.html</code>) — форма входа/регистрации + кнопка Google</li>
+        <li>🔑 <strong>Механизм токенов</strong>: access_token (15 мин, Bearer) + refresh_token (30 дней, httpOnly cookie)</li>
+    </ul>
+
+    <h3>🔄 Изменения в существующем коде</h3>
+    <ul>
+        <li>🔄 <code>web_app.py</code>: импорт auth обновлён на <code>routers.auth</code> + <code>core.auth</code></li>
+        <li>🔄 <code>/api/log</code>: переведён на FastAPI Depends вместо прямого вызова</li>
+        <li>✅ <strong>Добавлен <code>.env.example</code></strong> с документацией всех переменных окружения</li>
+        <li>✅ <strong>Обновлён <code>requirements.txt</code></strong>: добавлены <code>httpx</code>, <code>python-dotenv</code></li>
+    </ul>
+
+    <h2>13 марта 2026 — Этап 0: Подготовка БД и миграций</h2>
+
+    <h3>🗄️ SQLAlchemy + Alembic</h3>
+    <ul>
+        <li>✅ <strong>Выбрана БД</strong>: SQLite для dev (легко сменить на PostgreSQL через <code>DATABASE_URL</code>)</li>
+        <li>✅ <strong>Добавлен <code>resources/core/database.py</code></strong>: настройка SQLAlchemy 2.x, <code>SessionLocal</code>, <code>Base</code>, dependency <code>get_db()</code></li>
+        <li>✅ <strong>Добавлен <code>resources/core/models.py</code></strong>: ORM-модели всех базовых таблиц:</li>
+        <ul>
+            <li><code>users</code> — пользователи (email, username, password_hash, google_id)</li>
+            <li><code>games</code> — игры (name, slug, owner_id, settings JSONB)</li>
+            <li><code>game_engines</code> — подключённые движки к игре (engine_id, config, order)</li>
+            <li><code>game_members</code> — участники игры с ролями (owner/admin/moderator/player)</li>
+            <li><code>game_invites</code> — инвайт-токены (token, role, expires_at, used_at)</li>
+        </ul>
+        <li>✅ <strong>Настроен Alembic</strong>: <code>alembic/env.py</code> подключён к моделям, поддержка autogenerate</li>
+        <li>✅ <strong>Первая миграция применена</strong>: <code>alembic/versions/c4be1ed24337_init_base_tables.py</code></li>
+        <li>✅ <strong>БД создана</strong>: <code>resources/ttrpg.db</code></li>
+        <li>🔄 <strong>requirements.txt</strong>: добавлены <code>sqlalchemy</code>, <code>alembic</code>, <code>python-jose</code>, <code>passlib[bcrypt]</code>, <code>python-multipart</code></li>
+    </ul>
+    <p><strong>Затронутые файлы:</strong> <code>requirements.txt</code>, <code>resources/core/database.py</code>, <code>resources/core/models.py</code>, <code>alembic/</code></p>
+
+    <hr>
 
     <h2>28 февраля 2026 (обновление 9)</h2>
 
@@ -461,7 +1430,35 @@
 
     <hr>
 
+    <h2>📦 Страница «Ресурсы» (2026-03-15)</h2>
+    <ul>
+        <li>✅ <strong>Новая страница /resources</strong> — просмотр, поиск, создание, копирование и редактирование ресурсов
+            <ul>
+                <li>Фильтрация по тегам (мульти-выбор pill-кнопками)</li>
+                <li>Текстовый поиск по имени и ключу</li>
+                <li>Карточки ресурсов с ценой, весом, тегами</li>
+                <li>Системные ресурсы отмечены бейджем «Системный»</li>
+            </ul>
+        </li>
+        <li>✅ <strong>Действия с ресурсами</strong>:
+            <ul>
+                <li>Создание нового ресурса (key, name, price, weight, tags, meta)</li>
+                <li>Копирование любого ресурса</li>
+                <li>Массовое копирование по выбранным тегам</li>
+                <li>Редактирование и удаление собственных ресурсов</li>
+            </ul>
+        </li>
+        <li>🎨 <strong>UI</strong>: тёмная готическая тема, tag-input с автокомплитом, meta-редактор, hover-превью
+        </li>
+        <li>🔄 <strong>Навигация</strong>: ссылка «Ресурсы» добавлена в app-header
+        </li>
+    </ul>
+    <p><em>Затронутые файлы:</em> resources.html, js/resources.js, js/app-header.js, changelog.html</p>
+
+    <hr>
+
     <h3>Итого</h3>
-    <p><strong>Основной вектор изменений:</strong> миграция с простого ролла сундуков на интерактивную мини-игру + переработка системы торговцев с приоритизацией и кешированием. Последние улучшения сосредоточены на визуальной составляющей и центрировании интерфейса взаимодействия.</p>
+    <p><strong>Основной вектор изменений:</strong> рефакторинг архитектуры данных — все предметы в единой таблице <code>resource_items</code> с тегами, движки привязываются к ресурсам через <code>engine_resource_bindings</code> с delta overlay переопределениями. Визуальный UI для настройки привязок, контекстов, фильтров — без ручного JSON.</p>
+</div>
 </body>
 </html>

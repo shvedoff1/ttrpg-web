@@ -5,12 +5,12 @@
         "objects_count": 6,
         "categories": [
             {
-                "resource_file": "resources/ремесло/weapons.json",
+                "resource_file": "items.craft.weapons",
                 "count": 5,
                 "priority": 1
             },
             {
-                "resource_file": "resources/прочее/hlam.json",
+                "resource_file": "items.misc.hlam",
                 "count": 1,
                 "priority": 0
             }
@@ -32,127 +32,127 @@
         "objects_count": 15,
         "categories": [
             {
-                "resource_file": "resources/ремесло/weapons.json",
+                "resource_file": "items.craft.weapons",
                 "count": 1,
                 "priority": 0
             },
             {
-                "resource_file": "resources/прочее/hlam.json",
+                "resource_file": "items.misc.hlam",
                 "count": 1,
                 "priority": 0
             },
             {
-                "resource_file": "resources/провизия/food.json",
+                "resource_file": "items.food.food",
                 "count": 1,
                 "priority": 0
             },
             {
-                "resource_file": "resources/алхимия/potions.json",
+                "resource_file": "items.alchemy.potions",
                 "count": 1,
                 "priority": 0
             },
             {
-                "resource_file": "resources/прочее/tools.json",
+                "resource_file": "items.misc.tools",
                 "count": 1,
                 "priority": 0
             },
             {
-                "resource_file": "resources/прочее/cloth.json",
+                "resource_file": "items.misc.cloth",
                 "count": 1,
                 "priority": 0
             },
             {
-                "resource_file": "resources/провизия/alcohol.json",
+                "resource_file": "items.food.alcohol",
                 "count": 1,
                 "priority": 0
             },
             {
-                "resource_file": "resources/прочее/scrolls.json",
+                "resource_file": "items.misc.scrolls",
                 "count": 1,
                 "priority": 0
             },
             {
-                "resource_file": "resources/охота/pelts.json",
+                "resource_file": "items.hunt.pelts",
                 "count": 1,
                 "priority": 0
             },
             {
-                "resource_file": "resources/охота/arrows.json",
+                "resource_file": "items.hunt.arrows",
                 "count": 1,
                 "priority": 0
             },
             {
-                "resource_file": "resources/прочее/books.json",
+                "resource_file": "items.misc.books",
                 "count": 1,
                 "priority": 0
             },
             {
-                "resource_file": "resources/алхимия/reagents.json",
+                "resource_file": "items.alchemy.reagents",
                 "count": 1,
                 "priority": 0
             },
             {
-                "resource_file": "resources/ремесло/jewelry.json",
+                "resource_file": "items.craft.jewelry",
                 "count": 1,
                 "priority": 0
             },
             {
-                "resource_file": "resources/провизия/spices.json",
+                "resource_file": "items.food.spices",
                 "count": 1,
                 "priority": 0
             },
             {
-                "resource_file": "resources/прочее/hardware.json",
+                "resource_file": "items.misc.hardware",
                 "count": 1,
                 "priority": 0
             },
             {
-                "resource_file": "resources/прочее/candles.json",
+                "resource_file": "items.misc.candles",
                 "count": 1,
                 "priority": 0
             },
             {
-                "resource_file": "resources/охота/trophies.json",
+                "resource_file": "items.hunt.trophies",
                 "count": 1,
                 "priority": 0
             },
             {
-                "resource_file": "resources/провизия/fish.json",
+                "resource_file": "items.food.fish",
                 "count": 1,
                 "priority": 0
             },
             {
-                "resource_file": "resources/прочее/bags.json",
+                "resource_file": "items.misc.bags",
                 "count": 1,
                 "priority": 0
             },
             {
-                "resource_file": "resources/прочее/wood.json",
+                "resource_file": "items.misc.wood",
                 "count": 1,
                 "priority": 0
             },
             {
-                "resource_file": "resources/прочее/locks.json",
+                "resource_file": "items.misc.locks",
                 "count": 1,
                 "priority": 0
             },
             {
-                "resource_file": "resources/ремесло/metal.json",
+                "resource_file": "items.craft.metal",
                 "count": 1,
                 "priority": 0
             },
             {
-                "resource_file": "resources/охота/traps.json",
+                "resource_file": "items.hunt.traps",
                 "count": 1,
                 "priority": 0
             },
             {
-                "resource_file": "resources/ремесло/armor_parts.json",
+                "resource_file": "items.craft.armor_parts",
                 "count": 1,
                 "priority": 0
             },
             {
-                "resource_file": "resources/прочее/curiosities.json",
+                "resource_file": "items.misc.curiosities",
                 "count": 1,
                 "priority": 0
             }
@@ -165,12 +165,12 @@
         "objects_count": 10,
         "categories": [
             {
-                "resource_file": "resources/ремесло/weapons.json",
+                "resource_file": "items.craft.weapons",
                 "count": 2,
                 "priority": 1
             },
             {
-                "resource_file": "resources/прочее/hlam.json",
+                "resource_file": "items.misc.hlam",
                 "count": 2,
                 "priority": 0
             }
@@ -191,7 +191,7 @@
         "objects_count": 5,
         "categories": [
             {
-                "resource_file": "resources/прочее/wood.json",
+                "resource_file": "items.misc.wood",
                 "count": 1,
                 "priority": 1
             }
